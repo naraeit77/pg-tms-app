@@ -59451,3 +59451,3338 @@ Help: https://docs.oracle.com/error-help/db/ora-00934/
 }
 2026-02-25T02:15:58: [Metrics API] Oracle queries completed in 9870ms (failures: none)
 2026-02-25T02:15:58: [Metrics API] Total response time: 9870ms
+2026-02-25T02:16:18: [Metrics API] Fetching from Oracle directly
+2026-02-25T02:16:26: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.43,
+  io_mbps: 45.87,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T02:16:27: [Metrics API] Oracle queries completed in 8998ms (failures: none)
+2026-02-25T02:16:27: [Metrics API] Total response time: 8998ms
+2026-02-25T02:16:57: [Metrics API] Fetching from Oracle directly
+2026-02-25T02:17:00: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.7,
+  io_mbps: 45.81,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T02:17:06: [Metrics API] Oracle queries completed in 8941ms (failures: none)
+2026-02-25T02:17:06: [Metrics API] Total response time: 8941ms
+2026-02-25T02:17:27: [Metrics API] Fetching from Oracle directly
+2026-02-25T02:17:33: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.77,
+  io_mbps: 45.81,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T02:17:35: [Metrics API] Oracle queries completed in 8228ms (failures: none)
+2026-02-25T02:17:35: [Metrics API] Total response time: 8228ms
+2026-02-25T02:17:57: [Metrics API] Fetching from Oracle directly
+2026-02-25T02:18:06: [Metrics API] Oracle queries completed in 9303ms (failures: none)
+2026-02-25T02:18:06: [Metrics API] Total response time: 9303ms
+2026-02-25T02:18:07: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.78,
+  io_mbps: 46.01,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T02:18:27: [Metrics API] Fetching from Oracle directly
+2026-02-25T02:18:36: [Metrics API] Oracle queries completed in 8549ms (failures: none)
+2026-02-25T02:18:36: [Metrics API] Total response time: 8549ms
+2026-02-25T04:32:30: ▲ Next.js 16.1.6
+2026-02-25T04:32:30: ▲ Next.js 16.1.6
+2026-02-25T04:32:30: - Local:         http://localhost:3000
+2026-02-25T04:32:30: - Network:       http://192.168.0.4:3000
+2026-02-25T04:32:30: 
+2026-02-25T04:32:30: ✓ Starting...
+2026-02-25T04:32:30: - Local:         http://localhost:3000
+2026-02-25T04:32:30: - Network:       http://192.168.0.4:3000
+2026-02-25T04:32:30: 
+2026-02-25T04:32:30: ✓ Starting...
+2026-02-25T04:32:32: ✓ Ready in 2.6s
+2026-02-25T04:32:32: ✓ Ready in 2.6s
+2026-02-25T04:32:32: ▲ Next.js 16.1.6
+2026-02-25T04:32:32: ▲ Next.js 16.1.6
+2026-02-25T04:32:32: - Local:         http://localhost:3000
+2026-02-25T04:32:32: - Network:       http://192.168.0.4:3000
+2026-02-25T04:32:32: 
+2026-02-25T04:32:32: ✓ Starting...
+2026-02-25T04:32:32: - Local:         http://localhost:3000
+2026-02-25T04:32:32: - Network:       http://192.168.0.4:3000
+2026-02-25T04:32:32: 
+2026-02-25T04:32:32: ✓ Starting...
+2026-02-25T04:32:32: ✓ Ready in 311ms
+2026-02-25T04:32:32: ✓ Ready in 311ms
+2026-02-25T04:32:35: ✓ Oracle Thick mode initialized
+2026-02-25T04:32:35:   Library directory: /opt/oracle/instantclient
+2026-02-25T04:32:35: ✓ Oracle Thick mode initialized
+2026-02-25T04:32:35:   Library directory: /opt/oracle/instantclient
+2026-02-25T04:32:35: ✓ Oracle Thick mode initialized
+2026-02-25T04:32:35:   Library directory: /opt/oracle/instantclient
+2026-02-25T04:32:35: ✓ Oracle Thick mode initialized
+2026-02-25T04:32:35:   Library directory: /opt/oracle/instantclient
+2026-02-25T07:37:23: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:37:33: [Realtime Monitoring API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:37:33: [Pattern Detection API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:37:33: [Refactoring Suggestions API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:37:33: [Metrics API] Oracle queries completed in 9796ms (failures: none)
+2026-02-25T07:37:33: [Metrics API] Total response time: 9796ms
+2026-02-25T07:37:35: [Realtime Monitoring API] Found 30 active SQLs
+2026-02-25T07:37:40: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:37:40: [Pattern Detection API] Found 1 issues
+2026-02-25T07:37:44: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.43,
+  io_mbps: 46.51,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:37:50: [Metrics API] Oracle queries completed in 9592ms (failures: none)
+2026-02-25T07:37:50: [Metrics API] Total response time: 9592ms
+2026-02-25T07:37:58: [Pattern Detection API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:37:58: [Realtime Monitoring API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:37:58: [Refactoring Suggestions API] connection_id: f8aee7e1-7409-4834-acdb-c811e29e0f89
+2026-02-25T07:38:00: [Realtime Monitoring API] Found 30 active SQLs
+2026-02-25T07:38:01: [Refactoring Suggestions API] connection_id: 29011e56-5fd5-4007-81fa-a4ece29e112d
+2026-02-25T07:38:01: [Realtime Monitoring API] connection_id: 29011e56-5fd5-4007-81fa-a4ece29e112d
+2026-02-25T07:38:01: [Realtime Monitoring API] Found 2 active SQLs
+2026-02-25T07:38:02: [Refactoring Suggestions API] Found 0 suggestions
+2026-02-25T07:38:03: [Pattern Detection API] connection_id: 29011e56-5fd5-4007-81fa-a4ece29e112d
+2026-02-25T07:38:03: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:04: [Pattern Detection API] Found 0 issues
+2026-02-25T07:38:04: [Metrics API] Oracle queries completed in 924ms (failures: none)
+2026-02-25T07:38:04: [Metrics API] Total response time: 924ms
+2026-02-25T07:38:05: [Pattern Detection API] Found 1 issues
+2026-02-25T07:38:26: [Performance History] AWR query returned 0 rows for date=2026-02-25
+2026-02-25T07:38:26: [Performance History] Found 17 records from V$SQL
+2026-02-25T07:38:29: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-02-25T07:38:29: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:29: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-02-25T07:38:29: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-02-25T07:38:29: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-02-25T07:38:29: [OS Stats] 조회 완료: {
+  cpu_usage: 14.39,
+  memory_usage: 82.26,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-02-25T07:38:29: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-02-25T07:38:29: [Metrics API] Oracle queries completed in 668ms (failures: none)
+2026-02-25T07:38:29: [Metrics API] Total response time: 668ms
+2026-02-25T07:38:37: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:42: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 95.76,
+  io_mbps: 38.5,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:38:45: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:45: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-02-25T07:38:45: [OS Stats] 조회 완료: {
+  cpu_usage: 14.39,
+  memory_usage: 82.22,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-02-25T07:38:45: [Metrics API] Oracle queries completed in 424ms (failures: none)
+2026-02-25T07:38:45: [Metrics API] Total response time: 424ms
+2026-02-25T07:38:45: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:45: [OS Stats] 조회 완료: {
+  cpu_usage: 14.39,
+  memory_usage: 82.21,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-02-25T07:38:46: [Metrics API] Oracle queries completed in 490ms (failures: none)
+2026-02-25T07:38:46: [Metrics API] Total response time: 490ms
+2026-02-25T07:38:46: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:38:46: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-02-25T07:38:46: [Metrics API] Oracle queries completed in 509ms (failures: none)
+2026-02-25T07:38:46: [Metrics API] Total response time: 509ms
+2026-02-25T07:38:46: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-02-25T07:38:46: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-02-25T07:38:46: [OS Stats] 조회 완료: {
+  cpu_usage: 14.39,
+  memory_usage: 82.21,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-02-25T07:38:47: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-02-25T07:38:47: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-02-25T07:38:47: [Metrics API] Oracle queries completed in 9755ms (failures: none)
+2026-02-25T07:38:47: [Metrics API] Total response time: 9755ms
+2026-02-25T07:38:47: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-02-25T07:38:47: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-02-25T07:38:47: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-02-25T07:38:47: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-02-25T07:38:47: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-02-25T07:38:47: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-02-25T07:38:48: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-02-25T07:38:48: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-02-25T07:38:48: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-02-25T07:38:55: [sql-statistics] Standard Edition: V$SQL 직접 사용
+2026-02-25T07:38:55: [sql-statistics] V$SQL 폴백 시간 범위 쿼리: {
+  startTime: '2026-02-25 06:58:00',
+  endTime: '2026-02-25 07:39:00',
+  limit: 100,
+  orderBy: 'elapsed_time_ms'
+}
+2026-02-25T07:38:55: [sql-statistics] V$SQL 폴백 쿼리 결과: { rowCount: 10 }
+2026-02-25T07:39:45: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:39:54: [Metrics API] Oracle queries completed in 9191ms (failures: none)
+2026-02-25T07:39:54: [Metrics API] Total response time: 9191ms
+2026-02-25T07:40:18: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.33,
+  io_mbps: 44.15,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:46:01: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:46:04: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.38,
+  io_mbps: 41.06,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:46:10: [Metrics API] Oracle queries completed in 8786ms (failures: none)
+2026-02-25T07:46:10: [Metrics API] Total response time: 8786ms
+2026-02-25T07:46:38: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.29,
+  io_mbps: 38.68,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:46:40: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:46:49: [Metrics API] Oracle queries completed in 9119ms (failures: none)
+2026-02-25T07:46:49: [Metrics API] Total response time: 9119ms
+2026-02-25T07:47:10: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:47:12: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 95.89,
+  io_mbps: 38.68,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:47:19: [Metrics API] Oracle queries completed in 8661ms (failures: none)
+2026-02-25T07:47:19: [Metrics API] Total response time: 8661ms
+2026-02-25T07:47:40: [Metrics API] Fetching from Oracle directly
+2026-02-25T07:47:45: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.15,
+  io_mbps: 37.62,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T07:47:48: [Metrics API] Oracle queries completed in 7931ms (failures: none)
+2026-02-25T07:47:48: [Metrics API] Total response time: 7931ms
+2026-02-25T08:05:27: [Metrics API] Fetching from Oracle directly
+2026-02-25T08:05:31: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.89,
+  io_mbps: 36.08,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-25T08:05:37: [Metrics API] Oracle queries completed in 9833ms (failures: none)
+2026-02-25T08:05:37: [Metrics API] Total response time: 9833ms
+2026-02-25T22:30:04: ▲ Next.js 16.1.6
+2026-02-25T22:30:04: ▲ Next.js 16.1.6
+2026-02-25T22:30:04: - Local:         http://localhost:3000
+2026-02-25T22:30:04: - Network:       http://192.168.0.4:3000
+2026-02-25T22:30:04: 
+2026-02-25T22:30:04: ✓ Starting...
+2026-02-25T22:30:04: - Local:         http://localhost:3000
+2026-02-25T22:30:04: - Network:       http://192.168.0.4:3000
+2026-02-25T22:30:04: 
+2026-02-25T22:30:04: ✓ Starting...
+2026-02-25T22:30:04: ▲ Next.js 16.1.6
+2026-02-25T22:30:04: ▲ Next.js 16.1.6
+2026-02-25T22:30:04: - Local:         http://localhost:3000
+2026-02-25T22:30:04: - Network:       http://192.168.0.4:3000
+2026-02-25T22:30:04: 
+2026-02-25T22:30:04: ✓ Starting...
+2026-02-25T22:30:04: - Local:         http://localhost:3000
+2026-02-25T22:30:04: - Network:       http://192.168.0.4:3000
+2026-02-25T22:30:04: 
+2026-02-25T22:30:04: ✓ Starting...
+2026-02-25T22:30:06: ✓ Ready in 2s
+2026-02-25T22:30:06: ✓ Ready in 2s
+2026-02-25T22:30:06: ✓ Ready in 3.3s
+2026-02-25T22:30:06: ✓ Ready in 3.3s
+2026-02-25T22:30:08: ✓ Oracle Thick mode initialized
+2026-02-25T22:30:08:   Library directory: /opt/oracle/instantclient
+2026-02-25T22:30:08: ✓ Oracle Thick mode initialized
+2026-02-25T22:30:08:   Library directory: /opt/oracle/instantclient
+2026-02-25T22:30:08: ✓ Oracle Thick mode initialized
+2026-02-25T22:30:08:   Library directory: /opt/oracle/instantclient
+2026-02-25T22:30:08: ✓ Oracle Thick mode initialized
+2026-02-25T22:30:08:   Library directory: /opt/oracle/instantclient
+2026-02-26T00:34:48: [Metrics API] Fetching from Oracle directly
+2026-02-26T00:35:00: [Metrics API] Oracle queries completed in 11256ms (failures: none)
+2026-02-26T00:35:00: [Metrics API] Total response time: 11256ms
+2026-02-26T00:35:05: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.42,
+  io_mbps: 41.96,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-26T00:35:30: [Metrics API] Fetching from Oracle directly
+2026-02-26T00:35:38: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.98,
+  io_mbps: 37.4,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-26T00:35:39: [Metrics API] Oracle queries completed in 9848ms (failures: none)
+2026-02-26T00:35:39: [Metrics API] Total response time: 9848ms
+2026-02-26T00:37:04: [ASH API] Request: connectionId=29011e56-5fd5-4007-81fa-a4ece29e112d, range=2026-02-25 23:37:04 ~ 2026-02-26 00:37:04, clientTz=+09:00
+2026-02-26T00:37:04: [ASH] DB server time: 2026-02-26 00:37:43 +09:00, serverTz: +09:00, clientTz: +09:00
+2026-02-26T00:37:04: [ASH] Time conversion: 2026-02-25 23:37:04 ~ 2026-02-26 00:37:04 (client) → 2026-02-25 23:37:04 ~ 2026-02-26 00:37:04 (DB local)
+2026-02-26T00:37:04: [ASH] V$ACTIVE_SESSION_HISTORY returned 0 rows
+2026-02-26T00:37:04: [ASH] Trying DBA_HIST_ACTIVE_SESS_HISTORY...
+2026-02-26T00:37:05: [ASH] DBA_HIST_ACTIVE_SESS_HISTORY returned 0 rows
+2026-02-26T00:37:05: [ASH] Falling back to V$SESSION
+2026-02-26T00:37:05: [ASH] V$SESSION returned 0 rows
+2026-02-26T00:37:08: [ASH API] Request: connectionId=29011e56-5fd5-4007-81fa-a4ece29e112d, range=2026-02-25 23:37:08 ~ 2026-02-26 00:37:08, clientTz=+09:00
+2026-02-26T00:37:08: [ASH] DB server time: 2026-02-26 00:37:47 +09:00, serverTz: +09:00, clientTz: +09:00
+2026-02-26T00:37:08: [ASH] Time conversion: 2026-02-25 23:37:08 ~ 2026-02-26 00:37:08 (client) → 2026-02-25 23:37:08 ~ 2026-02-26 00:37:08 (DB local)
+2026-02-26T00:37:08: [ASH] V$ACTIVE_SESSION_HISTORY returned 0 rows
+2026-02-26T00:37:09: [ASH] Trying DBA_HIST_ACTIVE_SESS_HISTORY...
+2026-02-26T00:37:09: [ASH] DBA_HIST_ACTIVE_SESS_HISTORY returned 0 rows
+2026-02-26T00:37:09: [ASH] Falling back to V$SESSION
+2026-02-26T00:37:09: [ASH] V$SESSION returned 0 rows
+2026-02-26T09:06:08: ▲ Next.js 16.1.6
+2026-02-26T09:06:08: ▲ Next.js 16.1.6
+2026-02-26T09:06:08: - Local:         http://localhost:3000
+2026-02-26T09:06:08: - Network:       http://192.168.0.4:3000
+2026-02-26T09:06:08: 
+2026-02-26T09:06:08: ✓ Starting...
+2026-02-26T09:06:08: - Local:         http://localhost:3000
+2026-02-26T09:06:08: - Network:       http://192.168.0.4:3000
+2026-02-26T09:06:08: 
+2026-02-26T09:06:08: ✓ Starting...
+2026-02-26T09:06:09: ▲ Next.js 16.1.6
+2026-02-26T09:06:09: - Local:         http://localhost:3000
+2026-02-26T09:06:09: - Network:       http://192.168.0.4:3000
+2026-02-26T09:06:09: 
+2026-02-26T09:06:09: ✓ Starting...
+2026-02-26T09:06:09: ▲ Next.js 16.1.6
+2026-02-26T09:06:09: - Local:         http://localhost:3000
+2026-02-26T09:06:09: - Network:       http://192.168.0.4:3000
+2026-02-26T09:06:09: 
+2026-02-26T09:06:09: ✓ Starting...
+2026-02-26T09:06:11: ✓ Ready in 2.2s
+2026-02-26T09:06:11: ✓ Ready in 4.7s
+2026-02-26T09:06:11: ✓ Ready in 2.2s
+2026-02-26T09:06:11: ✓ Ready in 4.7s
+2026-02-26T09:06:14: ✓ Oracle Thick mode initialized
+2026-02-26T09:06:14:   Library directory: /opt/oracle/instantclient
+2026-02-26T09:06:14: ✓ Oracle Thick mode initialized
+2026-02-26T09:06:14:   Library directory: /opt/oracle/instantclient
+2026-02-26T09:06:14: ✓ Oracle Thick mode initialized
+2026-02-26T09:06:14:   Library directory: /opt/oracle/instantclient
+2026-02-26T09:06:14: ✓ Oracle Thick mode initialized
+2026-02-26T09:06:14:   Library directory: /opt/oracle/instantclient
+2026-02-26T15:13:29: [Metrics API] Fetching from Oracle directly
+2026-02-26T15:13:32: [Metrics API] Oracle queries completed in 2234ms (failures: none)
+2026-02-26T15:13:32: [Metrics API] Total response time: 2234ms
+2026-02-26T15:13:32: [OS Stats] 조회 완료: {
+  cpu_usage: 99.2,
+  memory_usage: 96.77,
+  io_mbps: 47.54,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-27T01:10:31: ▲ Next.js 16.1.6
+2026-02-27T01:10:31: - Local:         http://localhost:3000
+2026-02-27T01:10:31: - Network:       http://192.168.0.4:3000
+2026-02-27T01:10:31: 
+2026-02-27T01:10:31: ✓ Starting...
+2026-02-27T08:06:59: ▲ Next.js 16.1.6
+2026-02-27T08:06:59: ▲ Next.js 16.1.6
+2026-02-27T08:06:59: ▲ Next.js 16.1.6
+2026-02-27T08:06:59: ▲ Next.js 16.1.6
+2026-02-27T08:06:59: - Local:         http://localhost:3000
+2026-02-27T08:06:59: - Network:       http://192.168.0.4:3000
+2026-02-27T08:06:59: 
+2026-02-27T08:06:59: ✓ Starting...
+2026-02-27T08:06:59: - Local:         http://localhost:3000
+2026-02-27T08:06:59: - Network:       http://192.168.0.4:3000
+2026-02-27T08:06:59: 
+2026-02-27T08:06:59: ✓ Starting...
+2026-02-27T08:06:59: - Local:         http://localhost:3000
+2026-02-27T08:06:59: - Network:       http://192.168.0.4:3000
+2026-02-27T08:06:59: 
+2026-02-27T08:06:59: ✓ Starting...
+2026-02-27T08:06:59: - Local:         http://localhost:3000
+2026-02-27T08:06:59: - Network:       http://192.168.0.4:3000
+2026-02-27T08:06:59: 
+2026-02-27T08:06:59: ✓ Starting...
+2026-02-27T08:07:01: ✓ Ready in 4.1s
+2026-02-27T08:07:01: ✓ Ready in 2.8s
+2026-02-27T08:07:01: ✓ Ready in 2.8s
+2026-02-27T08:07:01: ✓ Ready in 4.1s
+2026-02-27T08:07:04: ✓ Oracle Thick mode initialized
+2026-02-27T08:07:04:   Library directory: /opt/oracle/instantclient
+2026-02-27T08:07:04: ✓ Oracle Thick mode initialized
+2026-02-27T08:07:04:   Library directory: /opt/oracle/instantclient
+2026-02-27T08:07:04: ✓ Oracle Thick mode initialized
+2026-02-27T08:07:04:   Library directory: /opt/oracle/instantclient
+2026-02-27T08:07:04: ✓ Oracle Thick mode initialized
+2026-02-27T08:07:04:   Library directory: /opt/oracle/instantclient
+2026-02-27T17:39:23: [Metrics API] Fetching from Oracle directly
+2026-02-27T17:39:33: [Metrics API] Oracle queries completed in 9320ms (failures: none)
+2026-02-27T17:39:33: [Metrics API] Total response time: 9320ms
+2026-02-27T17:39:37: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 92.54,
+  io_mbps: 47.08,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-27T18:44:38: ▲ Next.js 16.1.6
+2026-02-27T18:44:38: ▲ Next.js 16.1.6
+2026-02-27T18:44:38: - Local:         http://localhost:3000
+2026-02-27T18:44:38: - Network:       http://192.168.0.4:3000
+2026-02-27T18:44:38: 
+2026-02-27T18:44:38: ✓ Starting...
+2026-02-27T18:44:38: - Local:         http://localhost:3000
+2026-02-27T18:44:38: - Network:       http://192.168.0.4:3000
+2026-02-27T18:44:38: 
+2026-02-27T18:44:38: ✓ Starting...
+2026-02-27T21:27:16: ▲ Next.js 16.1.6
+2026-02-27T21:27:16: ▲ Next.js 16.1.6
+2026-02-27T21:27:16: - Local:         http://localhost:3000
+2026-02-27T21:27:16: - Network:       http://192.168.0.4:3000
+2026-02-27T21:27:16: 
+2026-02-27T21:27:16: ✓ Starting...
+2026-02-27T21:27:16: - Local:         http://localhost:3000
+2026-02-27T21:27:16: - Network:       http://192.168.0.4:3000
+2026-02-27T21:27:16: 
+2026-02-27T21:27:16: ✓ Starting...
+2026-02-27T21:27:16: ✓ Ready in 867ms
+2026-02-27T21:27:16: ✓ Ready in 868ms
+2026-02-27T21:27:17: ▲ Next.js 16.1.6
+2026-02-27T21:27:17: - Local:         http://localhost:3000
+2026-02-27T21:27:17: - Network:       http://192.168.0.4:3000
+2026-02-27T21:27:17: 
+2026-02-27T21:27:17: ✓ Starting...
+2026-02-27T21:27:17: ▲ Next.js 16.1.6
+2026-02-27T21:27:17: - Local:         http://localhost:3000
+2026-02-27T21:27:17: - Network:       http://192.168.0.4:3000
+2026-02-27T21:27:17: 
+2026-02-27T21:27:17: ✓ Starting...
+2026-02-27T21:27:17: ✓ Ready in 241ms
+2026-02-27T21:27:17: ✓ Ready in 238ms
+2026-02-27T21:27:17: ✓ Oracle Thick mode initialized
+2026-02-27T21:27:17:   Library directory: /opt/oracle/instantclient
+2026-02-27T21:27:17: ✓ Oracle Thick mode initialized
+2026-02-27T21:27:17:   Library directory: /opt/oracle/instantclient
+2026-02-27T21:27:17: ✓ Oracle Thick mode initialized
+2026-02-27T21:27:17:   Library directory: /opt/oracle/instantclient
+2026-02-27T21:27:17: ✓ Oracle Thick mode initialized
+2026-02-27T21:27:17:   Library directory: /opt/oracle/instantclient
+2026-02-28T02:53:37: ▲ Next.js 16.1.6
+2026-02-28T02:53:37: - Local:         http://localhost:3000
+2026-02-28T02:53:37: - Network:       http://192.168.0.4:3000
+2026-02-28T02:53:37: 
+2026-02-28T02:53:37: ✓ Starting...
+2026-02-28T10:28:25: ▲ Next.js 16.1.6
+2026-02-28T10:28:25: ▲ Next.js 16.1.6
+2026-02-28T10:28:25: ▲ Next.js 16.1.6
+2026-02-28T10:28:25: ▲ Next.js 16.1.6
+2026-02-28T10:28:25: - Local:         http://localhost:3000
+2026-02-28T10:28:25: - Network:       http://192.168.0.4:3000
+2026-02-28T10:28:25: 
+2026-02-28T10:28:25: ✓ Starting...
+2026-02-28T10:28:25: - Local:         http://localhost:3000
+2026-02-28T10:28:25: - Network:       http://192.168.0.4:3000
+2026-02-28T10:28:25: 
+2026-02-28T10:28:25: ✓ Starting...
+2026-02-28T10:28:25: - Local:         http://localhost:3000
+2026-02-28T10:28:25: - Network:       http://192.168.0.4:3000
+2026-02-28T10:28:25: 
+2026-02-28T10:28:25: ✓ Starting...
+2026-02-28T10:28:25: - Local:         http://localhost:3000
+2026-02-28T10:28:25: - Network:       http://192.168.0.4:3000
+2026-02-28T10:28:25: 
+2026-02-28T10:28:25: ✓ Starting...
+2026-02-28T10:28:26: ✓ Ready in 653ms
+2026-02-28T10:28:26: ✓ Ready in 976ms
+2026-02-28T10:28:26: ✓ Ready in 655ms
+2026-02-28T10:28:26: ✓ Ready in 977ms
+2026-02-28T10:28:27: ✓ Oracle Thick mode initialized
+2026-02-28T10:28:27:   Library directory: /opt/oracle/instantclient
+2026-02-28T10:28:27: ✓ Oracle Thick mode initialized
+2026-02-28T10:28:27:   Library directory: /opt/oracle/instantclient
+2026-02-28T10:28:27: ✓ Oracle Thick mode initialized
+2026-02-28T10:28:27:   Library directory: /opt/oracle/instantclient
+2026-02-28T10:28:27: ✓ Oracle Thick mode initialized
+2026-02-28T10:28:27:   Library directory: /opt/oracle/instantclient
+2026-02-28T16:17:29: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:17:40: [Metrics API] Oracle queries completed in 10714ms (failures: none)
+2026-02-28T16:17:40: [Metrics API] Total response time: 10714ms
+2026-02-28T16:17:45: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.12,
+  io_mbps: 46.71,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:18:09: [sql-grades] Edition: Enterprise, isEnterprise: true, timeRange: false, limit: 100
+2026-02-28T16:18:13: [clusters/analyze] Edition: Enterprise, isEnterprise: true, minutes: 60
+2026-02-28T16:33:19: [LLM Stream] Request received
+2026-02-28T16:33:19: [LLM Stream] Body parsed successfully, keys: [
+  'sql_text',
+  'context',
+  'language',
+  '_timestamp',
+  'execution_plan',
+  'metrics'
+]
+2026-02-28T16:33:19: [LLM Stream] Auth check: OK
+2026-02-28T16:33:19: [LLM Stream] Feature enabled: true
+2026-02-28T16:33:19: [LLM Stream] Validation: true []
+2026-02-28T16:33:19: [LLM Stream] Starting stream, messages: 2
+2026-02-28T16:33:19: [LLM Stream] LLM client created, starting chat...
+2026-02-28T16:33:47: [LLM Stream] First chunk received in 28077 ms
+2026-02-28T16:34:02: [LLM Stream] Completed in 43484 ms, chunks: 802
+2026-02-28T16:34:02: [LLM Stop] Request received
+2026-02-28T16:34:02: [LLM Stop] Sending unload request to Ollama: http://localhost:11434/api/generate model: qwen3:8b
+2026-02-28T16:34:02: [LLM Stop] Ollama response: 200 {"model":"qwen3:8b","created_at":"2026-02-28T07:34:02.577045Z","response":"","done":true,"done_reason":"unload"}
+2026-02-28T16:34:02: [LLM Stop] Model unload request sent successfully
+2026-02-28T16:34:23: [LLM Stream] Request received
+2026-02-28T16:34:23: [LLM Stream] Body parsed successfully, keys: [
+  'sql_text',
+  'context',
+  'language',
+  '_timestamp',
+  'execution_plan',
+  'metrics'
+]
+2026-02-28T16:34:23: [LLM Stream] Auth check: OK
+2026-02-28T16:34:23: [LLM Stream] Feature enabled: true
+2026-02-28T16:34:23: [LLM Stream] Validation: true []
+2026-02-28T16:34:23: [LLM Stream] Starting stream, messages: 2
+2026-02-28T16:34:23: [LLM Stream] LLM client created, starting chat...
+2026-02-28T16:35:11: [LLM Stream] First chunk received in 48060 ms
+2026-02-28T16:35:21: [LLM Stream] Completed in 57265 ms, chunks: 456
+2026-02-28T16:35:21: [LLM Stop] Request received
+2026-02-28T16:35:21: [LLM Stop] Sending unload request to Ollama: http://localhost:11434/api/generate model: qwen3:8b
+2026-02-28T16:35:21: [LLM Stop] Ollama response: 200 {"model":"qwen3:8b","created_at":"2026-02-28T07:35:21.139252Z","response":"","done":true,"done_reason":"unload"}
+2026-02-28T16:35:21: [LLM Stop] Model unload request sent successfully
+2026-02-28T16:55:02: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:55:12: [Metrics API] Oracle queries completed in 10496ms (failures: none)
+2026-02-28T16:55:12: [Metrics API] Total response time: 10496ms
+2026-02-28T16:55:17: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.52,
+  io_mbps: 43.91,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:55:42: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:55:50: [Metrics API] Oracle queries completed in 7781ms (failures: none)
+2026-02-28T16:55:50: [Metrics API] Total response time: 7781ms
+2026-02-28T16:55:50: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.64,
+  io_mbps: 42.15,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:56:12: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:56:21: [Metrics API] Oracle queries completed in 8609ms (failures: none)
+2026-02-28T16:56:21: [Metrics API] Total response time: 8609ms
+2026-02-28T16:56:24: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.02,
+  io_mbps: 42.15,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:56:42: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:56:51: [Metrics API] Oracle queries completed in 8618ms (failures: none)
+2026-02-28T16:56:51: [Metrics API] Total response time: 8618ms
+2026-02-28T16:56:57: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.53,
+  io_mbps: 49.62,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:57:21: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:57:30: [Metrics API] Oracle queries completed in 8911ms (failures: none)
+2026-02-28T16:57:30: [Metrics API] Total response time: 8911ms
+2026-02-28T16:57:31: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.32,
+  io_mbps: 49.62,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:57:51: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:57:58: [Metrics API] Oracle queries completed in 6951ms (failures: none)
+2026-02-28T16:57:58: [Metrics API] Total response time: 6951ms
+2026-02-28T16:58:07: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.39,
+  io_mbps: 40.88,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:58:21: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:58:30: [Metrics API] Oracle queries completed in 8962ms (failures: none)
+2026-02-28T16:58:30: [Metrics API] Total response time: 8962ms
+2026-02-28T16:58:41: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.67,
+  io_mbps: 42.84,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:58:51: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:58:59: [Metrics API] Oracle queries completed in 8367ms (failures: none)
+2026-02-28T16:58:59: [Metrics API] Total response time: 8367ms
+2026-02-28T16:59:15: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.77,
+  io_mbps: 42.84,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:59:21: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:59:28: [Metrics API] Oracle queries completed in 7364ms (failures: none)
+2026-02-28T16:59:28: [Metrics API] Total response time: 7364ms
+2026-02-28T16:59:49: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.52,
+  io_mbps: 47.94,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T16:59:51: [Metrics API] Fetching from Oracle directly
+2026-02-28T16:59:59: [Metrics API] Oracle queries completed in 8179ms (failures: none)
+2026-02-28T16:59:59: [Metrics API] Total response time: 8179ms
+2026-02-28T17:00:21: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:00:22: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.37,
+  io_mbps: 47.94,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:00:29: [Metrics API] Oracle queries completed in 7982ms (failures: none)
+2026-02-28T17:00:29: [Metrics API] Total response time: 7982ms
+2026-02-28T17:00:51: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:00:56: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.16,
+  io_mbps: 50.55,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:01:00: [Metrics API] Oracle queries completed in 8980ms (failures: none)
+2026-02-28T17:01:00: [Metrics API] Total response time: 8980ms
+2026-02-28T17:01:29: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.46,
+  io_mbps: 50.55,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:01:30: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:01:38: [Metrics API] Oracle queries completed in 7658ms (failures: none)
+2026-02-28T17:01:38: [Metrics API] Total response time: 7658ms
+2026-02-28T17:02:00: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:02:02: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.86,
+  io_mbps: 45.95,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:02:09: [Metrics API] Oracle queries completed in 8623ms (failures: none)
+2026-02-28T17:02:09: [Metrics API] Total response time: 8623ms
+2026-02-28T17:02:30: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:02:36: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.68,
+  io_mbps: 44.95,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:02:39: [Metrics API] Oracle queries completed in 8571ms (failures: none)
+2026-02-28T17:02:39: [Metrics API] Total response time: 8571ms
+2026-02-28T17:03:09: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:03:10: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.08,
+  io_mbps: 44.95,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:03:18: [Metrics API] Oracle queries completed in 8716ms (failures: none)
+2026-02-28T17:03:18: [Metrics API] Total response time: 8716ms
+2026-02-28T17:03:39: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:03:44: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.43,
+  io_mbps: 39.36,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:03:47: [Metrics API] Oracle queries completed in 8107ms (failures: none)
+2026-02-28T17:03:47: [Metrics API] Total response time: 8107ms
+2026-02-28T17:04:09: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:04:17: [Metrics API] Oracle queries completed in 8523ms (failures: none)
+2026-02-28T17:04:17: [Metrics API] Total response time: 8523ms
+2026-02-28T17:04:18: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.27,
+  io_mbps: 39.36,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:04:39: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:04:47: [Metrics API] Oracle queries completed in 7743ms (failures: none)
+2026-02-28T17:04:47: [Metrics API] Total response time: 7743ms
+2026-02-28T17:04:52: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.43,
+  io_mbps: 46.73,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:05:17: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:05:25: [Metrics API] Oracle queries completed in 8417ms (failures: none)
+2026-02-28T17:05:25: [Metrics API] Total response time: 8417ms
+2026-02-28T17:05:25: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.13,
+  io_mbps: 46.73,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:05:47: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:05:54: [Metrics API] Oracle queries completed in 7437ms (failures: none)
+2026-02-28T17:05:54: [Metrics API] Total response time: 7437ms
+2026-02-28T17:05:58: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.56,
+  io_mbps: 44.13,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:06:17: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:06:25: [Metrics API] Oracle queries completed in 7915ms (failures: none)
+2026-02-28T17:06:25: [Metrics API] Total response time: 7915ms
+2026-02-28T17:06:32: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 97.26,
+  io_mbps: 44.13,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:06:47: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:06:55: [Metrics API] Oracle queries completed in 7923ms (failures: none)
+2026-02-28T17:06:55: [Metrics API] Total response time: 7923ms
+2026-02-28T17:10:26: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:10:35: [Metrics API] Oracle queries completed in 8633ms (failures: none)
+2026-02-28T17:10:35: [Metrics API] Total response time: 8633ms
+2026-02-28T17:10:37: [Performance History] Found 100 records from AWR
+2026-02-28T17:10:38: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.39,
+  io_mbps: 44.2,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:10:39: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:10:48: [Metrics API] Oracle queries completed in 8398ms (failures: none)
+2026-02-28T17:10:48: [Metrics API] Total response time: 8398ms
+2026-02-28T17:11:39: [HealthCheck] Starting connection test: {
+  host: 'mcseoper.iptime.org',
+  port: 2521,
+  username: 'sys',
+  serviceName: '',
+  sid: 'NITDB',
+  connectionType: 'SID',
+  privilege: 'SYSDBA'
+}
+2026-02-28T17:11:40: Oracle Version Detection:
+2026-02-28T17:11:40:   BANNER: Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+2026-02-28T17:11:40:   VERSION: 11.2.0.1.0
+2026-02-28T17:11:40:   ✓ Extracted Edition: Enterprise Edition
+2026-02-28T17:11:40:   ✓ Extracted from BANNER: 11g
+2026-02-28T17:11:41: [HealthCheck] Starting connection test: {
+  host: 'mcseoper.iptime.org',
+  port: 2521,
+  username: 'sys',
+  serviceName: '',
+  sid: 'NITDB',
+  connectionType: 'SID',
+  privilege: 'SYSDBA'
+}
+2026-02-28T17:11:42: Oracle Version Detection:
+2026-02-28T17:11:42:   BANNER: Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+2026-02-28T17:11:42:   VERSION: 11.2.0.1.0
+2026-02-28T17:11:42:   ✓ Extracted Edition: Enterprise Edition
+2026-02-28T17:11:42:   ✓ Extracted from BANNER: 11g
+2026-02-28T17:11:53: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:11:53: [Metrics API] Oracle queries completed in 397ms (failures: none)
+2026-02-28T17:11:53: [Metrics API] Total response time: 397ms
+2026-02-28T17:11:54: [OS Stats] 조회 완료: {
+  cpu_usage: 2.52,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:12:24: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:12:24: [Metrics API] Fetching from Oracle directly
+2026-02-28T17:12:24: [Metrics API] Oracle queries completed in 429ms (failures: none)
+2026-02-28T17:12:24: [Metrics API] Total response time: 429ms
+2026-02-28T17:12:24: [OS Stats] 조회 완료: {
+  cpu_usage: 2.52,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T17:12:32: [Metrics API] Oracle queries completed in 8184ms (failures: none)
+2026-02-28T17:12:32: [Metrics API] Total response time: 8184ms
+2026-02-28T18:14:01: [Metrics API] Fetching from Oracle directly
+2026-02-28T18:14:02: [OS Stats] 조회 완료: {
+  cpu_usage: 3.92,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T18:14:02: [Metrics API] Oracle queries completed in 676ms (failures: none)
+2026-02-28T18:14:02: [Metrics API] Total response time: 676ms
+2026-02-28T18:14:32: [Metrics API] Fetching from Oracle directly
+2026-02-28T18:14:32: [OS Stats] 조회 완료: {
+  cpu_usage: 3.92,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-02-28T18:14:32: [Metrics API] Oracle queries completed in 426ms (failures: none)
+2026-02-28T18:14:32: [Metrics API] Total response time: 426ms
+2026-03-01T23:44:28: ▲ Next.js 16.1.6
+2026-03-01T23:44:28: ▲ Next.js 16.1.6
+2026-03-01T23:44:28: - Local:         http://localhost:3000
+2026-03-01T23:44:28: - Network:       http://192.168.0.4:3000
+2026-03-01T23:44:28: 
+2026-03-01T23:44:28: ✓ Starting...
+2026-03-01T23:44:28: - Local:         http://localhost:3000
+2026-03-01T23:44:28: - Network:       http://192.168.0.4:3000
+2026-03-01T23:44:28: 
+2026-03-01T23:44:28: ✓ Starting...
+2026-03-01T23:44:29: ▲ Next.js 16.1.6
+2026-03-01T23:44:29: - Local:         http://localhost:3000
+2026-03-01T23:44:29: - Network:       http://192.168.0.4:3000
+2026-03-01T23:44:29: 
+2026-03-01T23:44:29: ✓ Starting...
+2026-03-01T23:44:29: ▲ Next.js 16.1.6
+2026-03-01T23:44:29: - Local:         http://localhost:3000
+2026-03-01T23:44:29: - Network:       http://192.168.0.4:3000
+2026-03-01T23:44:29: 
+2026-03-01T23:44:29: ✓ Starting...
+2026-03-01T23:44:29: ✓ Ready in 338ms
+2026-03-01T23:44:29: ✓ Ready in 313ms
+2026-03-01T23:44:29: ✓ Ready in 842ms
+2026-03-01T23:44:29: ✓ Ready in 842ms
+2026-03-01T23:44:30: ✓ Oracle Thick mode initialized
+2026-03-01T23:44:30:   Library directory: /opt/oracle/instantclient
+2026-03-01T23:44:30: ✓ Oracle Thick mode initialized
+2026-03-01T23:44:30:   Library directory: /opt/oracle/instantclient
+2026-03-01T23:44:30: ✓ Oracle Thick mode initialized
+2026-03-01T23:44:30:   Library directory: /opt/oracle/instantclient
+2026-03-01T23:44:30: ✓ Oracle Thick mode initialized
+2026-03-01T23:44:30:   Library directory: /opt/oracle/instantclient
+2026-03-02T01:41:16: ▲ Next.js 16.1.6
+2026-03-02T01:41:16: ▲ Next.js 16.1.6
+2026-03-02T01:41:16: ▲ Next.js 16.1.6
+2026-03-02T01:41:16: - Local:         http://localhost:3000
+2026-03-02T01:41:16: - Network:       http://192.168.0.4:3000
+2026-03-02T01:41:16: 
+2026-03-02T01:41:16: ✓ Starting...
+2026-03-02T01:41:16: - Local:         http://localhost:3000
+2026-03-02T01:41:16: - Network:       http://192.168.0.4:3000
+2026-03-02T01:41:16: 
+2026-03-02T01:41:16: ✓ Starting...
+2026-03-02T01:41:16: - Local:         http://localhost:3000
+2026-03-02T01:41:16: - Network:       http://192.168.0.4:3000
+2026-03-02T01:41:16: 
+2026-03-02T01:41:16: ✓ Starting...
+2026-03-02T01:41:16: ✓ Ready in 251ms
+2026-03-02T01:41:16: ✓ Ready in 251ms
+2026-03-02T01:41:16: ✓ Oracle Thick mode initialized
+2026-03-02T01:41:16:   Library directory: /opt/oracle/instantclient
+2026-03-02T01:41:16: ✓ Oracle Thick mode initialized
+2026-03-02T01:41:16:   Library directory: /opt/oracle/instantclient
+2026-03-02T10:06:13: ▲ Next.js 16.1.6
+2026-03-02T10:06:13: ▲ Next.js 16.1.6
+2026-03-02T10:06:13: - Local:         http://localhost:3000
+2026-03-02T10:06:13: - Network:       http://192.168.0.4:3000
+2026-03-02T10:06:13: 
+2026-03-02T10:06:13: ✓ Starting...
+2026-03-02T10:06:13: - Local:         http://localhost:3000
+2026-03-02T10:06:13: - Network:       http://192.168.0.4:3000
+2026-03-02T10:06:13: 
+2026-03-02T10:06:13: ✓ Starting...
+2026-03-02T10:06:14: ▲ Next.js 16.1.6
+2026-03-02T10:06:14: - Local:         http://localhost:3000
+2026-03-02T10:06:14: - Network:       http://192.168.0.4:3000
+2026-03-02T10:06:14: 
+2026-03-02T10:06:14: ✓ Starting...
+2026-03-02T10:06:14: ▲ Next.js 16.1.6
+2026-03-02T10:06:14: - Local:         http://localhost:3000
+2026-03-02T10:06:14: - Network:       http://192.168.0.4:3000
+2026-03-02T10:06:14: 
+2026-03-02T10:06:14: ✓ Starting...
+2026-03-02T10:06:16: ✓ Ready in 4.5s
+2026-03-02T10:06:16: ✓ Ready in 3s
+2026-03-02T10:06:16: ✓ Ready in 3s
+2026-03-02T10:06:16: ✓ Ready in 4.5s
+2026-03-02T10:06:18: ✓ Oracle Thick mode initialized
+2026-03-02T10:06:18:   Library directory: /opt/oracle/instantclient
+2026-03-02T10:06:18: ✓ Oracle Thick mode initialized
+2026-03-02T10:06:18:   Library directory: /opt/oracle/instantclient
+2026-03-02T10:06:18: ✓ Oracle Thick mode initialized
+2026-03-02T10:06:18:   Library directory: /opt/oracle/instantclient
+2026-03-02T10:06:18: ✓ Oracle Thick mode initialized
+2026-03-02T10:06:18:   Library directory: /opt/oracle/instantclient
+2026-03-02T10:56:21: [Metrics API] Fetching from Oracle directly
+2026-03-02T10:56:22: [Metrics API] Oracle queries completed in 665ms (failures: none)
+2026-03-02T10:56:22: [Metrics API] Total response time: 665ms
+2026-03-02T10:56:22: [OS Stats] 조회 완료: {
+  cpu_usage: 2.62,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-02T10:56:52: [Metrics API] Fetching from Oracle directly
+2026-03-02T10:56:52: [Metrics API] Oracle queries completed in 444ms (failures: none)
+2026-03-02T10:56:52: [Metrics API] Total response time: 444ms
+2026-03-02T10:56:53: [OS Stats] 조회 완료: {
+  cpu_usage: 2.87,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-02T10:57:35: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T10:57:35: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T10:57:35: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T10:57:35: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T10:57:35: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T10:57:35: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-02T10:57:40: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T10:57:40: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T10:57:40: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T10:57:40: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T10:57:40: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T10:57:40: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-02T11:06:10: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T11:06:10: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T11:06:10: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T11:06:10: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T11:06:10: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T11:06:10: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-02T11:24:52: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T11:24:52: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T11:24:52: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T11:24:52: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T11:24:52: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T11:24:52: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-02T11:29:07: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T11:29:07: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T11:29:07: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T11:29:07: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T11:29:07: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T11:29:07: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-02T21:24:17: [SQL Monitor] Edition check: {
+  isEnterprise: true,
+  editionInfo: 'Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production'
+}
+2026-03-02T21:24:18: [SQL Monitor] License check: DIAGNOSTIC+TUNING
+2026-03-02T21:24:18: [SQL Monitor API] Executing query for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-02T21:24:18: [SQL Monitor API] Query filters - Status: all , Username: all
+2026-03-02T21:24:18: [SQL Monitor API] Query executed successfully, rows returned: 0
+2026-03-02T21:24:18: [SQL Monitor API] Found 0 SQL Monitor entries
+2026-03-03T00:33:25: [Metrics API] Fetching from Oracle directly
+2026-03-03T00:33:25: [Metrics API] Oracle queries completed in 569ms (failures: none)
+2026-03-03T00:33:25: [Metrics API] Total response time: 569ms
+2026-03-03T00:33:25: [OS Stats] 조회 완료: {
+  cpu_usage: 2.75,
+  memory_usage: 100,
+  io_mbps: 0.02,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-03T00:33:51: [Metrics API] Fetching from Oracle directly
+2026-03-03T00:33:57: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 96.13,
+  io_mbps: 39.48,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-03T00:34:01: [Metrics API] Oracle queries completed in 10074ms (failures: none)
+2026-03-03T00:34:01: [Metrics API] Total response time: 10074ms
+2026-03-03T00:34:11: [Performance History] AWR query returned 0 rows for date=2026-03-03
+2026-03-03T00:34:12: [Performance History] Fallback query failed: Error: ORA-00934: 그룹 함수는 허가되지 않습니다
+Help: https://docs.oracle.com/error-help/db/ora-00934/
+    at async S (.next/server/chunks/[root-of-the-server]__583b8673._.js:1:7651)
+    at async p (.next/server/chunks/_b02019cd._.js:103:15)
+    at async d (.next/server/chunks/_b02019cd._.js:164:4621)
+    at async l (.next/server/chunks/_b02019cd._.js:164:5662)
+    at async Module.T (.next/server/chunks/_b02019cd._.js:164:6740) {
+  errorNum: 934,
+  offset: 1673,
+  isRecoverable: false,
+  code: 'ORA-00934'
+}
+2026-03-03T00:34:13: [Performance History] AWR query returned 0 rows for date=2026-03-03
+2026-03-03T00:34:15: [Performance History] Fallback query failed: Error: ORA-00934: 그룹 함수는 허가되지 않습니다
+Help: https://docs.oracle.com/error-help/db/ora-00934/
+    at async S (.next/server/chunks/[root-of-the-server]__583b8673._.js:1:7651)
+    at async p (.next/server/chunks/_b02019cd._.js:103:15)
+    at async d (.next/server/chunks/_b02019cd._.js:164:4621)
+    at async l (.next/server/chunks/_b02019cd._.js:164:5662)
+    at async Module.T (.next/server/chunks/_b02019cd._.js:164:6740) {
+  errorNum: 934,
+  offset: 1673,
+  isRecoverable: false,
+  code: 'ORA-00934'
+}
+2026-03-03T00:34:20: [Performance History] AWR query returned 0 rows for date=2026-03-03
+2026-03-03T00:34:22: [Performance History] Fallback query failed: Error: ORA-00934: 그룹 함수는 허가되지 않습니다
+Help: https://docs.oracle.com/error-help/db/ora-00934/
+    at async S (.next/server/chunks/[root-of-the-server]__583b8673._.js:1:7651)
+    at async p (.next/server/chunks/_b02019cd._.js:103:15)
+    at async d (.next/server/chunks/_b02019cd._.js:164:4621)
+    at async l (.next/server/chunks/_b02019cd._.js:164:5662)
+    at async Module.T (.next/server/chunks/_b02019cd._.js:164:6740) {
+  errorNum: 934,
+  offset: 1673,
+  isRecoverable: false,
+  code: 'ORA-00934'
+}
+2026-03-03T00:34:22: [Performance Summary] Fallback query failed: Error: Query timeout after 10000ms
+    at Timeout.<anonymous> (.next/server/chunks/[root-of-the-server]__583b8673._.js:1:7462)
+2026-03-03T00:34:29: [Performance History] Found 41 records from AWR
+2026-03-03T00:34:33: [Performance History] Found 100 records from AWR
+2026-03-03T00:34:47: [Performance History] Found 100 records from AWR
+2026-03-03T00:34:48: [Performance History] Found 100 records from AWR
+2026-03-03T00:34:54: [Performance History] Found 100 records from AWR
+2026-03-03T00:35:00: [ASH API] Request: connectionId=f8aee7e1-7409-4834-acdb-c811e29e0f89, range=2026-03-02 23:35:00 ~ 2026-03-03 00:35:00, clientTz=+09:00
+2026-03-03T00:35:01: [ASH] DB server time: 2026-03-02 10:35:01 -05:00, serverTz: -05:00, clientTz: +09:00
+2026-03-03T00:35:01: [ASH] Time conversion: 2026-03-02 23:35:00 ~ 2026-03-03 00:35:00 (client) → 2026-03-02 09:35:00 ~ 2026-03-02 10:35:00 (DB local)
+2026-03-03T00:35:05: [ASH] V$ACTIVE_SESSION_HISTORY returned 5000 rows
+2026-03-03T00:35:16: [Metrics API] Fetching from Oracle directly
+2026-03-03T00:35:25: [Metrics API] Oracle queries completed in 8550ms (failures: none)
+2026-03-03T00:35:25: [Metrics API] Total response time: 8550ms
+2026-03-03T00:35:29: ▲ Next.js 16.1.6
+2026-03-03T00:35:29: ▲ Next.js 16.1.6
+2026-03-03T00:35:29: - Local:         http://localhost:3000
+2026-03-03T00:35:29: - Network:       http://192.168.0.4:3000
+2026-03-03T00:35:29: 
+2026-03-03T00:35:29: ✓ Starting...
+2026-03-03T00:35:29: - Local:         http://localhost:3000
+2026-03-03T00:35:29: - Network:       http://192.168.0.4:3000
+2026-03-03T00:35:29: 
+2026-03-03T00:35:29: ✓ Starting...
+2026-03-03T00:35:29: ✓ Ready in 326ms
+2026-03-03T00:35:30: ✓ Oracle Thick mode initialized
+2026-03-03T00:35:30:   Library directory: /opt/oracle/instantclient
+2026-03-03T15:27:36: ▲ Next.js 16.1.6
+2026-03-03T15:27:36: ▲ Next.js 16.1.6
+2026-03-03T15:27:36: - Local:         http://localhost:3000
+2026-03-03T15:27:36: - Network:       http://192.168.0.4:3000
+2026-03-03T15:27:36: 
+2026-03-03T15:27:36: ✓ Starting...
+2026-03-03T15:27:36: - Local:         http://localhost:3000
+2026-03-03T15:27:36: - Network:       http://192.168.0.4:3000
+2026-03-03T15:27:36: 
+2026-03-03T15:27:36: ✓ Starting...
+2026-03-03T15:27:36: ✓ Ready in 533ms
+2026-03-03T15:27:36: ✓ Ready in 534ms
+2026-03-03T15:27:37: ✓ Oracle Thick mode initialized
+2026-03-03T15:27:37:   Library directory: /opt/oracle/instantclient
+2026-03-03T15:27:37: ✓ Oracle Thick mode initialized
+2026-03-03T15:27:37:   Library directory: /opt/oracle/instantclient
+2026-03-03T15:27:37: ▲ Next.js 16.1.6
+2026-03-03T15:27:37: ▲ Next.js 16.1.6
+2026-03-03T15:27:37: - Local:         http://localhost:3000
+2026-03-03T15:27:37: - Network:       http://192.168.0.4:3000
+2026-03-03T15:27:37: 
+2026-03-03T15:27:37: ✓ Starting...
+2026-03-03T15:27:37: - Local:         http://localhost:3000
+2026-03-03T15:27:37: - Network:       http://192.168.0.4:3000
+2026-03-03T15:27:37: 
+2026-03-03T15:27:37: ✓ Starting...
+2026-03-03T15:27:38: ✓ Ready in 222ms
+2026-03-03T15:27:38: ✓ Ready in 223ms
+2026-03-03T15:27:38: ✓ Oracle Thick mode initialized
+2026-03-03T15:27:38:   Library directory: /opt/oracle/instantclient
+2026-03-03T15:27:38: ✓ Oracle Thick mode initialized
+2026-03-03T15:27:38:   Library directory: /opt/oracle/instantclient
+2026-03-04T08:27:11: ▲ Next.js 16.1.6
+2026-03-04T08:27:11: ▲ Next.js 16.1.6
+2026-03-04T08:27:11: - Local:         http://localhost:3000
+2026-03-04T08:27:11: 
+2026-03-04T08:27:11: ✓ Starting...
+2026-03-04T08:27:11: - Local:         http://localhost:3000
+2026-03-04T08:27:11: 
+2026-03-04T08:27:11: ✓ Starting...
+2026-03-04T08:27:11: ▲ Next.js 16.1.6
+2026-03-04T08:27:11: - Local:         http://localhost:3000
+2026-03-04T08:27:11: 
+2026-03-04T08:27:11: ✓ Starting...
+2026-03-04T08:27:11: ▲ Next.js 16.1.6
+2026-03-04T08:27:11: - Local:         http://localhost:3000
+2026-03-04T08:27:11: 
+2026-03-04T08:27:11: ✓ Starting...
+2026-03-04T08:27:13: ✓ Ready in 2s
+2026-03-04T08:27:13: ✓ Ready in 3.6s
+2026-03-04T08:27:13: ✓ Ready in 3.6s
+2026-03-04T08:27:13: ✓ Ready in 2s
+2026-03-04T08:27:17: ✓ Oracle Thick mode initialized
+2026-03-04T08:27:17:   Library directory: /opt/oracle/instantclient
+2026-03-04T08:27:17: ✓ Oracle Thick mode initialized
+2026-03-04T08:27:17:   Library directory: /opt/oracle/instantclient
+2026-03-04T08:27:17: ✓ Oracle Thick mode initialized
+2026-03-04T08:27:17:   Library directory: /opt/oracle/instantclient
+2026-03-04T08:27:17: ✓ Oracle Thick mode initialized
+2026-03-04T08:27:17:   Library directory: /opt/oracle/instantclient
+2026-03-04T09:08:39: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:08:45: [Metrics API] Oracle queries completed in 5295ms (failures: none)
+2026-03-04T09:08:45: [Metrics API] Total response time: 5295ms
+2026-03-04T09:08:47: [OS Stats] 조회 완료: {
+  cpu_usage: 15.96,
+  memory_usage: 100,
+  io_mbps: 0.02,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:08:49: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:08:49: [OS Stats] 조회 완료: {
+  cpu_usage: 10.69,
+  memory_usage: 96.11,
+  io_mbps: 0.05,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:08:49: [Metrics API] Oracle queries completed in 403ms (failures: none)
+2026-03-04T09:08:49: [Metrics API] Total response time: 403ms
+2026-03-04T09:09:19: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:09:19: [OS Stats] 조회 완료: {
+  cpu_usage: 10.69,
+  memory_usage: 96.03,
+  io_mbps: 0.05,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:09:19: [Metrics API] Oracle queries completed in 399ms (failures: none)
+2026-03-04T09:09:19: [Metrics API] Total response time: 399ms
+2026-03-04T09:09:49: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:09:49: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.02,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:09:50: [Metrics API] Oracle queries completed in 424ms (failures: none)
+2026-03-04T09:09:50: [Metrics API] Total response time: 424ms
+2026-03-04T09:10:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:10:20: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:10:20: [Metrics API] Oracle queries completed in 400ms (failures: none)
+2026-03-04T09:10:20: [Metrics API] Total response time: 400ms
+2026-03-04T09:10:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:10:50: [Metrics API] Oracle queries completed in 380ms (failures: none)
+2026-03-04T09:10:50: [Metrics API] Total response time: 380ms
+2026-03-04T09:10:50: [OS Stats] 조회 완료: {
+  cpu_usage: 10.9,
+  memory_usage: 96.08,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:11:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:11:20: [Metrics API] Oracle queries completed in 399ms (failures: none)
+2026-03-04T09:11:20: [Metrics API] Total response time: 399ms
+2026-03-04T09:11:20: [OS Stats] 조회 완료: {
+  cpu_usage: 10.9,
+  memory_usage: 96.04,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:11:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:11:50: [Metrics API] Oracle queries completed in 378ms (failures: none)
+2026-03-04T09:11:50: [Metrics API] Total response time: 378ms
+2026-03-04T09:11:51: [OS Stats] 조회 완료: {
+  cpu_usage: 10.86,
+  memory_usage: 96.03,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:12:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:12:20: [Metrics API] Oracle queries completed in 370ms (failures: none)
+2026-03-04T09:12:20: [Metrics API] Total response time: 370ms
+2026-03-04T09:12:21: [OS Stats] 조회 완료: {
+  cpu_usage: 10.86,
+  memory_usage: 96.03,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:12:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:12:50: [Metrics API] Oracle queries completed in 395ms (failures: none)
+2026-03-04T09:12:50: [Metrics API] Total response time: 395ms
+2026-03-04T09:12:51: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.04,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:13:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:13:20: [Metrics API] Oracle queries completed in 382ms (failures: none)
+2026-03-04T09:13:20: [Metrics API] Total response time: 382ms
+2026-03-04T09:13:21: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.02,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:13:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:13:50: [Metrics API] Oracle queries completed in 410ms (failures: none)
+2026-03-04T09:13:50: [Metrics API] Total response time: 410ms
+2026-03-04T09:13:52: [OS Stats] 조회 완료: {
+  cpu_usage: 10.88,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:14:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:14:20: [Metrics API] Oracle queries completed in 407ms (failures: none)
+2026-03-04T09:14:20: [Metrics API] Total response time: 407ms
+2026-03-04T09:14:22: [OS Stats] 조회 완료: {
+  cpu_usage: 10.88,
+  memory_usage: 96.03,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:14:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:14:50: [Metrics API] Oracle queries completed in 395ms (failures: none)
+2026-03-04T09:14:50: [Metrics API] Total response time: 395ms
+2026-03-04T09:14:52: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.07,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:15:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:15:20: [Metrics API] Oracle queries completed in 372ms (failures: none)
+2026-03-04T09:15:20: [Metrics API] Total response time: 372ms
+2026-03-04T09:15:22: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.12,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:15:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:15:50: [Metrics API] Oracle queries completed in 391ms (failures: none)
+2026-03-04T09:15:50: [Metrics API] Total response time: 391ms
+2026-03-04T09:15:53: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:16:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:16:20: [Metrics API] Oracle queries completed in 374ms (failures: none)
+2026-03-04T09:16:20: [Metrics API] Total response time: 374ms
+2026-03-04T09:16:23: [OS Stats] 조회 완료: {
+  cpu_usage: 10.89,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:16:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:16:50: [Metrics API] Oracle queries completed in 375ms (failures: none)
+2026-03-04T09:16:50: [Metrics API] Total response time: 375ms
+2026-03-04T09:16:53: [OS Stats] 조회 완료: {
+  cpu_usage: 10.85,
+  memory_usage: 96.03,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:17:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:17:21: [Metrics API] Oracle queries completed in 391ms (failures: none)
+2026-03-04T09:17:21: [Metrics API] Total response time: 391ms
+2026-03-04T09:17:23: [OS Stats] 조회 완료: {
+  cpu_usage: 10.85,
+  memory_usage: 96.05,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:17:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:17:51: [Metrics API] Oracle queries completed in 389ms (failures: none)
+2026-03-04T09:17:51: [Metrics API] Total response time: 389ms
+2026-03-04T09:17:54: [OS Stats] 조회 완료: {
+  cpu_usage: 10.88,
+  memory_usage: 96.04,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:18:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:18:21: [Metrics API] Oracle queries completed in 398ms (failures: none)
+2026-03-04T09:18:21: [Metrics API] Total response time: 398ms
+2026-03-04T09:18:24: [OS Stats] 조회 완료: {
+  cpu_usage: 10.88,
+  memory_usage: 96.05,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:18:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:18:51: [Metrics API] Oracle queries completed in 377ms (failures: none)
+2026-03-04T09:18:51: [Metrics API] Total response time: 377ms
+2026-03-04T09:18:54: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.03,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:19:19: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:19:19: [Metrics API] Oracle queries completed in 826ms (failures: none)
+2026-03-04T09:19:19: [Metrics API] Total response time: 826ms
+2026-03-04T09:19:20: [OS Stats] 조회 완료: {
+  cpu_usage: 61.92,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:19:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:19:21: [Metrics API] Oracle queries completed in 441ms (failures: none)
+2026-03-04T09:19:21: [Metrics API] Total response time: 441ms
+2026-03-04T09:19:24: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:19:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:19:51: [Metrics API] Oracle queries completed in 373ms (failures: none)
+2026-03-04T09:19:51: [Metrics API] Total response time: 373ms
+2026-03-04T09:19:55: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.04,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:20:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:20:21: [Metrics API] Oracle queries completed in 390ms (failures: none)
+2026-03-04T09:20:21: [Metrics API] Total response time: 390ms
+2026-03-04T09:20:25: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.04,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:20:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:20:51: [Metrics API] Oracle queries completed in 402ms (failures: none)
+2026-03-04T09:20:51: [Metrics API] Total response time: 402ms
+2026-03-04T09:20:55: [OS Stats] 조회 완료: {
+  cpu_usage: 10.86,
+  memory_usage: 96.05,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:21:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:21:21: [Metrics API] Oracle queries completed in 370ms (failures: none)
+2026-03-04T09:21:21: [Metrics API] Total response time: 370ms
+2026-03-04T09:21:26: [OS Stats] 조회 완료: {
+  cpu_usage: 10.86,
+  memory_usage: 96.04,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:21:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:21:51: [Metrics API] Oracle queries completed in 359ms (failures: none)
+2026-03-04T09:21:51: [Metrics API] Total response time: 359ms
+2026-03-04T09:21:56: [OS Stats] 조회 완료: {
+  cpu_usage: 10.9,
+  memory_usage: 96.05,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:22:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:22:21: [Metrics API] Oracle queries completed in 389ms (failures: none)
+2026-03-04T09:22:21: [Metrics API] Total response time: 389ms
+2026-03-04T09:22:26: [OS Stats] 조회 완료: {
+  cpu_usage: 10.9,
+  memory_usage: 96.05,
+  io_mbps: 0.12,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:22:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:22:52: [Metrics API] Oracle queries completed in 424ms (failures: none)
+2026-03-04T09:22:52: [Metrics API] Total response time: 424ms
+2026-03-04T09:22:56: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.52,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:23:22: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:23:22: [Metrics API] Oracle queries completed in 379ms (failures: none)
+2026-03-04T09:23:22: [Metrics API] Total response time: 379ms
+2026-03-04T09:23:27: [OS Stats] 조회 완료: {
+  cpu_usage: 10.87,
+  memory_usage: 96.51,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:23:52: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:23:52: [Metrics API] Oracle queries completed in 379ms (failures: none)
+2026-03-04T09:23:52: [Metrics API] Total response time: 379ms
+2026-03-04T09:23:57: [OS Stats] 조회 완료: {
+  cpu_usage: 10.93,
+  memory_usage: 96.5,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:24:22: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:24:22: [Metrics API] Oracle queries completed in 398ms (failures: none)
+2026-03-04T09:24:22: [Metrics API] Total response time: 398ms
+2026-03-04T09:24:27: [OS Stats] 조회 완료: {
+  cpu_usage: 10.93,
+  memory_usage: 96.52,
+  io_mbps: 0.1,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:24:52: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:24:55: [Metrics API] Oracle queries completed in 3093ms (failures: none)
+2026-03-04T09:24:55: [Metrics API] Total response time: 3093ms
+2026-03-04T09:24:58: [OS Stats] 조회 완료: {
+  cpu_usage: 16.02,
+  memory_usage: 89.95,
+  io_mbps: 107.63,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:25:25: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:25:28: [Metrics API] Oracle queries completed in 3159ms (failures: none)
+2026-03-04T09:25:28: [Metrics API] Total response time: 3159ms
+2026-03-04T09:25:30: [OS Stats] 조회 완료: {
+  cpu_usage: 16.02,
+  memory_usage: 86.44,
+  io_mbps: 107.63,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:25:55: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:25:58: [Metrics API] Oracle queries completed in 3446ms (failures: none)
+2026-03-04T09:25:58: [Metrics API] Total response time: 3446ms
+2026-03-04T09:26:01: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 84.1,
+  io_mbps: 190.93,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:26:25: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:26:28: [Metrics API] Oracle queries completed in 3616ms (failures: none)
+2026-03-04T09:26:28: [Metrics API] Total response time: 3616ms
+2026-03-04T09:26:32: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 82.78,
+  io_mbps: 190.93,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:26:55: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:26:58: [Metrics API] Oracle queries completed in 3045ms (failures: none)
+2026-03-04T09:26:58: [Metrics API] Total response time: 3045ms
+2026-03-04T09:27:04: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 81.97,
+  io_mbps: 21.28,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:27:25: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:27:28: [Metrics API] Oracle queries completed in 3234ms (failures: none)
+2026-03-04T09:27:28: [Metrics API] Total response time: 3234ms
+2026-03-04T09:27:35: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 81.29,
+  io_mbps: 21.28,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:27:55: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:27:57: [Metrics API] Oracle queries completed in 2632ms (failures: none)
+2026-03-04T09:27:57: [Metrics API] Total response time: 2632ms
+2026-03-04T09:28:02: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:28:11: [OS Stats] 조회 완료: {
+  cpu_usage: 86.99,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T09:28:15: [Metrics API] Oracle queries completed in 12922ms (failures: none)
+2026-03-04T09:28:15: [Metrics API] Total response time: 12922ms
+2026-03-04T09:28:32: [Realtime Monitoring API] connection_id: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-04T09:28:32: [Pattern Detection API] connection_id: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-04T09:28:32: [Refactoring Suggestions API] connection_id: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-04T09:28:35: [Refactoring Suggestions API] Found 0 suggestions
+2026-03-04T09:28:36: [Realtime Monitoring API] Found 1 active SQLs
+2026-03-04T09:28:37: [Pattern Detection API] Found 1 issues
+2026-03-04T09:28:45: [sql-grades] Edition: Enterprise, isEnterprise: true, timeRange: false, limit: 100
+2026-03-04T09:28:47: [clusters/analyze] Edition: Enterprise, isEnterprise: true, minutes: 60
+2026-03-04T09:28:53: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:29:00: [Metrics API] Oracle queries completed in 7362ms (failures: none)
+2026-03-04T09:29:00: [Metrics API] Total response time: 7362ms
+2026-03-04T09:29:10: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:29:10: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T09:29:10: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T09:29:11: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T09:29:11: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T09:29:11: [OS Stats] 조회 완료: {
+  cpu_usage: 12.87,
+  memory_usage: 99.05,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T09:29:12: [Performance Trend] V$SQL bucket query returned 19 rows
+2026-03-04T09:29:12: [Metrics API] Oracle queries completed in 2337ms (failures: none)
+2026-03-04T09:29:12: [Metrics API] Total response time: 2337ms
+2026-03-04T09:29:42: [Metrics API] Fetching from Oracle directly
+2026-03-04T09:29:42: [OS Stats] 조회 완료: {
+  cpu_usage: 12.87,
+  memory_usage: 95.94,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T09:29:44: [Metrics API] Oracle queries completed in 1951ms (failures: none)
+2026-03-04T09:29:44: [Metrics API] Total response time: 1951ms
+2026-03-04T09:30:45: [LLM Stream] Request received
+2026-03-04T09:30:45: [LLM Stream] Body parsed successfully, keys: [
+  'sql_text',
+  'context',
+  'language',
+  '_timestamp',
+  'execution_plan',
+  'metrics'
+]
+2026-03-04T09:30:45: [LLM Stream] Auth check: OK
+2026-03-04T09:30:45: [LLM Stream] Feature enabled: true
+2026-03-04T09:30:45: [LLM Stream] Validation: true []
+2026-03-04T09:30:45: [LLM Stream] Starting stream, messages: 2
+2026-03-04T09:30:45: [LLM Stream] LLM client created, starting chat...
+2026-03-04T09:31:04: [LLM Stream] First chunk received in 18886 ms
+2026-03-04T09:31:15: [LLM Stream] Completed in 29953 ms, chunks: 612
+2026-03-04T09:31:15: [LLM Stop] Request received
+2026-03-04T09:31:15: [LLM Stop] Sending unload request to Ollama: http://localhost:11434/api/generate model: qwen3:8b
+2026-03-04T09:31:15: [LLM Stop] Ollama response: 200 {"model":"qwen3:8b","created_at":"2026-03-04T00:31:15.240066Z","response":"","done":true,"done_reason":"unload"}
+2026-03-04T09:31:15: [LLM Stop] Model unload request sent successfully
+2026-03-04T11:09:15: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:09:24: [Metrics API] Oracle queries completed in 8586ms (failures: none)
+2026-03-04T11:09:24: [Metrics API] Total response time: 8586ms
+2026-03-04T11:09:27: [OS Stats] 조회 완료: {
+  cpu_usage: 22.78,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T11:09:48: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:09:50: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 79.52,
+  io_mbps: 1.52,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T11:09:52: [Metrics API] Oracle queries completed in 3442ms (failures: none)
+2026-03-04T11:09:52: [Metrics API] Total response time: 3442ms
+2026-03-04T11:10:21: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 78.92,
+  io_mbps: 1.52,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T11:10:22: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:10:24: [Metrics API] Oracle queries completed in 2317ms (failures: none)
+2026-03-04T11:10:24: [Metrics API] Total response time: 2317ms
+2026-03-04T11:12:13: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:12:16: [Metrics API] Oracle queries completed in 3157ms (failures: none)
+2026-03-04T11:12:16: [Metrics API] Total response time: 3157ms
+2026-03-04T11:13:23: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:13:25: [Metrics API] Oracle queries completed in 2631ms (failures: none)
+2026-03-04T11:13:25: [Metrics API] Total response time: 2631ms
+2026-03-04T11:13:29: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:13:29: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:13:30: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:13:30: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:13:30: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:13:31: [OS Stats] 조회 완료: {
+  cpu_usage: 13.23,
+  memory_usage: 93.91,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:13:31: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T11:13:31: [Metrics API] Oracle queries completed in 2146ms (failures: none)
+2026-03-04T11:13:31: [Metrics API] Total response time: 2146ms
+2026-03-04T11:14:24: [sql-statistics] Standard Edition: V$SQL 직접 사용
+2026-03-04T11:14:24: [sql-statistics] V$SQL 폴백 시간 범위 쿼리: {
+  startTime: '2026-03-04 11:13:00',
+  endTime: '2026-03-04 11:14:00',
+  limit: 100,
+  orderBy: 'elapsed_time_ms'
+}
+2026-03-04T11:14:25: [sql-statistics] V$SQL 폴백 쿼리 결과: { rowCount: 7 }
+2026-03-04T11:14:31: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:14:32: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:14:32: [OS Stats] 조회 완료: {
+  cpu_usage: 13.23,
+  memory_usage: 94.24,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:14:32: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:14:32: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:14:32: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:14:33: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T11:14:34: [Metrics API] Oracle queries completed in 2224ms (failures: none)
+2026-03-04T11:14:34: [Metrics API] Total response time: 2224ms
+2026-03-04T11:15:03: [OS Stats] 조회 완료: {
+  cpu_usage: 13.24,
+  memory_usage: 94.31,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:15:04: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:15:06: [Metrics API] Oracle queries completed in 2015ms (failures: none)
+2026-03-04T11:15:06: [Metrics API] Total response time: 2015ms
+2026-03-04T11:15:33: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:15:33: [OS Stats] 조회 완료: {
+  cpu_usage: 13.24,
+  memory_usage: 94.29,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:15:34: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:15:34: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:15:34: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:15:34: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:15:35: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T11:15:36: [Metrics API] Oracle queries completed in 2126ms (failures: none)
+2026-03-04T11:15:36: [Metrics API] Total response time: 2126ms
+2026-03-04T11:16:04: [OS Stats] 조회 완료: {
+  cpu_usage: 13.24,
+  memory_usage: 94.8,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:16:06: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:16:08: [Metrics API] Oracle queries completed in 2409ms (failures: none)
+2026-03-04T11:16:08: [Metrics API] Total response time: 2409ms
+2026-03-04T11:16:35: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:16:35: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:16:36: [OS Stats] 조회 완료: {
+  cpu_usage: 13.24,
+  memory_usage: 91.13,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:16:36: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:16:36: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:16:36: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:16:37: [Performance Trend] V$SQL bucket query returned 20 rows
+2026-03-04T11:16:38: [Metrics API] Oracle queries completed in 2176ms (failures: none)
+2026-03-04T11:16:38: [Metrics API] Total response time: 2176ms
+2026-03-04T11:17:06: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:17:07: [OS Stats] 조회 완료: {
+  cpu_usage: 13.24,
+  memory_usage: 94.69,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:17:08: [Metrics API] Oracle queries completed in 2005ms (failures: none)
+2026-03-04T11:17:08: [Metrics API] Total response time: 2005ms
+2026-03-04T11:17:36: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:17:37: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:17:37: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:17:38: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:17:38: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:17:38: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.49,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:17:38: [Metrics API] Oracle queries completed in 2006ms (failures: none)
+2026-03-04T11:17:38: [Metrics API] Total response time: 2006ms
+2026-03-04T11:17:39: [Performance Trend] V$SQL bucket query returned 19 rows
+2026-03-04T11:18:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:18:09: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.3,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:18:10: [Metrics API] Oracle queries completed in 2039ms (failures: none)
+2026-03-04T11:18:10: [Metrics API] Total response time: 2039ms
+2026-03-04T11:18:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:18:39: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:18:39: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:18:39: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:18:39: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:18:40: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.08,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:18:40: [Metrics API] Oracle queries completed in 2200ms (failures: none)
+2026-03-04T11:18:40: [Metrics API] Total response time: 2200ms
+2026-03-04T11:18:41: [Performance Trend] V$SQL bucket query returned 20 rows
+2026-03-04T11:19:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:19:10: [Metrics API] Oracle queries completed in 2300ms (failures: none)
+2026-03-04T11:19:10: [Metrics API] Total response time: 2300ms
+2026-03-04T11:19:11: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.68,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:19:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:19:41: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:19:42: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:19:42: [Metrics API] Oracle queries completed in 3551ms (failures: none)
+2026-03-04T11:19:42: [Metrics API] Total response time: 3551ms
+2026-03-04T11:19:42: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:19:42: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:19:42: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.43,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:19:43: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T11:20:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:20:10: [Metrics API] Oracle queries completed in 1953ms (failures: none)
+2026-03-04T11:20:10: [Metrics API] Total response time: 1953ms
+2026-03-04T11:20:13: [OS Stats] 조회 완료: {
+  cpu_usage: 13.25,
+  memory_usage: 94.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:20:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:20:40: [Metrics API] Oracle queries completed in 2180ms (failures: none)
+2026-03-04T11:20:40: [Metrics API] Total response time: 2180ms
+2026-03-04T11:20:43: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:20:43: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:20:43: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:20:43: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:20:44: [OS Stats] 조회 완료: {
+  cpu_usage: 13.26,
+  memory_usage: 91.24,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:20:44: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T11:21:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:21:10: [Metrics API] Oracle queries completed in 1770ms (failures: none)
+2026-03-04T11:21:10: [Metrics API] Total response time: 1770ms
+2026-03-04T11:21:15: [OS Stats] 조회 완료: {
+  cpu_usage: 13.26,
+  memory_usage: 94.84,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:21:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:21:40: [Metrics API] Oracle queries completed in 2211ms (failures: none)
+2026-03-04T11:21:40: [Metrics API] Total response time: 2211ms
+2026-03-04T11:21:44: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:21:45: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:21:45: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:21:45: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:21:46: [OS Stats] 조회 완료: {
+  cpu_usage: 13.26,
+  memory_usage: 95.39,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:21:46: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T11:22:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:22:11: [Metrics API] Oracle queries completed in 2336ms (failures: none)
+2026-03-04T11:22:11: [Metrics API] Total response time: 2336ms
+2026-03-04T11:22:16: [OS Stats] 조회 완료: {
+  cpu_usage: 13.26,
+  memory_usage: 95.98,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:22:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:22:41: [Metrics API] Oracle queries completed in 3106ms (failures: none)
+2026-03-04T11:22:41: [Metrics API] Total response time: 3106ms
+2026-03-04T11:22:46: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:22:46: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:22:46: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:22:46: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:22:47: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T11:22:48: [OS Stats] 조회 완료: {
+  cpu_usage: 13.26,
+  memory_usage: 96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:23:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:23:10: [Metrics API] Oracle queries completed in 1919ms (failures: none)
+2026-03-04T11:23:10: [Metrics API] Total response time: 1919ms
+2026-03-04T11:23:19: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 96.21,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:23:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:23:40: [Metrics API] Oracle queries completed in 1848ms (failures: none)
+2026-03-04T11:23:40: [Metrics API] Total response time: 1848ms
+2026-03-04T11:23:47: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:23:48: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:23:48: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:23:48: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:23:49: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T11:23:50: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 95.47,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:24:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:24:10: [Metrics API] Oracle queries completed in 2206ms (failures: none)
+2026-03-04T11:24:10: [Metrics API] Total response time: 2206ms
+2026-03-04T11:24:21: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 95.93,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:24:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:24:40: [Metrics API] Oracle queries completed in 1771ms (failures: none)
+2026-03-04T11:24:40: [Metrics API] Total response time: 1771ms
+2026-03-04T11:24:49: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:24:49: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:24:49: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:24:49: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:24:50: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:24:52: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 97.1,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:25:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:25:10: [Metrics API] Oracle queries completed in 1789ms (failures: none)
+2026-03-04T11:25:10: [Metrics API] Total response time: 1789ms
+2026-03-04T11:25:23: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 95.56,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:25:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:25:40: [Metrics API] Oracle queries completed in 2180ms (failures: none)
+2026-03-04T11:25:40: [Metrics API] Total response time: 2180ms
+2026-03-04T11:25:50: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:25:51: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:25:51: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:25:51: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:25:52: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:25:53: [OS Stats] 조회 완료: {
+  cpu_usage: 13.27,
+  memory_usage: 95.58,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:26:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:26:13: [Metrics API] Oracle queries completed in 1984ms (failures: none)
+2026-03-04T11:26:13: [Metrics API] Total response time: 1984ms
+2026-03-04T11:26:24: [OS Stats] 조회 완료: {
+  cpu_usage: 13.28,
+  memory_usage: 95.64,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:26:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:26:42: [Metrics API] Oracle queries completed in 1789ms (failures: none)
+2026-03-04T11:26:42: [Metrics API] Total response time: 1789ms
+2026-03-04T11:26:52: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:26:52: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:26:53: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:26:53: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:26:53: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T11:26:55: [OS Stats] 조회 완료: {
+  cpu_usage: 13.28,
+  memory_usage: 95.86,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:27:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:27:12: [Metrics API] Oracle queries completed in 1811ms (failures: none)
+2026-03-04T11:27:12: [Metrics API] Total response time: 1811ms
+2026-03-04T11:27:26: [OS Stats] 조회 완료: {
+  cpu_usage: 13.28,
+  memory_usage: 95.92,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:27:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:27:46: [Metrics API] Oracle queries completed in 5334ms (failures: none)
+2026-03-04T11:27:46: [Metrics API] Total response time: 5334ms
+2026-03-04T11:27:53: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:27:54: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:27:54: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:27:54: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:27:55: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T11:27:57: [OS Stats] 조회 완료: {
+  cpu_usage: 13.28,
+  memory_usage: 95.9,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:28:16: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:28:19: [Metrics API] Oracle queries completed in 3453ms (failures: none)
+2026-03-04T11:28:19: [Metrics API] Total response time: 3453ms
+2026-03-04T11:28:28: [OS Stats] 조회 완료: {
+  cpu_usage: 13.28,
+  memory_usage: 95.91,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:28:46: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:28:48: [Metrics API] Oracle queries completed in 1889ms (failures: none)
+2026-03-04T11:28:48: [Metrics API] Total response time: 1889ms
+2026-03-04T11:28:55: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:28:55: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:28:55: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:28:55: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:28:56: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T11:28:59: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 95.94,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:29:16: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:29:19: [Metrics API] Oracle queries completed in 3470ms (failures: none)
+2026-03-04T11:29:19: [Metrics API] Total response time: 3470ms
+2026-03-04T11:29:30: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 95.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:29:46: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:29:48: [Metrics API] Oracle queries completed in 2007ms (failures: none)
+2026-03-04T11:29:48: [Metrics API] Total response time: 2007ms
+2026-03-04T11:29:56: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:29:57: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:29:57: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:29:57: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:29:58: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:30:01: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 95.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:30:18: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:30:20: [Metrics API] Oracle queries completed in 1852ms (failures: none)
+2026-03-04T11:30:20: [Metrics API] Total response time: 1852ms
+2026-03-04T11:30:32: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 96.03,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:30:48: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:30:50: [Metrics API] Oracle queries completed in 2174ms (failures: none)
+2026-03-04T11:30:50: [Metrics API] Total response time: 2174ms
+2026-03-04T11:30:58: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:30:58: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:30:58: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:30:58: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:30:59: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T11:31:03: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 96.09,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:31:18: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:31:20: [Metrics API] Oracle queries completed in 2195ms (failures: none)
+2026-03-04T11:31:20: [Metrics API] Total response time: 2195ms
+2026-03-04T11:31:34: [OS Stats] 조회 완료: {
+  cpu_usage: 13.29,
+  memory_usage: 96.14,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:31:48: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:31:50: [Metrics API] Oracle queries completed in 1913ms (failures: none)
+2026-03-04T11:31:50: [Metrics API] Total response time: 1913ms
+2026-03-04T11:31:59: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:32:00: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:32:00: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:32:00: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:32:01: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T11:32:05: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 96.18,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:32:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:32:22: [Metrics API] Oracle queries completed in 1741ms (failures: none)
+2026-03-04T11:32:22: [Metrics API] Total response time: 1741ms
+2026-03-04T11:32:36: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 96.1,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:32:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:32:52: [Metrics API] Oracle queries completed in 2235ms (failures: none)
+2026-03-04T11:32:52: [Metrics API] Total response time: 2235ms
+2026-03-04T11:33:01: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:33:01: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:33:01: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:33:01: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:33:03: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T11:33:07: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 95.3,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:33:20: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:33:25: [Metrics API] Oracle queries completed in 5335ms (failures: none)
+2026-03-04T11:33:25: [Metrics API] Total response time: 5335ms
+2026-03-04T11:33:38: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 95.32,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:33:50: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:33:52: [Metrics API] Oracle queries completed in 1886ms (failures: none)
+2026-03-04T11:33:52: [Metrics API] Total response time: 1886ms
+2026-03-04T11:34:03: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:34:03: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:34:03: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:34:03: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:34:04: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:34:09: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 95.37,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:34:22: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:34:24: [Metrics API] Oracle queries completed in 1932ms (failures: none)
+2026-03-04T11:34:24: [Metrics API] Total response time: 1932ms
+2026-03-04T11:34:40: [OS Stats] 조회 완료: {
+  cpu_usage: 13.3,
+  memory_usage: 95.8,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:34:52: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:34:54: [Metrics API] Oracle queries completed in 2478ms (failures: none)
+2026-03-04T11:34:54: [Metrics API] Total response time: 2478ms
+2026-03-04T11:35:04: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:35:04: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:35:05: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:35:05: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:35:06: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T11:35:10: [OS Stats] 조회 완료: {
+  cpu_usage: 13.31,
+  memory_usage: 95.84,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:35:22: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:35:26: [Metrics API] Oracle queries completed in 3774ms (failures: none)
+2026-03-04T11:35:26: [Metrics API] Total response time: 3774ms
+2026-03-04T11:35:41: [OS Stats] 조회 완료: {
+  cpu_usage: 13.31,
+  memory_usage: 95.84,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:35:52: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:35:54: [Metrics API] Oracle queries completed in 1694ms (failures: none)
+2026-03-04T11:35:54: [Metrics API] Total response time: 1694ms
+2026-03-04T11:36:06: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:36:06: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:36:06: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:36:06: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:36:07: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:36:13: [OS Stats] 조회 완료: {
+  cpu_usage: 13.31,
+  memory_usage: 95.96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:36:24: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:36:26: [Metrics API] Oracle queries completed in 1946ms (failures: none)
+2026-03-04T11:36:26: [Metrics API] Total response time: 1946ms
+2026-03-04T11:36:44: [OS Stats] 조회 완료: {
+  cpu_usage: 13.31,
+  memory_usage: 95.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:36:54: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:36:56: [Metrics API] Oracle queries completed in 2369ms (failures: none)
+2026-03-04T11:36:56: [Metrics API] Total response time: 2369ms
+2026-03-04T11:37:07: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:37:08: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:37:08: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:37:08: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:37:09: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:37:14: [OS Stats] 조회 완료: {
+  cpu_usage: 13.31,
+  memory_usage: 95.96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:37:24: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:37:26: [Metrics API] Oracle queries completed in 2588ms (failures: none)
+2026-03-04T11:37:26: [Metrics API] Total response time: 2588ms
+2026-03-04T11:37:45: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 95.96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:37:54: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:37:57: [Metrics API] Oracle queries completed in 3626ms (failures: none)
+2026-03-04T11:37:57: [Metrics API] Total response time: 3626ms
+2026-03-04T11:38:09: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:38:09: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:38:10: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:38:10: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:38:10: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:38:16: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 95.97,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:38:24: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:38:26: [Metrics API] Oracle queries completed in 2095ms (failures: none)
+2026-03-04T11:38:26: [Metrics API] Total response time: 2095ms
+2026-03-04T11:38:47: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:38:54: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:38:56: [Metrics API] Oracle queries completed in 1828ms (failures: none)
+2026-03-04T11:38:56: [Metrics API] Total response time: 1828ms
+2026-03-04T11:39:10: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:39:11: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:39:11: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:39:11: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:39:12: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:39:18: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 95.93,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:39:26: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:39:28: [Metrics API] Oracle queries completed in 2059ms (failures: none)
+2026-03-04T11:39:28: [Metrics API] Total response time: 2059ms
+2026-03-04T11:39:49: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 95.8,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:39:56: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:39:59: [Metrics API] Oracle queries completed in 3054ms (failures: none)
+2026-03-04T11:39:59: [Metrics API] Total response time: 3054ms
+2026-03-04T11:40:12: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:40:12: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:40:12: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:40:12: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:40:13: [Performance Trend] V$SQL bucket query returned 27 rows
+2026-03-04T11:40:20: [OS Stats] 조회 완료: {
+  cpu_usage: 13.32,
+  memory_usage: 95.65,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:40:26: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:40:28: [Metrics API] Oracle queries completed in 2047ms (failures: none)
+2026-03-04T11:40:28: [Metrics API] Total response time: 2047ms
+2026-03-04T11:40:51: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 95.55,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:40:56: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:40:57: [Metrics API] Oracle queries completed in 1705ms (failures: none)
+2026-03-04T11:40:57: [Metrics API] Total response time: 1705ms
+2026-03-04T11:41:14: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:41:14: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:41:14: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:41:14: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:41:15: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:41:22: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 95.53,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:41:26: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:41:28: [Metrics API] Oracle queries completed in 2151ms (failures: none)
+2026-03-04T11:41:28: [Metrics API] Total response time: 2151ms
+2026-03-04T11:41:52: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 95.22,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:41:56: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:41:58: [Metrics API] Oracle queries completed in 2130ms (failures: none)
+2026-03-04T11:41:58: [Metrics API] Total response time: 2130ms
+2026-03-04T11:42:15: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:42:15: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:42:16: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:42:16: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:42:16: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:42:23: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 94.85,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:42:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:42:30: [Metrics API] Oracle queries completed in 1933ms (failures: none)
+2026-03-04T11:42:30: [Metrics API] Total response time: 1933ms
+2026-03-04T11:42:54: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 94.51,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:42:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:43:00: [Metrics API] Oracle queries completed in 1805ms (failures: none)
+2026-03-04T11:43:00: [Metrics API] Total response time: 1805ms
+2026-03-04T11:43:16: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:43:17: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:43:17: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:43:17: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:43:18: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:43:25: [OS Stats] 조회 완료: {
+  cpu_usage: 13.33,
+  memory_usage: 94.28,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:43:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:43:30: [Metrics API] Oracle queries completed in 1972ms (failures: none)
+2026-03-04T11:43:30: [Metrics API] Total response time: 1972ms
+2026-03-04T11:43:56: [OS Stats] 조회 완료: {
+  cpu_usage: 13.34,
+  memory_usage: 94.47,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:43:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:44:00: [Metrics API] Oracle queries completed in 2014ms (failures: none)
+2026-03-04T11:44:00: [Metrics API] Total response time: 2014ms
+2026-03-04T11:44:18: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:44:19: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:44:19: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:44:19: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:44:20: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:44:27: [OS Stats] 조회 완료: {
+  cpu_usage: 13.34,
+  memory_usage: 94.28,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:44:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:44:30: [Metrics API] Oracle queries completed in 2157ms (failures: none)
+2026-03-04T11:44:30: [Metrics API] Total response time: 2157ms
+2026-03-04T11:44:58: [OS Stats] 조회 완료: {
+  cpu_usage: 13.34,
+  memory_usage: 94.22,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:44:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:45:00: [Metrics API] Oracle queries completed in 2012ms (failures: none)
+2026-03-04T11:45:00: [Metrics API] Total response time: 2012ms
+2026-03-04T11:45:20: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:45:20: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:45:20: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:45:20: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:45:21: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:45:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:45:29: [OS Stats] 조회 완료: {
+  cpu_usage: 13.34,
+  memory_usage: 94.09,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:45:30: [Metrics API] Oracle queries completed in 2293ms (failures: none)
+2026-03-04T11:45:30: [Metrics API] Total response time: 2293ms
+2026-03-04T11:45:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:46:00: [OS Stats] 조회 완료: {
+  cpu_usage: 13.34,
+  memory_usage: 93.91,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:46:00: [Metrics API] Oracle queries completed in 2180ms (failures: none)
+2026-03-04T11:46:00: [Metrics API] Total response time: 2180ms
+2026-03-04T11:46:21: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:46:22: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:46:22: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:46:22: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:46:23: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:46:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:46:30: [Metrics API] Oracle queries completed in 2312ms (failures: none)
+2026-03-04T11:46:30: [Metrics API] Total response time: 2312ms
+2026-03-04T11:46:31: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 93.4,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:46:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:47:00: [Metrics API] Oracle queries completed in 2187ms (failures: none)
+2026-03-04T11:47:00: [Metrics API] Total response time: 2187ms
+2026-03-04T11:47:02: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 93.51,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:47:23: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:47:23: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:47:23: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:47:23: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:47:24: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:47:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:47:31: [Metrics API] Oracle queries completed in 2905ms (failures: none)
+2026-03-04T11:47:31: [Metrics API] Total response time: 2905ms
+2026-03-04T11:47:33: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 93.3,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:47:58: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:48:03: [Metrics API] Oracle queries completed in 4416ms (failures: none)
+2026-03-04T11:48:03: [Metrics API] Total response time: 4416ms
+2026-03-04T11:48:04: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 92.89,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:48:25: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:48:25: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:48:25: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:48:25: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:48:26: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:48:28: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:48:30: [Metrics API] Oracle queries completed in 1995ms (failures: none)
+2026-03-04T11:48:30: [Metrics API] Total response time: 1995ms
+2026-03-04T11:48:35: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 92.87,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:49:00: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:49:02: [Metrics API] Oracle queries completed in 2182ms (failures: none)
+2026-03-04T11:49:02: [Metrics API] Total response time: 2182ms
+2026-03-04T11:49:06: [OS Stats] 조회 완료: {
+  cpu_usage: 13.35,
+  memory_usage: 92.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:49:26: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:49:26: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:49:27: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:49:27: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:49:28: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:49:30: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:49:32: [Metrics API] Oracle queries completed in 1956ms (failures: none)
+2026-03-04T11:49:32: [Metrics API] Total response time: 1956ms
+2026-03-04T11:49:37: [OS Stats] 조회 완료: {
+  cpu_usage: 13.36,
+  memory_usage: 92.78,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:50:00: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:50:02: [Metrics API] Oracle queries completed in 1884ms (failures: none)
+2026-03-04T11:50:02: [Metrics API] Total response time: 1884ms
+2026-03-04T11:50:07: [OS Stats] 조회 완료: {
+  cpu_usage: 13.36,
+  memory_usage: 92.56,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:50:28: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:50:28: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:50:28: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:50:28: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:50:29: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:50:32: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:50:34: [Metrics API] Oracle queries completed in 1669ms (failures: none)
+2026-03-04T11:50:34: [Metrics API] Total response time: 1669ms
+2026-03-04T11:50:38: [OS Stats] 조회 완료: {
+  cpu_usage: 13.36,
+  memory_usage: 92.52,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:51:02: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:51:04: [Metrics API] Oracle queries completed in 2085ms (failures: none)
+2026-03-04T11:51:04: [Metrics API] Total response time: 2085ms
+2026-03-04T11:51:09: [OS Stats] 조회 완료: {
+  cpu_usage: 13.36,
+  memory_usage: 92.55,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:51:29: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:51:30: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:51:30: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:51:30: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:51:30: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:51:32: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:51:34: [Metrics API] Oracle queries completed in 2032ms (failures: none)
+2026-03-04T11:51:34: [Metrics API] Total response time: 2032ms
+2026-03-04T11:51:40: [OS Stats] 조회 완료: {
+  cpu_usage: 13.36,
+  memory_usage: 92.5,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:52:02: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:52:04: [Metrics API] Oracle queries completed in 1783ms (failures: none)
+2026-03-04T11:52:04: [Metrics API] Total response time: 1783ms
+2026-03-04T11:52:11: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 92.23,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:52:31: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:52:31: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:52:31: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:52:31: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:52:32: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:52:34: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:52:36: [Metrics API] Oracle queries completed in 1735ms (failures: none)
+2026-03-04T11:52:36: [Metrics API] Total response time: 1735ms
+2026-03-04T11:52:42: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 92.18,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:53:04: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:53:06: [Metrics API] Oracle queries completed in 1969ms (failures: none)
+2026-03-04T11:53:06: [Metrics API] Total response time: 1969ms
+2026-03-04T11:53:13: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 93.08,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:53:32: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:53:32: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:53:33: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:53:33: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:53:34: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:53:43: [Metrics API] Oracle queries completed in 8995ms (failures: none)
+2026-03-04T11:53:43: [Metrics API] Total response time: 8995ms
+2026-03-04T11:53:44: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 92.94,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:54:04: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:54:05: [Metrics API] Oracle queries completed in 1204ms (failures: none)
+2026-03-04T11:54:05: [Metrics API] Total response time: 1204ms
+2026-03-04T11:54:15: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 92.87,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:54:34: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:54:36: [Metrics API] Oracle queries completed in 1975ms (failures: none)
+2026-03-04T11:54:36: [Metrics API] Total response time: 1975ms
+2026-03-04T11:54:41: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:54:42: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:54:42: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:54:42: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:54:43: [Performance Trend] V$SQL bucket query returned 27 rows
+2026-03-04T11:54:46: [OS Stats] 조회 완료: {
+  cpu_usage: 13.37,
+  memory_usage: 93.25,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:55:06: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:55:11: [Metrics API] Oracle queries completed in 4786ms (failures: none)
+2026-03-04T11:55:11: [Metrics API] Total response time: 4786ms
+2026-03-04T11:55:17: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 92.69,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:55:36: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:55:38: [Metrics API] Oracle queries completed in 2076ms (failures: none)
+2026-03-04T11:55:38: [Metrics API] Total response time: 2076ms
+2026-03-04T11:55:43: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:55:43: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:55:44: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:55:44: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:55:44: [Performance Trend] V$SQL bucket query returned 27 rows
+2026-03-04T11:55:48: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 92.61,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:56:06: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:56:16: [Metrics API] Oracle queries completed in 9673ms (failures: topSql)
+2026-03-04T11:56:16: [Metrics API] Total response time: 9673ms
+2026-03-04T11:56:20: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 92.85,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:56:36: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:56:38: [Metrics API] Oracle queries completed in 1899ms (failures: none)
+2026-03-04T11:56:38: [Metrics API] Total response time: 1899ms
+2026-03-04T11:56:44: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:56:45: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:56:45: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:56:45: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:56:46: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:56:51: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 93.13,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:57:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:57:10: [Metrics API] Oracle queries completed in 1752ms (failures: none)
+2026-03-04T11:57:10: [Metrics API] Total response time: 1752ms
+2026-03-04T11:57:22: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 93,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:57:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:57:40: [Metrics API] Oracle queries completed in 1889ms (failures: none)
+2026-03-04T11:57:40: [Metrics API] Total response time: 1889ms
+2026-03-04T11:57:46: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:57:46: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:57:47: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:57:47: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:57:47: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T11:57:53: [OS Stats] 조회 완료: {
+  cpu_usage: 13.38,
+  memory_usage: 93.08,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:58:08: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:58:10: [Metrics API] Oracle queries completed in 2318ms (failures: none)
+2026-03-04T11:58:10: [Metrics API] Total response time: 2318ms
+2026-03-04T11:58:24: [OS Stats] 조회 완료: {
+  cpu_usage: 13.39,
+  memory_usage: 92.91,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:58:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:58:40: [Metrics API] Oracle queries completed in 2305ms (failures: none)
+2026-03-04T11:58:40: [Metrics API] Total response time: 2305ms
+2026-03-04T11:58:48: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:58:48: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:58:48: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:58:48: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:58:49: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T11:58:55: [OS Stats] 조회 완료: {
+  cpu_usage: 13.39,
+  memory_usage: 92.68,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:59:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:59:13: [Metrics API] Oracle queries completed in 2260ms (failures: none)
+2026-03-04T11:59:13: [Metrics API] Total response time: 2260ms
+2026-03-04T11:59:26: [OS Stats] 조회 완료: {
+  cpu_usage: 13.39,
+  memory_usage: 92.84,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T11:59:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T11:59:43: [Metrics API] Oracle queries completed in 2266ms (failures: none)
+2026-03-04T11:59:43: [Metrics API] Total response time: 2266ms
+2026-03-04T11:59:49: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T11:59:49: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T11:59:50: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T11:59:50: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T11:59:50: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T11:59:57: [OS Stats] 조회 완료: {
+  cpu_usage: 13.39,
+  memory_usage: 90.65,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:00:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:00:13: [Metrics API] Oracle queries completed in 2079ms (failures: none)
+2026-03-04T12:00:13: [Metrics API] Total response time: 2079ms
+2026-03-04T12:00:28: [OS Stats] 조회 완료: {
+  cpu_usage: 13.39,
+  memory_usage: 90.95,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:00:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:00:42: [Metrics API] Oracle queries completed in 1762ms (failures: none)
+2026-03-04T12:00:42: [Metrics API] Total response time: 1762ms
+2026-03-04T12:00:50: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:00:51: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:00:51: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:00:51: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:00:52: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T12:00:59: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 91.83,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:01:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:01:13: [Metrics API] Oracle queries completed in 2491ms (failures: none)
+2026-03-04T12:01:13: [Metrics API] Total response time: 2491ms
+2026-03-04T12:01:30: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 92.34,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:01:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:01:43: [Metrics API] Oracle queries completed in 2745ms (failures: none)
+2026-03-04T12:01:43: [Metrics API] Total response time: 2745ms
+2026-03-04T12:01:52: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:01:52: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:01:53: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:01:53: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:01:53: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T12:02:01: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 92.11,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:02:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:02:13: [Metrics API] Oracle queries completed in 2224ms (failures: none)
+2026-03-04T12:02:13: [Metrics API] Total response time: 2224ms
+2026-03-04T12:02:32: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 91.99,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:02:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:02:43: [Metrics API] Oracle queries completed in 1974ms (failures: none)
+2026-03-04T12:02:43: [Metrics API] Total response time: 1974ms
+2026-03-04T12:02:53: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:02:54: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:02:54: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:02:54: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:02:55: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T12:03:03: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 92.15,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:03:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:03:13: [Metrics API] Oracle queries completed in 2420ms (failures: none)
+2026-03-04T12:03:13: [Metrics API] Total response time: 2420ms
+2026-03-04T12:03:34: [OS Stats] 조회 완료: {
+  cpu_usage: 13.4,
+  memory_usage: 91.53,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:03:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:03:42: [Metrics API] Oracle queries completed in 1834ms (failures: none)
+2026-03-04T12:03:42: [Metrics API] Total response time: 1834ms
+2026-03-04T12:03:55: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:03:56: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:03:56: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:03:56: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:03:57: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T12:04:04: [OS Stats] 조회 완료: {
+  cpu_usage: 13.41,
+  memory_usage: 91.48,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:04:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:04:12: [Metrics API] Oracle queries completed in 1521ms (failures: none)
+2026-03-04T12:04:12: [Metrics API] Total response time: 1521ms
+2026-03-04T12:04:35: [OS Stats] 조회 완료: {
+  cpu_usage: 13.41,
+  memory_usage: 91.36,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:04:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:04:43: [Metrics API] Oracle queries completed in 2181ms (failures: none)
+2026-03-04T12:04:43: [Metrics API] Total response time: 2181ms
+2026-03-04T12:04:57: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:04:57: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:04:57: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:04:57: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:04:58: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:05:06: [OS Stats] 조회 완료: {
+  cpu_usage: 13.41,
+  memory_usage: 91.52,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:05:11: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:05:13: [Metrics API] Oracle queries completed in 2079ms (failures: none)
+2026-03-04T12:05:13: [Metrics API] Total response time: 2079ms
+2026-03-04T12:05:37: [OS Stats] 조회 완료: {
+  cpu_usage: 13.41,
+  memory_usage: 91.36,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:05:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:05:44: [Metrics API] Oracle queries completed in 3130ms (failures: none)
+2026-03-04T12:05:44: [Metrics API] Total response time: 3130ms
+2026-03-04T12:05:59: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:05:59: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:05:59: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:05:59: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:06:00: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T12:06:08: [OS Stats] 조회 완료: {
+  cpu_usage: 13.41,
+  memory_usage: 91.28,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:06:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:06:16: [Metrics API] Oracle queries completed in 1924ms (failures: none)
+2026-03-04T12:06:16: [Metrics API] Total response time: 1924ms
+2026-03-04T12:06:39: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 91.23,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:06:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:06:46: [Metrics API] Oracle queries completed in 1926ms (failures: none)
+2026-03-04T12:06:46: [Metrics API] Total response time: 1926ms
+2026-03-04T12:07:01: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:07:01: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:07:01: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:07:01: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:07:02: [Performance Trend] V$SQL bucket query returned 26 rows
+2026-03-04T12:07:10: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 91.96,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:07:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:07:16: [Metrics API] Oracle queries completed in 1873ms (failures: none)
+2026-03-04T12:07:16: [Metrics API] Total response time: 1873ms
+2026-03-04T12:07:41: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 92.01,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:07:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:07:47: [Metrics API] Oracle queries completed in 3308ms (failures: none)
+2026-03-04T12:07:47: [Metrics API] Total response time: 3308ms
+2026-03-04T12:08:02: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:08:03: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:08:03: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:08:03: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:08:04: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T12:08:12: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 91.86,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:08:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:08:16: [Metrics API] Oracle queries completed in 1944ms (failures: none)
+2026-03-04T12:08:16: [Metrics API] Total response time: 1944ms
+2026-03-04T12:08:43: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 91.63,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:08:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:08:46: [Metrics API] Oracle queries completed in 2010ms (failures: none)
+2026-03-04T12:08:46: [Metrics API] Total response time: 2010ms
+2026-03-04T12:09:04: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:09:04: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:09:05: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:09:05: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:09:05: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:09:14: [OS Stats] 조회 완료: {
+  cpu_usage: 13.42,
+  memory_usage: 91.55,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:09:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:09:16: [Metrics API] Oracle queries completed in 2255ms (failures: none)
+2026-03-04T12:09:16: [Metrics API] Total response time: 2255ms
+2026-03-04T12:09:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:09:45: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.63,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:09:46: [Metrics API] Oracle queries completed in 2088ms (failures: none)
+2026-03-04T12:09:46: [Metrics API] Total response time: 2088ms
+2026-03-04T12:10:05: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:10:06: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:10:06: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:10:06: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:10:06: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T12:10:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:10:16: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.58,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:10:19: [Metrics API] Oracle queries completed in 5278ms (failures: none)
+2026-03-04T12:10:19: [Metrics API] Total response time: 5278ms
+2026-03-04T12:10:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:10:46: [Metrics API] Oracle queries completed in 2362ms (failures: none)
+2026-03-04T12:10:46: [Metrics API] Total response time: 2362ms
+2026-03-04T12:10:47: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.31,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:11:07: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:11:07: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:11:07: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:11:07: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:11:08: [Performance Trend] V$SQL bucket query returned 25 rows
+2026-03-04T12:11:14: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:11:16: [Metrics API] Oracle queries completed in 2369ms (failures: none)
+2026-03-04T12:11:16: [Metrics API] Total response time: 2369ms
+2026-03-04T12:11:18: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.38,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:11:44: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:11:46: [Metrics API] Oracle queries completed in 2269ms (failures: none)
+2026-03-04T12:11:46: [Metrics API] Total response time: 2269ms
+2026-03-04T12:11:51: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.4,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:12:08: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:12:09: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:12:09: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:12:09: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:12:10: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:12:16: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:12:22: [Metrics API] Oracle queries completed in 5804ms (failures: none)
+2026-03-04T12:12:22: [Metrics API] Total response time: 5804ms
+2026-03-04T12:12:24: [OS Stats] 조회 완료: {
+  cpu_usage: 13.43,
+  memory_usage: 91.46,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:12:46: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:12:51: [Metrics API] Oracle queries completed in 4258ms (failures: none)
+2026-03-04T12:12:51: [Metrics API] Total response time: 4258ms
+2026-03-04T12:12:55: [OS Stats] 조회 완료: {
+  cpu_usage: 13.44,
+  memory_usage: 91.82,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:13:10: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:13:10: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:13:10: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:13:10: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:13:12: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:13:16: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:13:20: [Metrics API] Oracle queries completed in 3828ms (failures: none)
+2026-03-04T12:13:20: [Metrics API] Total response time: 3828ms
+2026-03-04T12:13:26: [OS Stats] 조회 완료: {
+  cpu_usage: 13.44,
+  memory_usage: 91.79,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:13:46: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:13:48: [Metrics API] Oracle queries completed in 2208ms (failures: none)
+2026-03-04T12:13:48: [Metrics API] Total response time: 2208ms
+2026-03-04T12:13:57: [OS Stats] 조회 완료: {
+  cpu_usage: 13.44,
+  memory_usage: 91.63,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:14:12: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:14:12: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:14:12: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:14:12: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:14:13: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:14:19: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:14:20: [Metrics API] Oracle queries completed in 1720ms (failures: none)
+2026-03-04T12:14:20: [Metrics API] Total response time: 1720ms
+2026-03-04T12:14:27: [OS Stats] 조회 완료: {
+  cpu_usage: 13.44,
+  memory_usage: 91.51,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:14:49: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:14:51: [Metrics API] Oracle queries completed in 1959ms (failures: none)
+2026-03-04T12:14:51: [Metrics API] Total response time: 1959ms
+2026-03-04T12:14:58: [OS Stats] 조회 완료: {
+  cpu_usage: 13.44,
+  memory_usage: 91.75,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:15:13: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:15:14: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:15:14: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:15:14: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:15:15: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T12:15:19: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:15:20: [Metrics API] Oracle queries completed in 1816ms (failures: none)
+2026-03-04T12:15:20: [Metrics API] Total response time: 1816ms
+2026-03-04T12:15:29: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.62,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:15:49: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:15:50: [Metrics API] Oracle queries completed in 1911ms (failures: none)
+2026-03-04T12:15:50: [Metrics API] Total response time: 1911ms
+2026-03-04T12:16:00: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.55,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:16:15: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:16:15: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:16:15: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:16:15: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:16:16: [Performance Trend] V$SQL bucket query returned 24 rows
+2026-03-04T12:16:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:16:23: [Metrics API] Oracle queries completed in 1932ms (failures: none)
+2026-03-04T12:16:23: [Metrics API] Total response time: 1932ms
+2026-03-04T12:16:31: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.32,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:16:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:16:53: [Metrics API] Oracle queries completed in 1982ms (failures: none)
+2026-03-04T12:16:53: [Metrics API] Total response time: 1982ms
+2026-03-04T12:17:03: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.51,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:17:16: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:17:17: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:17:17: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:17:17: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:17:18: [Performance Trend] V$SQL bucket query returned 23 rows
+2026-03-04T12:17:21: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:17:23: [Metrics API] Oracle queries completed in 1762ms (failures: none)
+2026-03-04T12:17:23: [Metrics API] Total response time: 1762ms
+2026-03-04T12:17:33: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.23,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:17:51: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:17:53: [Metrics API] Oracle queries completed in 2159ms (failures: none)
+2026-03-04T12:17:53: [Metrics API] Total response time: 2159ms
+2026-03-04T12:18:04: [OS Stats] 조회 완료: {
+  cpu_usage: 13.45,
+  memory_usage: 91.64,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:18:18: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:18:18: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:18:18: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:18:18: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:18:19: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T12:18:23: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:18:25: [Metrics API] Oracle queries completed in 2295ms (failures: none)
+2026-03-04T12:18:25: [Metrics API] Total response time: 2295ms
+2026-03-04T12:18:35: [OS Stats] 조회 완료: {
+  cpu_usage: 13.46,
+  memory_usage: 91.15,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:18:53: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:18:55: [Metrics API] Oracle queries completed in 2011ms (failures: none)
+2026-03-04T12:18:55: [Metrics API] Total response time: 2011ms
+2026-03-04T12:19:06: [OS Stats] 조회 완료: {
+  cpu_usage: 13.46,
+  memory_usage: 91.43,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:19:19: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:19:20: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:19:20: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:19:20: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:19:21: [Performance Trend] V$SQL bucket query returned 21 rows
+2026-03-04T12:19:23: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:19:27: [Metrics API] Oracle queries completed in 3733ms (failures: none)
+2026-03-04T12:19:27: [Metrics API] Total response time: 3733ms
+2026-03-04T12:19:37: [OS Stats] 조회 완료: {
+  cpu_usage: 13.46,
+  memory_usage: 91.22,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:19:53: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:19:55: [Metrics API] Oracle queries completed in 1826ms (failures: none)
+2026-03-04T12:19:55: [Metrics API] Total response time: 1826ms
+2026-03-04T12:20:08: [OS Stats] 조회 완료: {
+  cpu_usage: 13.46,
+  memory_usage: 91.02,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T12:20:21: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T12:20:21: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T12:20:21: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T12:20:21: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T12:20:22: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T12:20:25: [Metrics API] Fetching from Oracle directly
+2026-03-04T12:20:26: [Schemas API] Fetching schemas for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a
+2026-03-04T12:20:26: [Schemas API] Connection found: NITDB
+2026-03-04T12:20:26: [Schemas API] Executing query...
+2026-03-04T12:20:27: [Schemas API] Success! Found 16 schemas
+2026-03-04T12:20:27: [Objects API] Fetching objects for connection: 1209346b-17cc-4ff6-a5be-1a888717fc8a schema: APEX_030200 type: TABLE
+2026-03-04T12:20:27: [Objects API] Connection found: NITDB
+2026-03-04T12:20:27: [Metrics API] Oracle queries completed in 2096ms (failures: none)
+2026-03-04T12:20:27: [Metrics API] Total response time: 2096ms
+2026-03-04T12:20:39: [OS Stats] 조회 완료: {
+  cpu_usage: 13.46,
+  memory_usage: 90.86,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T18:58:41: [Metrics API] Fetching from Oracle directly
+2026-03-04T18:58:44: [Metrics API] Oracle queries completed in 3421ms (failures: none)
+2026-03-04T18:58:44: [Metrics API] Total response time: 3421ms
+2026-03-04T18:59:01: [Metrics API] Fetching from Oracle directly
+2026-03-04T18:59:11: [Metrics API] Oracle queries completed in 10261ms (failures: none)
+2026-03-04T18:59:11: [Metrics API] Total response time: 10261ms
+2026-03-04T18:59:14: [OS Stats] 조회 완료: {
+  cpu_usage: 23.65,
+  memory_usage: 100,
+  io_mbps: 0.03,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T18:59:18: [Metrics API] Fetching from Oracle directly
+2026-03-04T18:59:20: [OS Stats] 조회 완료: {
+  cpu_usage: 100,
+  memory_usage: 92.79,
+  io_mbps: 0.07,
+  has_osstat: true,
+  has_sysmetric: true
+}
+2026-03-04T18:59:22: [Metrics API] Oracle queries completed in 4256ms (failures: none)
+2026-03-04T18:59:22: [Metrics API] Total response time: 4256ms
+2026-03-04T18:59:38: [Metrics API] Fetching from Oracle directly
+2026-03-04T18:59:38: [Performance Trend] Standard Edition detected (Standard), skipping ASH-based strategies
+2026-03-04T18:59:38: [Performance Trend] V$SYSMETRIC_HISTORY has no data for requested time range
+2026-03-04T18:59:39: [Performance Trend] V$SYSMETRIC query returned 0 rows
+2026-03-04T18:59:39: [Performance Trend] Using V$SQL time-bucketed fallback (60 minutes)
+2026-03-04T18:59:39: [OS Stats] 조회 완료: {
+  cpu_usage: 14.82,
+  memory_usage: 91.68,
+  io_mbps: 0,
+  has_osstat: true,
+  has_sysmetric: false
+}
+2026-03-04T18:59:40: [Performance Trend] V$SQL bucket query returned 22 rows
+2026-03-04T18:59:41: [Metrics API] Oracle queries completed in 2591ms (failures: none)
+2026-03-04T18:59:41: [Metrics API] Total response time: 2591ms
+2026-03-04T18:59:59: [Performance History] AWR query returned 0 rows for date=2026-03-04
+2026-03-04T19:00:00: [Performance History] Found 53 records from V$SQL
