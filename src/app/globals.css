@@ -44,30 +44,57 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --card: 217 33% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217 33% 13%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 7%;
+    --secondary: 215 25% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 25% 15%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 215 25% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 25% 20%;
+    --input: 215 25% 20%;
+    --ring: 217 91% 60%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* WhaTap-style status colors */
+    --status-normal: 217 91% 60%;
+    --status-warning: 25 95% 53%;
+    --status-critical: 0 84% 60%;
+    --status-inactive: 215 14% 45%;
+
+    /* Performance text colors */
+    --perf-normal: 210 40% 98%;
+    --perf-slow: 25 95% 53%;
+    --perf-critical: 0 84% 60%;
+
+    /* Wait event type colors */
+    --wait-cpu: 160 60% 45%;
+    --wait-io: 270 60% 60%;
+    --wait-lock: 0 84% 60%;
+    --wait-lwlock: 340 75% 55%;
+    --wait-client: 217 91% 60%;
+    --wait-ipc: 45 93% 47%;
+    --wait-bufferpin: 200 80% 50%;
+    --wait-activity: 215 14% 45%;
+    --wait-extension: 30 80% 55%;
+    --wait-timeout: 280 65% 60%;
+
+    /* Sidebar */
+    --sidebar-bg: 222 55% 7%;
+    --sidebar-hover: 217 91% 60%;
   }
 }
 

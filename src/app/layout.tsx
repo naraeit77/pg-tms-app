@@ -33,8 +33,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Narae TMS v2.0 - SQL Tuning Management System',
-  description: 'Narae TMS - 주식회사 나래정보기술의 엔터프라이즈급 Oracle SQL 튜닝 관리 시스템',
+  title: 'Narae PG-TMS v1.0 - PostgreSQL SQL Tuning Management System',
+  description: 'Narae PG-TMS - 주식회사 나래정보기술의 엔터프라이즈급 PostgreSQL SQL 튜닝 관리 시스템',
 };
 
 import { ColorSchemeScript } from '@mantine/core';
@@ -45,13 +45,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko" className="dark" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-        <ColorSchemeScript defaultColorScheme="auto" />
+        <ColorSchemeScript defaultColorScheme="dark" />
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}

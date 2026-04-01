@@ -102,7 +102,7 @@ function SignUpContent() {
           </div>
           <CardTitle className="text-2xl text-center">회원가입</CardTitle>
           <CardDescription className="text-center">
-            Narae TMS v2.0 계정을 생성합니다
+            Narae PG-TMS v1.0 계정을 생성합니다
           </CardDescription>
         </CardHeader>
 

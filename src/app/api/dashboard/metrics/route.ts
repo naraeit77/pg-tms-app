@@ -1,207 +1,165 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { db } from '@/db';
-import { oracleConnections, sqlStatistics } from '@/db/schema';
-import { eq, and, ne, sql } from 'drizzle-orm';
-import { executeQuery } from '@/lib/oracle';
-import { getOracleConfig } from '@/lib/oracle/utils';
+import { getPgConfig } from '@/lib/pg/utils';
+import { executeQuery } from '@/lib/pg';
+import { collectGlobalStats } from '@/lib/pg/collectors/global-stats';
+import { collectSessions } from '@/lib/pg/collectors/sessions';
+import { collectWaitEvents } from '@/lib/pg/collectors/wait-events';
+import { collectSqlStats } from '@/lib/pg/collectors/sql-stats';
+import { collectLocks } from '@/lib/pg/collectors/locks';
+
+export const dynamic = 'force-dynamic';
 
 /**
- * GET /api/dashboard/metrics
- * 대시보드 메트릭 조회 (특정 연결 또는 전체)
+ * GET /api/dashboard/metrics?connection_id=...
+ * 대시보드 종합 메트릭 (Global Stats, Sessions, Wait Events, Top SQL, Locks)
  */
 export async function GET(request: NextRequest) {
   try {
-    // 현재 사용자 확인 (Next-Auth 세션 사용)
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const searchParams = request.nextUrl.searchParams;
-    const connectionId = searchParams.get('connection_id');
+    const connectionId = request.nextUrl.searchParams.get('connection_id');
+    if (!connectionId) {
+      return NextResponse.json({ error: 'connection_id required' }, { status: 400 });
+    }
 
-    // 특정 연결의 실시간 메트릭을 가져오는 경우
-    if (connectionId && connectionId !== 'all') {
+    const config = await getPgConfig(connectionId);
+
+    // 모든 수집기를 병렬 실행, pg_stat_statements 미설치 시 Top SQL은 빈 배열
+    const [globalStats, sessions, waitEvents, topSql, locks] = await Promise.all([
+      collectGlobalStats(config),
+      collectSessions(config),
+      collectWaitEvents(config),
+      collectSqlStats(config, 10, 'total_exec_time').catch((err) => {
+        console.warn('[Dashboard] collectSqlStats failed:', err.message);
+        return [];
+      }),
+      collectLocks(config),
+    ]);
+
+    // pg_stat_statements 상태 판단
+    let pgssStatus: 'enabled' | 'no_data' | 'not_installed' = 'not_installed';
+    if (topSql.length > 0) {
+      pgssStatus = 'enabled';
+    } else {
+      // topSql이 비어있는 이유: 확장 미설치 or 데이터 없음
       try {
-        // 캐싱된 연결 설정 가져오기
-        const config = await getOracleConfig(connectionId);
-
-        // Oracle에서 실시간 메트릭 수집 (PDB 호환 쿼리)
-        const metricsQuery = `
-          SELECT
-            -- Buffer Cache Hit Ratio (PDB 호환: NVL로 빈 결과 처리)
-            ROUND((1 - (NVL((SELECT value FROM v$sysstat WHERE name = 'physical reads'), 0)
-              / NULLIF(NVL((SELECT value FROM v$sysstat WHERE name = 'db block gets'), 0)
-                + NVL((SELECT value FROM v$sysstat WHERE name = 'consistent gets'), 0), 0))) * 100, 2) as buffer_cache_hit_ratio,
-
-            -- Executions per second (last snapshot)
-            NVL((SELECT value FROM v$sysstat WHERE name = 'execute count'), 0) as total_executions,
-
-            -- Average Response Time (from v$sql - weighted average)
-            NVL((SELECT
-              CASE
-                WHEN SUM(executions) > 0
-                THEN SUM(elapsed_time) / SUM(executions) / 1000
-                ELSE 0
-              END
-             FROM v$sql
-             WHERE executions > 0
-               AND ROWNUM <= 1000), 0) as avg_response_time_ms,
-
-            -- SGA Used (GB)
-            NVL((SELECT SUM(bytes) / 1024 / 1024 / 1024
-             FROM v$sgastat), 0) as sga_used_gb,
-
-            -- Active Sessions
-            NVL((SELECT COUNT(*) FROM v$session WHERE status = 'ACTIVE' AND type = 'USER'), 0) as active_sessions
-          FROM dual
-        `;
-
-        const result = await executeQuery<{
-          BUFFER_CACHE_HIT_RATIO: number;
-          TOTAL_EXECUTIONS: number;
-          AVG_RESPONSE_TIME_MS: number;
-          SGA_USED_GB: number;
-          ACTIVE_SESSIONS: number;
-        }>(config, metricsQuery);
-
-        if (result.rows && result.rows.length > 0) {
-          const metrics = result.rows[0];
-
-          // Fallback: PostgreSQL에서 평균 응답시간 계산
-          let avgResponseTime = Number(metrics.AVG_RESPONSE_TIME_MS) || 0;
-
-          if (avgResponseTime === 0 || !Number.isFinite(avgResponseTime)) {
-            // sql_statistics에서 평균 계산
-            const sqlStats = await db
-              .select({
-                elapsed_time_ms: sqlStatistics.elapsedTimeMs,
-                executions: sqlStatistics.executions,
-                avg_elapsed_time_ms: sqlStatistics.avgElapsedTimeMs,
-              })
-              .from(sqlStatistics)
-              .where(
-                and(
-                  eq(sqlStatistics.oracleConnectionId, connectionId),
-                  ne(sqlStatistics.executions, 0)
-                )
-              )
-              .limit(1000);
-
-            if (sqlStats && sqlStats.length > 0) {
-              // 가중 평균 계산 (실행 횟수로 가중)
-              const totalExecutions = sqlStats.reduce((sum, s) => sum + (s.executions || 0), 0);
-              const weightedSum = sqlStats.reduce((sum, s) => {
-                const avgTime = Number(s.avg_elapsed_time_ms) || ((s.elapsed_time_ms || 0) / Math.max(s.executions || 0, 1));
-                return sum + (avgTime * (s.executions || 0));
-              }, 0);
-
-              avgResponseTime = totalExecutions > 0 ? weightedSum / totalExecutions : 0;
-            }
-          }
-
-          return NextResponse.json({
-            buffer_cache_hit_ratio: Number(metrics.BUFFER_CACHE_HIT_RATIO) || 0,
-            executions_per_sec: Number(metrics.TOTAL_EXECUTIONS) || 0,
-            avg_response_time: Number.isFinite(avgResponseTime) ? Math.round(avgResponseTime) : 0,
-            sga_used_gb: Number(metrics.SGA_USED_GB) || 0,
-            active_sessions: Number(metrics.ACTIVE_SESSIONS) || 0,
-          }, {
-            headers: {
-              'Cache-Control': 'private, s-maxage=30, stale-while-revalidate=60',
-            },
-          });
-        }
-      } catch (oracleError) {
-        console.error('Oracle metrics collection failed:', oracleError);
-        // Oracle 연결 실패 시 기본값 반환
-        return NextResponse.json({
-          buffer_cache_hit_ratio: 0,
-          executions_per_sec: 0,
-          avg_response_time: 0,
-          sga_used_gb: 0,
-          active_sessions: 0,
-        });
+        await executeQuery(config, 'SELECT 1 FROM pg_stat_statements LIMIT 1');
+        pgssStatus = 'no_data';
+      } catch {
+        pgssStatus = 'not_installed';
       }
     }
 
-    // 전체 연결의 요약 메트릭 (병렬 처리로 최적화)
-    const [connectionsData, sqlStatsData] = await Promise.all([
-      db
-        .select({
-          id: oracleConnections.id,
-          is_active: oracleConnections.isActive,
-          health_status: oracleConnections.healthStatus,
-        })
-        .from(oracleConnections),
-      db
-        .select({
-          id: sqlStatistics.id,
-          status: sqlStatistics.status,
-          priority: sqlStatistics.priority,
-          elapsed_time_ms: sqlStatistics.elapsedTimeMs,
-          executions: sqlStatistics.executions,
-          buffer_gets: sqlStatistics.bufferGets,
-        })
-        .from(sqlStatistics)
-        .limit(10000), // 성능 최적화: 제한된 수만 조회
+    // Additional metrics: replication delay, vacuum sessions
+    const [replicationResult, vacuumResult] = await Promise.all([
+      executeQuery<{ delay_sec: number }>(
+        config,
+        `SELECT COALESCE(MAX(EXTRACT(EPOCH FROM replay_lag)), 0)::float AS delay_sec FROM pg_stat_replication`
+      ).catch(() => ({ rows: [{ delay_sec: 0 }] })),
+      executeQuery<{ count: number }>(
+        config,
+        `SELECT COUNT(*)::int AS count FROM pg_stat_activity WHERE backend_type = 'autovacuum worker'`
+      ).catch(() => ({ rows: [{ count: 0 }] })),
     ]);
 
-    const connections = connectionsData || [];
-    const sqlStats = sqlStatsData || [];
+    const activeSessions = sessions.filter((s) => s.state === 'active');
+    const idleSessions = sessions.filter((s) => s.state === 'idle');
+    const idleInTxSessions = sessions.filter((s) => s.state === 'idle in transaction');
+    const blockedSessions = locks.filter((l) => !l.granted && l.blocking_pid);
 
-    const totalConnections = connections.length;
-    const activeConnections =
-      connections.filter((c) => c.is_active && c.health_status === 'HEALTHY').length;
+    // Uptime
+    const uptimeResult = await executeQuery<{ uptime_sec: number }>(
+      config,
+      `SELECT EXTRACT(EPOCH FROM (current_timestamp - pg_postmaster_start_time()))::float AS uptime_sec`
+    ).catch(() => ({ rows: [{ uptime_sec: 0 }] }));
 
-    const totalSQLs = sqlStats.length;
-    const criticalSQLs = sqlStats.filter((s) => s.status === 'CRITICAL').length;
-    const warningSQLs = sqlStats.filter((s) => s.status === 'WARNING').length;
+    // Long waiting session breakdown (WhaTap style: 5s/10s/60s bands)
+    const longWaitingSessions = {
+      under5s: blockedSessions.filter(
+        (l: any) => l.query_duration_ms != null && l.query_duration_ms < 5000
+      ).length,
+      s5to10: blockedSessions.filter(
+        (l: any) => l.query_duration_ms != null && l.query_duration_ms >= 5000 && l.query_duration_ms < 10000
+      ).length,
+      s10to60: blockedSessions.filter(
+        (l: any) => l.query_duration_ms != null && l.query_duration_ms >= 10000 && l.query_duration_ms < 60000
+      ).length,
+      over60s: blockedSessions.filter(
+        (l: any) => l.query_duration_ms != null && l.query_duration_ms >= 60000
+      ).length,
+    };
 
-    // 평균 지표 계산
-    let avgElapsedTime = 0;
-    let totalExecutions = 0;
-    let avgBufferGets = 0;
-
-    if (sqlStats && sqlStats.length > 0) {
-      const totalElapsed = sqlStats.reduce((sum, s) => sum + (s.elapsed_time_ms || 0), 0);
-      avgElapsedTime = totalElapsed / sqlStats.length;
-
-      totalExecutions = sqlStats.reduce((sum, s) => sum + (s.executions || 0), 0);
-
-      const totalBufferGets = sqlStats.reduce((sum, s) => sum + (s.buffer_gets || 0), 0);
-      avgBufferGets = totalBufferGets / sqlStats.length;
-    }
+    // Long active session breakdown (WhaTap style duration bands)
+    const longActiveSessions = {
+      under3s: activeSessions.filter(
+        (s: any) => s.query_duration_ms != null && s.query_duration_ms < 3000
+      ).length,
+      s3to10: activeSessions.filter(
+        (s: any) => s.query_duration_ms != null && s.query_duration_ms >= 3000 && s.query_duration_ms < 10000
+      ).length,
+      s10to15: activeSessions.filter(
+        (s: any) => s.query_duration_ms != null && s.query_duration_ms >= 10000 && s.query_duration_ms < 15000
+      ).length,
+      over15s: activeSessions.filter(
+        (s: any) => s.query_duration_ms != null && s.query_duration_ms >= 15000
+      ).length,
+    };
 
     return NextResponse.json({
-      totalConnections,
-      activeConnections,
-      totalSQLs,
-      criticalSQLs,
-      warningSQLs,
-      avgElapsedTime,
-      totalExecutions,
-      avgBufferGets,
-      buffer_cache_hit_ratio: 0,
-      executions_per_sec: 0,
-      avg_response_time: avgElapsedTime,
-      sga_used_gb: 0,
-      active_sessions: 0,
-    }, {
-      headers: {
-        'Cache-Control': 'private, s-maxage=60, stale-while-revalidate=120',
+      success: true,
+      data: {
+        global: globalStats,
+        sessions: {
+          active: activeSessions.length,
+          idle: idleSessions.length,
+          idleInTx: idleInTxSessions.length,
+          total: sessions.length,
+          activeSessions: activeSessions.slice(0, 20),
+        },
+        waitEvents: waitEvents.slice(0, 15),
+        topSql: topSql.slice(0, 15),
+        pgssStatus,
+        blockedSessions: blockedSessions.map((l) => ({
+          pid: l.pid,
+          usename: l.usename,
+          waitEvent: l.wait_event || l.mode,
+          waitDurationMs: l.query_duration_ms,
+          blockingPid: l.blocking_pid,
+          query: l.query?.substring(0, 200),
+        })),
+        timestamp: new Date().toISOString(),
+        slow_query_count: activeSessions.filter(
+          (s: any) => s.query_duration_ms != null && Number(s.query_duration_ms) > 1000
+        ).length,
+        replication_delay_sec: Number(replicationResult.rows[0]?.delay_sec) || 0,
+        vacuum_sessions: Number(vacuumResult.rows[0]?.count) || 0,
+        long_active_sessions: longActiveSessions,
+        long_waiting_sessions: longWaitingSessions,
+        uptime_sec: Number(uptimeResult.rows[0]?.uptime_sec) || 0,
       },
     });
-  } catch (error) {
-    console.error('Dashboard metrics error:', error);
+  } catch (error: any) {
+    console.error('Dashboard metrics error:', error?.message || error);
+
+    const isConnectionError =
+      error?.message?.includes('Connection not found') ||
+      error?.message?.includes('inactive') ||
+      error?.message?.includes('ECONNREFUSED') ||
+      error?.message?.includes('timeout') ||
+      error?.message?.includes('ENOTFOUND') ||
+      error?.message?.includes('복호화');
+
     return NextResponse.json(
       {
-        error: 'Failed to fetch dashboard metrics',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: error.message || 'Internal server error',
+        code: isConnectionError ? 'CONNECTION_ERROR' : 'QUERY_ERROR',
       },
-      { status: 500 }
+      { status: isConnectionError ? 503 : 500 }
     );
   }
 }

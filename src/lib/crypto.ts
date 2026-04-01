@@ -1,6 +1,6 @@
 /**
  * 암호화/복호화 유틸리티
- * Oracle DB 비밀번호를 AES-256-GCM으로 암호화/복호화
+ * 대상 DB 비밀번호를 AES-256-GCM으로 암호화/복호화
  */
 
 import crypto from 'crypto';

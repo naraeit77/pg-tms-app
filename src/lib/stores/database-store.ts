@@ -8,12 +8,11 @@ export interface DatabaseConnection {
   description?: string | null;
   host: string;
   port: number;
-  serviceName?: string | null;
-  sid?: string | null;
+  database: string;
   username: string;
-  connectionType: 'SERVICE_NAME' | 'SID';
-  oracleVersion?: string | null;
-  oracleEdition?: string | null;
+  sslMode?: string | null;
+  pgVersion?: string | null;
+  pgStatStatementsEnabled?: boolean;
   isActive: boolean;
   isDefault: boolean;
   healthStatus?: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY' | 'ERROR' | 'UNKNOWN';
@@ -43,10 +42,8 @@ export const useDatabaseStore = create<DatabaseState>((set, get) => ({
     const isCurrentValid = currentSelected && connections.some((c) => c.id === currentSelected);
 
     if (isCurrentValid) {
-      // 현재 선택이 유효하면 connections만 업데이트 (selectedConnectionId 유지)
       set({ connections });
     } else {
-      // 현재 선택이 유효하지 않으면 기본 연결로 대체
       const defaultConnection = connections.find((c) => c.isDefault);
       const validSelectedId = defaultConnection?.id || connections[0]?.id || null;
 
@@ -78,7 +75,7 @@ export const useDatabaseStore = create<DatabaseState>((set, get) => ({
     set((state) => ({
       connections: state.connections.map((conn) =>
         conn.id === id
-          ? { ...conn, healthStatus, ...(version ? { oracleVersion: version } : {}) }
+          ? { ...conn, healthStatus, ...(version ? { pgVersion: version } : {}) }
           : conn
       ),
     })),

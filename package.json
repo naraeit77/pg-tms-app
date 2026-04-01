@@ -1,7 +1,7 @@
 {
-  "name": "narae-tms",
-  "version": "2.0.0",
-  "description": "Narae TMS - SQL Tuning Management System by 주식회사 나래정보기술",
+  "name": "narae-pg-tms",
+  "version": "1.0.0",
+  "description": "Narae PG-TMS - PostgreSQL SQL Tuning Management System by 주식회사 나래정보기술",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -72,7 +72,6 @@
     "next-auth": "^4.24.5",
     "next-themes": "^0.4.3",
     "node-cron": "^4.2.1",
-    "oracledb": "^6.10.0",
     "pg": "^8.18.0",
     "postcss-import": "^16.1.1",
     "react": "^19.0.0",

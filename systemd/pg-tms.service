@@ -1,0 +1,27 @@
+[Unit]
+Description=PG-TMS v1.0 - PostgreSQL SQL Tuning Management System
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/pg-tms
+Environment=NODE_ENV=production
+Environment=PORT=3000
+EnvironmentFile=/opt/pg-tms/.env.local
+ExecStart=/usr/bin/node /opt/pg-tms/node_modules/next/dist/bin/next start
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pg-tms
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

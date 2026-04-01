@@ -21,7 +21,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/monitoring';
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const error = searchParams.get('error');
   const registered = searchParams.get('registered');
 
@@ -93,7 +93,7 @@ function SignInContent() {
               <Database className="h-8 w-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">Narae TMS v2.0</CardTitle>
+          <CardTitle className="text-2xl text-center">Narae PG-TMS v1.0</CardTitle>
           <CardDescription className="text-center">
             SQL Tuning Management System
           </CardDescription>

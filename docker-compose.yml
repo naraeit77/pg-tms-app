@@ -1,67 +1,65 @@
 version: '3.8'
 
 services:
-  # TMS Application
-  tms:
+  # PG-TMS Application
+  pg-tms:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: tms-app
+    container_name: pg-tms-app
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      # Node Environment
       - NODE_ENV=production
       - PORT=3000
-
-      # NextAuth
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-
-      # Supabase
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-
-      # Encryption
+      - DATABASE_URL=postgresql://tms_app:${DB_PASSWORD:-changeme}@pg-tms-db:5432/pgtms
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-
-      # Oracle Configuration
-      - ORACLE_THICK_MODE=false
-
-    volumes:
-      # Persist logs
-      - ./logs:/app/logs
+      - LLM_BASE_URL=${LLM_BASE_URL:-http://host.docker.internal:11434}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME:-qwen3:8b}
+      - LLM_API_TYPE=${LLM_API_TYPE:-ollama}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-4096}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE:-0.3}
+      - LLM_TIMEOUT=${LLM_TIMEOUT:-180000}
+    depends_on:
+      pg-tms-db:
+        condition: service_healthy
     networks:
-      - tms-network
+      - pgtms-network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/auth/signin"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  # Nginx Reverse Proxy (Optional)
-  nginx:
-    image: nginx:alpine
-    container_name: tms-nginx
+  # PostgreSQL (Application DB)
+  pg-tms-db:
+    image: pgvector/pgvector:pg17
+    container_name: pg-tms-db
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
+    environment:
+      - POSTGRES_DB=pgtms
+      - POSTGRES_USER=tms_app
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - ./logs/nginx:/var/log/nginx
-    depends_on:
-      - tms
+      - pgtms-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
-      - tms-network
+      - pgtms-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tms_app -d pgtms"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
-  tms-network:
+  pgtms-network:
     driver: bridge
 
 volumes:
-  logs:
+  pgtms-data:
