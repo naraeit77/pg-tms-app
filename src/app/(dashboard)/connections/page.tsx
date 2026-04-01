@@ -1,15 +1,16 @@
 'use client';
 
 /**
- * Oracle Connection Management Page
- * Oracle DB 연결 관리 화면
+ * PG 연결 관리 페이지
  */
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Database, Activity, Play, Trash2 } from 'lucide-react';
+import { Database, Plus, Trash2, RefreshCw, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -21,707 +22,261 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
-
-interface OracleConnection {
-  id: string;
-  name: string;
-  description?: string;
-  host: string;
-  port: number;
-  service_name?: string;
-  sid?: string;
-  username: string;
-  connection_type: 'SERVICE_NAME' | 'SID';
-  oracle_version?: string;
-  oracle_edition?: string;
-  is_active: boolean;
-  is_default: boolean;
-  health_status?: 'HEALTHY' | 'WARNING' | 'ERROR' | 'UNKNOWN';
-  last_health_check_at?: string;
-  last_connected_at?: string;
-  created_at: string;
-}
-
-interface NewConnectionForm {
-  name: string;
-  description: string;
-  host: string;
-  port: number;
-  service_name: string;
-  sid: string;
-  username: string;
-  password: string;
-  connection_type: 'SERVICE_NAME' | 'SID';
-  privilege: 'NORMAL' | 'SYSDBA' | 'SYSOPER';
-  is_active: boolean;
-  is_default: boolean;
-}
 
 export default function ConnectionsPage() {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
-  const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [testResult, setTestResult] = useState<any>(null);
+  const [isTesting, setIsTesting] = useState(false);
 
-  // 초기 폼 상태
-  const initialFormState: NewConnectionForm = {
+  const [form, setForm] = useState({
     name: '',
     description: '',
-    host: '',
-    port: 1521,
-    service_name: '',
-    sid: '',
+    host: 'localhost',
+    port: '5432',
+    database: '',
     username: '',
     password: '',
-    connection_type: 'SERVICE_NAME',
-    privilege: 'NORMAL',
-    is_active: true,
-    is_default: false,
-  };
+    sslMode: 'prefer',
+  });
 
-  const [formData, setFormData] = useState<NewConnectionForm>(initialFormState);
-
-  // 연결 목록 조회
-  const { data: connections, isLoading } = useQuery<OracleConnection[]>({
-    queryKey: ['oracle-connections'],
+  const { data: connections, isLoading } = useQuery({
+    queryKey: ['pg-connections'],
     queryFn: async () => {
-      const res = await fetch('/api/oracle/connections');
-      if (!res.ok) throw new Error('Failed to fetch connections');
+      const res = await fetch('/api/pg/connections');
+      if (!res.ok) throw new Error('Failed to fetch');
       return res.json();
     },
   });
 
-  // 연결 추가 Mutation
-  const addConnectionMutation = useMutation({
-    mutationFn: async (data: NewConnectionForm) => {
-      const res = await fetch('/api/oracle/connections', {
+  const [createError, setCreateError] = useState<string | null>(null);
+
+  const createMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const res = await fetch('/api/pg/connections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || 'Failed to add connection');
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to create');
       }
-
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['oracle-connections'] });
+      queryClient.invalidateQueries({ queryKey: ['pg-connections'] });
       queryClient.invalidateQueries({ queryKey: ['database-selector-connections'] });
-      setIsAddDialogOpen(false);
-      setFormData(initialFormState);
-      toast({
-        title: '연결 추가 완료',
-        description: 'Oracle DB 연결이 성공적으로 추가되었습니다.',
-      });
+      setIsDialogOpen(false);
+      setCreateError(null);
+      resetForm();
     },
     onError: (error: Error) => {
-      toast({
-        title: '연결 추가 실패',
-        description: error.message,
-        variant: 'destructive',
-      });
+      setCreateError(error.message);
     },
   });
 
-  // 연결 테스트 Mutation
-  const testConnectionMutation = useMutation({
-    mutationFn: async (data: NewConnectionForm) => {
-      const res = await fetch('/api/oracle/connections/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || 'Connection test failed');
-      }
-
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/pg/connections/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
       return res.json();
-    },
-    onSuccess: (data) => {
-      setTestResult({ success: true, message: '연결 테스트 성공!' });
-      toast({
-        title: '연결 테스트 성공',
-        description: `Oracle ${data.version || ''} 연결 확인됨`,
-      });
-    },
-    onError: (error: Error) => {
-      setTestResult({ success: false, message: error.message });
-      toast({
-        title: '연결 테스트 실패',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // Health Check Mutation
-  const healthCheckMutation = useMutation({
-    mutationFn: async (connectionId: string) => {
-      const res = await fetch(`/api/oracle/connections/${connectionId}/health`);
-      if (!res.ok) throw new Error('Health check failed');
-      return res.json();
-    },
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['oracle-connections'] });
-      queryClient.invalidateQueries({ queryKey: ['database-selector-connections'] });
-      const healthData = response.data;
-      const statusText = healthData.isHealthy
-        ? `정상 (${healthData.version || 'Unknown'}, ${healthData.responseTime}ms)`
-        : '연결 실패';
-      toast({
-        title: 'Health Check 완료',
-        description: `상태: ${statusText}`,
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: 'Health Check 실패',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // 데이터 수집 (활성화) Mutation
-  const collectDataMutation = useMutation({
-    mutationFn: async (connectionId: string) => {
-      const res = await fetch('/api/monitoring/collect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ connection_id: connectionId }),
-      });
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.details || error.error || '활성화 실패');
-      }
-      return res.json();
-    },
-    onSuccess: (data) => {
-      console.log('Collection response:', data);
-      const total = data.total ?? data.collected ?? 0;
-      const collected = data.collected ?? 0;
-      const errors = data.errors ?? 0;
-
-      toast({
-        title: '활성화 완료',
-        description: `SQL 정보 수집됨 (전체: ${total}, 성공: ${collected}, 실패: ${errors})`,
-      });
-    },
-    onError: (error: Error) => {
-      console.error('Collect data error:', error);
-      toast({
-        title: '활성화 실패',
-        description: error.message || 'SQL 통계 수집 중 오류가 발생했습니다.',
-        variant: 'destructive',
-      });
-    },
-  });
-
-  // 연결 삭제 Mutation
-  const deleteConnectionMutation = useMutation({
-    mutationFn: async (connectionId: string) => {
-      console.log('[DELETE] Attempting to delete connection:', connectionId);
-      const res = await fetch(`/api/oracle/connections/${connectionId}`, {
-        method: 'DELETE',
-      });
-      console.log('[DELETE] Response status:', res.status);
-
-      if (!res.ok) {
-        const error = await res.json();
-        console.error('[DELETE] Error response:', error);
-        throw new Error(error.error || '연결 삭제 실패');
-      }
-      const result = await res.json();
-      console.log('[DELETE] Success:', result);
-      return result;
     },
     onSuccess: () => {
-      console.log('[DELETE] Mutation success - invalidating queries');
-      queryClient.invalidateQueries({ queryKey: ['oracle-connections'] });
+      queryClient.invalidateQueries({ queryKey: ['pg-connections'] });
       queryClient.invalidateQueries({ queryKey: ['database-selector-connections'] });
-      toast({
-        title: '연결 삭제 완료',
-        description: 'DB 연결이 성공적으로 삭제되었습니다.',
-      });
-    },
-    onError: (error: Error) => {
-      console.error('[DELETE] Mutation error:', error);
-      toast({
-        title: '연결 삭제 실패',
-        description: error.message,
-        variant: 'destructive',
-      });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const resetForm = () => {
+    setForm({ name: '', description: '', host: 'localhost', port: '5432', database: '', username: '', password: '', sslMode: 'prefer' });
     setTestResult(null);
-    addConnectionMutation.mutate(formData);
+    setCreateError(null);
   };
 
-  const handleTestConnection = () => {
+  const handleTest = async () => {
+    setIsTesting(true);
     setTestResult(null);
-    testConnectionMutation.mutate(formData);
+    try {
+      const res = await fetch('/api/pg/connections/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          host: form.host,
+          port: parseInt(form.port),
+          database: form.database,
+          username: form.username,
+          password: form.password,
+          sslMode: form.sslMode,
+        }),
+      });
+      const data = await res.json();
+      setTestResult(data.data);
+    } catch (err: any) {
+      setTestResult({ isHealthy: false, error: err.message });
+    } finally {
+      setIsTesting(false);
+    }
   };
 
-  const handleHealthCheck = (connectionId: string) => {
-    healthCheckMutation.mutate(connectionId);
-  };
-
-  const handleCollectData = (connectionId: string) => {
-    collectDataMutation.mutate(connectionId);
-  };
-
-  const handleDelete = (connectionId: string) => {
-    deleteConnectionMutation.mutate(connectionId);
+  const handleSubmit = () => {
+    createMutation.mutate({
+      ...form,
+      port: parseInt(form.port),
+    });
   };
 
   return (
     <div className="space-y-6">
-      {/* 페이지 헤더 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">DB 연결 관리</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1">
-            Oracle 데이터베이스 연결 추가 및 관리
-          </p>
+          <h1 className="text-2xl font-bold">DB 연결 관리</h1>
+          <p className="text-muted-foreground">PostgreSQL 대상 데이터베이스 연결을 관리합니다</p>
         </div>
-
-        {/* 연결 추가 버튼 */}
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              연결 추가
+            <Button onClick={resetForm}>
+              <Plus className="mr-2 h-4 w-4" />
+              새 연결 추가
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>새 Oracle DB 연결 추가</DialogTitle>
-              <DialogDescription>
-                Oracle 데이터베이스 연결 정보를 입력해주세요.
-              </DialogDescription>
+              <DialogTitle>PostgreSQL 연결 추가</DialogTitle>
+              <DialogDescription>대상 PostgreSQL 데이터베이스 연결 정보를 입력하세요</DialogDescription>
             </DialogHeader>
-
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4 py-4">
-                {/* 연결 이름 */}
-                <div className="grid gap-2">
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <Label htmlFor="name">연결 이름 *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="예: Production DB"
-                    required
-                  />
+                  <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="운영DB" />
                 </div>
-
-                {/* 설명 */}
-                <div className="grid gap-2">
-                  <Label htmlFor="description">설명</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="연결에 대한 간단한 설명"
-                    rows={2}
-                  />
-                </div>
-
-                {/* 호스트 & 포트 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="host">호스트 *</Label>
-                    <Input
-                      id="host"
-                      value={formData.host}
-                      onChange={(e) => setFormData({ ...formData, host: e.target.value })}
-                      placeholder="localhost"
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="port">포트 *</Label>
-                    <Input
-                      id="port"
-                      type="number"
-                      value={formData.port}
-                      onChange={(e) => setFormData({ ...formData, port: parseInt(e.target.value) })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* 연결 타입 */}
-                <div className="grid gap-2">
-                  <Label htmlFor="connection_type">연결 타입 *</Label>
-                  <Select
-                    value={formData.connection_type}
-                    onValueChange={(value: 'SERVICE_NAME' | 'SID') =>
-                      setFormData({ ...formData, connection_type: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
+                <div className="space-y-2">
+                  <Label htmlFor="sslMode">SSL 모드</Label>
+                  <Select value={form.sslMode} onValueChange={(v) => setForm({ ...form, sslMode: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="SERVICE_NAME">Service Name</SelectItem>
-                      <SelectItem value="SID">SID</SelectItem>
+                      <SelectItem value="disable">disable</SelectItem>
+                      <SelectItem value="prefer">prefer</SelectItem>
+                      <SelectItem value="require">require</SelectItem>
+                      <SelectItem value="verify-full">verify-full</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-
-                {/* Service Name / SID */}
-                {formData.connection_type === 'SERVICE_NAME' ? (
-                  <div className="grid gap-2">
-                    <Label htmlFor="service_name">Service Name *</Label>
-                    <Input
-                      id="service_name"
-                      value={formData.service_name}
-                      onChange={(e) => setFormData({ ...formData, service_name: e.target.value })}
-                      placeholder="ORCL"
-                      required
-                    />
-                  </div>
-                ) : (
-                  <div className="grid gap-2">
-                    <Label htmlFor="sid">SID *</Label>
-                    <Input
-                      id="sid"
-                      value={formData.sid}
-                      onChange={(e) => setFormData({ ...formData, sid: e.target.value })}
-                      placeholder="ORCL"
-                      required
-                    />
-                  </div>
-                )}
-
-                {/* 사용자명 & 비밀번호 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="username">사용자명 *</Label>
-                    <Input
-                      id="username"
-                      value={formData.username}
-                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                      placeholder="system"
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="password">비밀번호 *</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* 접속 권한 (SYS 계정용) */}
-                <div className="grid gap-2">
-                  <Label htmlFor="privilege">접속 권한</Label>
-                  <Select
-                    value={formData.privilege}
-                    onValueChange={(value: 'NORMAL' | 'SYSDBA' | 'SYSOPER') =>
-                      setFormData({ ...formData, privilege: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NORMAL">일반 (Normal)</SelectItem>
-                      <SelectItem value="SYSDBA">SYSDBA (SYS 계정용)</SelectItem>
-                      <SelectItem value="SYSOPER">SYSOPER</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground">
-                    SYS 계정으로 접속할 경우 SYSDBA를 선택하세요.
-                  </p>
-                </div>
-
-                {/* 연결 테스트 */}
-                <div className="pt-4 border-t">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="w-full"
-                    onClick={handleTestConnection}
-                    disabled={testConnectionMutation.isPending}
-                  >
-                    <Activity className="h-4 w-4 mr-2" />
-                    {testConnectionMutation.isPending ? '테스트 중...' : '연결 테스트'}
-                  </Button>
-
-                  {testResult && (
-                    <div
-                      className={`mt-3 p-3 rounded-md text-sm ${
-                        testResult.success
-                          ? 'bg-green-50 text-green-800 border border-green-200'
-                          : 'bg-red-50 text-red-800 border border-red-200'
-                      }`}
-                    >
-                      {testResult.success ? '✓ ' : '✗ '}
-                      {testResult.message}
-                    </div>
-                  )}
-                </div>
-
-                {/* 옵션 */}
-                <div className="space-y-3 pt-4 border-t">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_active">활성화</Label>
-                    <Switch
-                      id="is_active"
-                      checked={formData.is_active}
-                      onCheckedChange={(checked) =>
-                        setFormData({ ...formData, is_active: checked })
-                      }
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_default">기본 연결로 설정</Label>
-                    <Switch
-                      id="is_default"
-                      checked={formData.is_default}
-                      onCheckedChange={(checked) =>
-                        setFormData({ ...formData, is_default: checked })
-                      }
-                    />
-                  </div>
                 </div>
               </div>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="col-span-3 space-y-2">
+                  <Label htmlFor="host">호스트 *</Label>
+                  <Input id="host" value={form.host} onChange={(e) => setForm({ ...form, host: e.target.value })} placeholder="localhost" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="port">포트</Label>
+                  <Input id="port" value={form.port} onChange={(e) => setForm({ ...form, port: e.target.value })} placeholder="5432" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="database">데이터베이스 *</Label>
+                <Input id="database" value={form.database} onChange={(e) => setForm({ ...form, database: e.target.value })} placeholder="mydb" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username">사용자명 *</Label>
+                  <Input id="username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="postgres" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">비밀번호 *</Label>
+                  <Input id="password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">설명</Label>
+                <Input id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="운영 환경 PostgreSQL" />
+              </div>
 
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsAddDialogOpen(false)}
-                >
-                  취소
-                </Button>
-                <Button type="submit" disabled={addConnectionMutation.isPending}>
-                  {addConnectionMutation.isPending ? '추가 중...' : '연결 추가'}
-                </Button>
-              </DialogFooter>
-            </form>
+              {testResult && (
+                <div className={`flex items-center gap-2 p-3 rounded-lg text-sm ${testResult.isHealthy ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                  {testResult.isHealthy ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                  {testResult.isHealthy
+                    ? `연결 성공! PostgreSQL ${testResult.version} (${testResult.responseTimeMs}ms) | pg_stat_statements: ${testResult.pgStatStatementsEnabled ? '활성' : '비활성'}`
+                    : `연결 실패: ${testResult.error}`
+                  }
+                </div>
+              )}
+
+              {createError && (
+                <div className="flex items-center gap-2 p-3 rounded-lg text-sm bg-red-50 text-red-700 border border-red-200">
+                  <XCircle className="h-4 w-4 shrink-0" />
+                  <span>연결 추가 실패: {createError}</span>
+                </div>
+              )}
+            </div>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={handleTest} disabled={isTesting || !form.host || !form.database || !form.username || !form.password}>
+                {isTesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                연결 테스트
+              </Button>
+              <Button onClick={handleSubmit} disabled={createMutation.isPending || !form.name || !form.host || !form.database || !form.username || !form.password}>
+                {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                추가
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* 연결 목록 */}
       {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {[...Array(6)].map((_, i) => (
-            <Skeleton key={`skeleton-connections-${i}`} className="h-48" />
-          ))}
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
-      ) : connections && connections.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {connections.map((conn) => (
-            <ConnectionCard
-              key={conn.id}
-              connection={conn}
-              onHealthCheck={handleHealthCheck}
-              onCollectData={handleCollectData}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      ) : (
+      ) : !connections || connections.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Database className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground mb-4">등록된 DB 연결이 없습니다.</p>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              첫 번째 연결 추가
-            </Button>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <Database className="h-16 w-16 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">등록된 연결이 없습니다</h3>
+            <p className="text-muted-foreground mb-4">&quot;새 연결 추가&quot; 버튼을 클릭하여 PostgreSQL 연결을 추가하세요</p>
           </CardContent>
         </Card>
+      ) : (
+        <div className="grid gap-4">
+          {connections.map((conn: any) => (
+            <Card key={conn.id}>
+              <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
+                <div className="space-y-1">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Database className="h-4 w-4" />
+                    {conn.name}
+                    <Badge variant={conn.health_status === 'HEALTHY' ? 'default' : 'outline'} className={conn.health_status === 'HEALTHY' ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                      {conn.health_status || 'UNKNOWN'}
+                    </Badge>
+                    {conn.is_default && <Badge variant="secondary" className="text-xs">기본</Badge>}
+                  </CardTitle>
+                  <CardDescription>
+                    {conn.host}:{conn.port}/{conn.database} ({conn.username})
+                    {conn.pg_version && ` | PostgreSQL ${conn.pg_version}`}
+                    {conn.pg_stat_statements_enabled && ' | pg_stat_statements'}
+                  </CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => { if (confirm(`"${conn.name}" 연결을 삭제하시겠습니까?`)) deleteMutation.mutate(conn.id); }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </CardHeader>
+              {conn.description && (
+                <CardContent className="pt-0">
+                  <p className="text-sm text-muted-foreground">{conn.description}</p>
+                </CardContent>
+              )}
+            </Card>
+          ))}
+        </div>
       )}
     </div>
-  );
-}
-
-// 연결 카드 컴포넌트
-interface ConnectionCardProps {
-  connection: OracleConnection;
-  onHealthCheck: (id: string) => void;
-  onCollectData: (id: string) => void;
-  onDelete: (id: string) => void;
-}
-
-function ConnectionCard({ connection, onHealthCheck, onCollectData, onDelete }: ConnectionCardProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const healthStatusColors = {
-    HEALTHY: 'default',
-    WARNING: 'outline',
-    ERROR: 'destructive',
-    UNKNOWN: 'secondary',
-  } as const;
-
-  // health_status를 대문자로 정규화
-  const normalizedHealthStatus = connection.health_status?.toUpperCase() as keyof typeof healthStatusColors | undefined;
-
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5" />
-              {connection.name}
-              {connection.is_default && (
-                <Badge variant="secondary" className="text-xs">
-                  기본
-                </Badge>
-              )}
-            </CardTitle>
-            <CardDescription className="mt-1">
-              {connection.description || `${connection.host}:${connection.port}`}
-            </CardDescription>
-          </div>
-          {normalizedHealthStatus && (
-            <Badge variant={healthStatusColors[normalizedHealthStatus] || 'secondary'}>
-              {normalizedHealthStatus}
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">접속 정보:</span>
-            <span className="font-mono text-xs">
-              {connection.username}@{connection.host}:{connection.port}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">연결 타입:</span>
-            <span>
-              {connection.connection_type === 'SERVICE_NAME'
-                ? connection.service_name
-                : connection.sid}
-            </span>
-          </div>
-          {connection.oracle_version && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Oracle 버전:</span>
-              <span className="font-medium">{connection.oracle_version}</span>
-            </div>
-          )}
-          {connection.oracle_edition && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Oracle Edition:</span>
-              <Badge variant="outline" className="text-xs">
-                {connection.oracle_edition}
-              </Badge>
-            </div>
-          )}
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">상태:</span>
-            <span>{connection.is_active ? '활성' : '비활성'}</span>
-          </div>
-          {connection.last_health_check_at && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">마지막 체크:</span>
-              <span className="text-xs">
-                {new Date(connection.last_health_check_at).toLocaleString('ko-KR')}
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex gap-2 mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1"
-            onClick={() => onHealthCheck(connection.id)}
-          >
-            <Activity className="h-4 w-4 mr-2" />
-            Health Check
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1"
-            onClick={() => onCollectData(connection.id)}
-          >
-            <Play className="h-4 w-4 mr-2" />
-            활성화
-          </Button>
-        </div>
-
-        <div className="mt-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
-            onClick={() => setShowDeleteDialog(true)}
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            연결 삭제
-          </Button>
-        </div>
-
-        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>연결을 삭제하시겠습니까?</AlertDialogTitle>
-              <AlertDialogDescription>
-                <span className="font-semibold">{connection.name}</span> 연결을 삭제합니다.
-                <br />이 작업은 되돌릴 수 없습니다.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>취소</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  onDelete(connection.id);
-                  setShowDeleteDialog(false);
-                }}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                삭제
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardContent>
-    </Card>
   );
 }
