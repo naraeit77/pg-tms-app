@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { db } from '@/db';
 import { pgTmsSnapshots } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -14,10 +13,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
     const snapshot = await getSnapshot(id);
@@ -28,8 +25,8 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: snapshot });
   } catch (error) {
-    console.error('Failed to fetch snapshot:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[SnapshotDetail]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
 
@@ -41,10 +38,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
 
@@ -59,7 +54,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to delete snapshot:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[SnapshotDelete]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

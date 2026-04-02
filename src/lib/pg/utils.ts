@@ -5,7 +5,7 @@
 
 import { db } from '@/db';
 import { pgConnections } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { decrypt } from '@/lib/crypto';
 import { PgConnectionConfig } from './types';
 
@@ -14,20 +14,26 @@ const connectionCache = new Map<string, { config: PgConnectionConfig; expiry: nu
 const CACHE_TTL = 5 * 60 * 1000;
 
 /**
- * connectionId로 DB에서 연결 정보를 로드하고 비밀번호를 복호화
+ * connectionId로 DB에서 연결 정보를 로드하고 비밀번호를 복호화.
+ * userId를 전달하면 소유권을 검증합니다 (단일 테넌트 보안).
  */
-export async function getPgConfig(connectionId: string): Promise<PgConnectionConfig> {
-  // 캐시 확인
-  const cached = connectionCache.get(connectionId);
+export async function getPgConfig(connectionId: string, userId?: string): Promise<PgConnectionConfig> {
+  // 캐시 확인 (userId가 지정된 경우 캐시 키에 포함)
+  const cacheKey = userId ? `${connectionId}:${userId}` : connectionId;
+  const cached = connectionCache.get(cacheKey);
   if (cached && cached.expiry > Date.now()) {
     return cached.config;
   }
 
-  // DB에서 연결 정보 조회
+  // DB에서 연결 정보 조회 (userId가 있으면 소유권도 함께 검증)
+  const conditions = userId
+    ? and(eq(pgConnections.id, connectionId), eq(pgConnections.userId, userId))
+    : eq(pgConnections.id, connectionId);
+
   const [connection] = await db
     .select()
     .from(pgConnections)
-    .where(eq(pgConnections.id, connectionId))
+    .where(conditions)
     .limit(1);
 
   if (!connection) {
@@ -57,7 +63,7 @@ export async function getPgConfig(connectionId: string): Promise<PgConnectionCon
   };
 
   // 캐시 저장
-  connectionCache.set(connectionId, {
+  connectionCache.set(cacheKey, {
     config,
     expiry: Date.now() + CACHE_TTL,
   });

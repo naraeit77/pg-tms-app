@@ -1,11 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest } from 'next/server';
 import { getPgConfig } from '@/lib/pg/utils';
 import { healthCheck } from '@/lib/pg/client';
 import { db } from '@/db';
 import { pgConnections } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import {
+  requireSession,
+  verifyConnectionOwnership,
+  apiSuccess,
+  handlePgError,
+} from '@/lib/api-utils';
 
 /**
  * GET /api/pg/connections/[id]/health
@@ -16,25 +20,15 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse: authError } = await requireSession();
+    if (authError) return authError;
 
     const { id } = await params;
 
-    // 소유자 검증
-    const [connection] = await db
-      .select({ id: pgConnections.id })
-      .from(pgConnections)
-      .where(and(eq(pgConnections.id, id), eq(pgConnections.userId, session.user.id)))
-      .limit(1);
+    const { errorResponse: ownerError } = await verifyConnectionOwnership(id, session.user.id);
+    if (ownerError) return ownerError;
 
-    if (!connection) {
-      return NextResponse.json({ error: 'Connection not found' }, { status: 404 });
-    }
-
-    const config = await getPgConfig(id);
+    const config = await getPgConfig(id, session.user.id);
     const result = await healthCheck(config);
 
     // DB에 헬스 체크 결과 업데이트
@@ -50,12 +44,16 @@ export async function GET(
       })
       .where(and(eq(pgConnections.id, id), eq(pgConnections.userId, session.user.id)));
 
-    return NextResponse.json({ success: true, data: result });
-  } catch (error: any) {
-    console.error('Health check failed:', error);
-    return NextResponse.json(
-      { success: false, data: { isHealthy: false, error: error.message, pgStatStatementsEnabled: false, responseTimeMs: 0 } },
-      { status: 200 }
-    );
+    return apiSuccess(result);
+  } catch (error) {
+    // 헬스체크는 실패해도 200으로 결과를 반환 (기존 동작 유지)
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Health check failed:', message);
+    return apiSuccess({
+      isHealthy: false,
+      error: message,
+      pgStatStatementsEnabled: false,
+      responseTimeMs: 0,
+    });
   }
 }

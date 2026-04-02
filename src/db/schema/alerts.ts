@@ -12,18 +12,21 @@ import {
   bigserial,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { organizations } from './organizations';
+import { users } from './users';
 import { pgConnections } from './connections';
 
 /**
  * 알림 규칙
  * 메트릭 임계값 기반 알림 + 이상 탐지 규칙
+ *
+ * [SINGLE-TENANT] userId로 소유권 격리. orgId는 향후 멀티테넌트용 (nullable)
  */
 export const alertRules = pgTable('alert_rules', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
-  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  orgId: uuid('org_id'), // 향후 멀티테넌트 확장용
   connectionId: uuid('connection_id').references(() => pgConnections.id, { onDelete: 'cascade' }),
-  // null이면 조직 내 모든 커넥션에 적용
+  // null이면 사용자의 모든 커넥션에 적용
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description'),
   // 대상 메트릭
@@ -59,6 +62,7 @@ export const alertRules = pgTable('alert_rules', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 }, (table) => [
+  index('idx_alert_rules_user').on(table.userId),
   index('idx_alert_rules_org').on(table.orgId),
   index('idx_alert_rules_conn').on(table.connectionId),
   index('idx_alert_rules_metric').on(table.metric),
@@ -74,7 +78,8 @@ export const alertRules = pgTable('alert_rules', {
 export const alertHistory = pgTable('alert_history', {
   id: bigserial('id', { mode: 'number' }).primaryKey(),
   ruleId: uuid('rule_id').references(() => alertRules.id, { onDelete: 'set null' }),
-  orgId: uuid('org_id').notNull(),
+  userId: uuid('user_id').notNull(),
+  orgId: uuid('org_id'), // 향후 멀티테넌트 확장용
   connectionId: uuid('connection_id').notNull(),
   // 알림 내용
   metric: varchar('metric', { length: 100 }).notNull(),
@@ -95,6 +100,7 @@ export const alertHistory = pgTable('alert_history', {
   notificationResults: jsonb('notification_results').default([]),
   // [{ "channel": "email", "success": true, "sentAt": "..." }]
 }, (table) => [
+  index('idx_alert_history_user').on(table.userId),
   index('idx_alert_history_org').on(table.orgId),
   index('idx_alert_history_conn').on(table.connectionId),
   index('idx_alert_history_rule').on(table.ruleId),

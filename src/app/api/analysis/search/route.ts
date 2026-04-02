@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery } from '@/lib/pg/client';
 
@@ -11,10 +10,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connectionId = request.nextUrl.searchParams.get('connection_id');
     const q = request.nextUrl.searchParams.get('q');
@@ -22,13 +19,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'connection_id and q required' }, { status: 400 });
     }
 
-    const config = await getPgConfig(connectionId);
+    const config = await getPgConfig(connectionId, session.user.id);
 
     let rows: any[] = [];
     try {
       const result = await executeQuery(config, `
         SELECT
-          queryid, query, calls, total_exec_time, mean_exec_time, rows,
+          queryid::text AS queryid, query, calls, total_exec_time, mean_exec_time, rows,
           shared_blks_hit, shared_blks_read,
           pg_catalog.pg_get_userbyid(userid) AS username
         FROM pg_stat_statements

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -12,10 +11,8 @@ import bcrypt from 'bcryptjs';
  */
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { current_password, new_password } = body;
@@ -38,7 +35,7 @@ export async function PATCH(request: NextRequest) {
     const userResult = await db
       .select({ passwordHash: users.passwordHash })
       .from(users)
-      .where(eq(users.email, session.user.email))
+      .where(eq(users.email, session.user.email!))
       .limit(1);
 
     if (userResult.length === 0) {
@@ -61,7 +58,7 @@ export async function PATCH(request: NextRequest) {
         passwordHash: hashedPassword,
         updatedAt: new Date(),
       })
-      .where(eq(users.email, session.user.email))
+      .where(eq(users.email, session.user.email!))
       .returning({ id: users.id });
 
     if (updated.length === 0) {
@@ -73,7 +70,7 @@ export async function PATCH(request: NextRequest) {
       message: 'Password updated successfully',
     });
   } catch (error) {
-    console.error('Password change error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[PasswordChange]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

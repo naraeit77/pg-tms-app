@@ -1,8 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest } from 'next/server';
 import { healthCheck, closePool } from '@/lib/pg/client';
 import { PgConnectionConfig } from '@/lib/pg/types';
+import {
+  requireSession,
+  apiSuccess,
+  apiError,
+  validateRequired,
+} from '@/lib/api-utils';
 
 /**
  * POST /api/pg/connections/test
@@ -10,19 +14,15 @@ import { PgConnectionConfig } from '@/lib/pg/types';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { host, port, database, username, password, sslMode } = body;
 
-    if (!host || !database || !username || !password) {
-      return NextResponse.json(
-        { error: '필수 필드를 모두 입력해주세요' },
-        { status: 400 }
-      );
+    const missingError = validateRequired(body, ['host', 'database', 'username', 'password']);
+    if (missingError) {
+      return apiError(missingError, 'BAD_REQUEST', 400);
     }
 
     const config: PgConnectionConfig = {
@@ -39,15 +39,18 @@ export async function POST(request: NextRequest) {
 
     const result = await healthCheck(config);
 
-    // 테스트 후 풀 정리 (캐시된 풀이 남지 않도록)
+    // 테스트 후 풀 정리
     await closePool(config).catch(() => {});
 
-    return NextResponse.json({ success: true, data: result });
-  } catch (error: any) {
-    console.error('Connection test failed:', error);
-    return NextResponse.json(
-      { success: false, data: { isHealthy: false, error: error.message, pgStatStatementsEnabled: false, responseTimeMs: 0 } },
-      { status: 200 }
-    );
+    return apiSuccess(result);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Connection test failed:', message);
+    return apiSuccess({
+      isHealthy: false,
+      error: message,
+      pgStatStatementsEnabled: false,
+      responseTimeMs: 0,
+    });
   }
 }

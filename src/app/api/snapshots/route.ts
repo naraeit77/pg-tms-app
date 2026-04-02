@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { db } from '@/db';
 import { pgTmsSnapshots } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
@@ -14,10 +13,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connectionId = request.nextUrl.searchParams.get('connection_id');
     if (!connectionId) {
@@ -35,8 +32,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: snapshots });
   } catch (error) {
-    console.error('Failed to fetch snapshots:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[SnapshotList]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
 
@@ -46,10 +43,8 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { connection_id } = await request.json();
     if (!connection_id) {
@@ -59,8 +54,7 @@ export async function POST(request: NextRequest) {
     const snapshotId = await createSnapshot(connection_id);
 
     return NextResponse.json({ success: true, data: { id: snapshotId } }, { status: 201 });
-  } catch (error: any) {
-    console.error('Failed to create snapshot:', error);
-    return NextResponse.json({ error: error.message || 'Failed to create snapshot' }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'SnapshotCreate');
   }
 }

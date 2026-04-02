@@ -12,6 +12,21 @@ const SALT_LENGTH = 64;
 const TAG_LENGTH = 16;
 const KEY_LENGTH = 32; // 256 bits
 
+// 서버 시작 시 암호화 키 검증 - 기본 키 사용 경고
+if (typeof process !== 'undefined' && process.env) {
+  if (!process.env.ENCRYPTION_KEY || process.env.ENCRYPTION_KEY === 'default-key-change-this-in-prod') {
+    console.warn(
+      '\x1b[33m[SECURITY WARNING]\x1b[0m ENCRYPTION_KEY가 설정되지 않았거나 기본값입니다. ' +
+      '프로덕션 환경에서는 반드시 32자 이상의 안전한 키를 설정하세요.'
+    );
+  } else if (process.env.ENCRYPTION_KEY.length < 32) {
+    console.warn(
+      '\x1b[33m[SECURITY WARNING]\x1b[0m ENCRYPTION_KEY가 32자 미만입니다. ' +
+      '보안을 위해 32자 이상의 키를 사용하세요.'
+    );
+  }
+}
+
 /**
  * Encryption Key 파생 (PBKDF2 사용)
  */
@@ -24,6 +39,10 @@ function deriveKey(password: string, salt: Buffer): Buffer {
  */
 export function encrypt(text: string): string {
   if (!text) return '';
+
+  if (process.env.NODE_ENV === 'production' && !validateEncryptionKey()) {
+    throw new Error('프로덕션 환경에서 기본 암호화 키를 사용할 수 없습니다. ENCRYPTION_KEY를 설정하세요.');
+  }
 
   try {
     // Salt 생성

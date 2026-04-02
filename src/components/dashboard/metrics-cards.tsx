@@ -156,7 +156,7 @@ export function AlertBanner({ sessions, className }: AlertBannerProps) {
       </div>
       <div className="space-y-2">
         {sessions.map((s, i) => (
-          <div key={i} className="bg-gray-900/50 rounded p-3 text-sm">
+          <div key={i} className="bg-muted/50 rounded p-3 text-sm">
             <div className="flex flex-wrap gap-x-4 gap-y-1">
               <span>
                 <span className="text-gray-500">SID:</span>{' '}

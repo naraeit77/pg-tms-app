@@ -64,38 +64,39 @@ export function MetricChart({
           {showGrid && (
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="hsl(215 25% 20%)"
+              stroke="hsl(var(--chart-grid))"
               strokeOpacity={0.5}
             />
           )}
           <XAxis
             dataKey={timeKey}
             tickFormatter={formatTime}
-            tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }}
-            axisLine={{ stroke: 'hsl(215 25% 20%)' }}
+            tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }}
+            axisLine={{ stroke: 'hsl(var(--chart-grid))' }}
             tickLine={false}
             minTickGap={40}
           />
           <YAxis
             tickFormatter={yAxisFormatter}
-            tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }}
+            tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }}
             axisLine={false}
             tickLine={false}
             width={45}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: 'hsl(217 33% 13%)',
-              border: '1px solid hsl(215 25% 20%)',
+              backgroundColor: 'hsl(var(--chart-tooltip-bg))',
+              border: '1px solid hsl(var(--chart-tooltip-border))',
               borderRadius: '6px',
               fontSize: '12px',
-              color: 'hsl(210 40% 98%)',
+              color: 'hsl(var(--chart-tooltip-text))',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
             }}
             labelFormatter={formatTime}
           />
           {showLegend && (
             <Legend
-              wrapperStyle={{ fontSize: '11px', color: 'hsl(215 20% 55%)' }}
+              wrapperStyle={{ fontSize: '11px', color: 'hsl(var(--chart-tick))' }}
             />
           )}
           {series.map((s) => (

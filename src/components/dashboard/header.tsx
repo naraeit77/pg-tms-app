@@ -44,7 +44,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
     user.role === 'admin' ? '관리자' : user.role === 'tuner' ? '튜너' : '뷰어';
 
   return (
-    <header className="bg-[#070d1a] text-white shadow-lg sticky top-0 z-50 border-b border-border">
+    <header className="bg-[hsl(var(--sidebar-bg))] shadow-sm sticky top-0 z-50 border-b border-[hsl(var(--sidebar-border))]">
       <div className="flex items-center justify-between px-4 py-2 gap-2">
         {/* Left: Mobile menu + Logo + Title */}
         <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
@@ -72,9 +72,9 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         <div className="flex items-center gap-2 flex-shrink-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/10 transition-colors">
+              <button className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-[hsl(var(--sidebar-hover))] transition-colors">
                 <Avatar className="h-7 w-7">
-                  <AvatarFallback className="bg-slate-700 text-white text-xs">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {initials}
                   </AvatarFallback>
                 </Avatar>

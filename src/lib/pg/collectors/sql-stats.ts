@@ -28,7 +28,7 @@ export async function ensurePgStatStatements(config: PgConnectionConfig): Promis
 }
 
 export interface SqlStatRow {
-  queryid: number;
+  queryid: string;
   query: string;
   dbid: number;
   userid: number;
@@ -106,7 +106,7 @@ export async function collectSqlStats(
 
   const sql = `
     SELECT
-      s.queryid,
+      s.queryid::text AS queryid,
       s.query,
       s.dbid,
       s.userid,

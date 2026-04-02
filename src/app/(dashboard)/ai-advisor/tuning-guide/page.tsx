@@ -46,6 +46,7 @@ import {
   Loader2,
   Download,
 } from 'lucide-react'
+import { ExplainPlanTree } from '@/components/charts/explain-plan-tree'
 
 type AnalysisContext = 'tuning' | 'explain' | 'index' | 'rewrite'
 type SupportedLanguage = 'ko' | 'en'
@@ -228,15 +229,16 @@ export default function AITuningGuidePage() {
         setUseMetrics(true)
       }
 
-      // EXPLAIN 자동 조회
+      // EXPLAIN 자동 조회 — $1, $2 등 파라미터를 NULL로 치환하여 실행
       try {
-        const explainRes = await fetch('/api/analysis/search', {
+        const explainSql = sqlData.query.replace(/\$\d+/g, 'NULL')
+        const explainRes = await fetch('/api/pg/explain', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             connection_id: selectedConnectionId,
-            action: 'explain',
-            sql: sqlData.query,
+            sql: explainSql,
+            analyze: false,
           }),
         })
         const explainData = await explainRes.json()
@@ -593,12 +595,26 @@ export default function AITuningGuidePage() {
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent>
+                <CardContent className="space-y-3">
+                  {/* Oracle-style plan tree view */}
+                  {executionPlan && (() => {
+                    try {
+                      const parsed = JSON.parse(executionPlan)
+                      return (
+                        <div className="border border-border rounded-md overflow-hidden">
+                          <ExplainPlanTree plan={parsed} />
+                        </div>
+                      )
+                    } catch {
+                      return null
+                    }
+                  })()}
+                  {/* Raw JSON editor */}
                   <Textarea
                     placeholder='[{"Plan": {"Node Type": "Seq Scan", "Relation Name": "users", ...}}]'
                     value={executionPlan}
                     onChange={(e) => setExecutionPlan(e.target.value)}
-                    className="min-h-[150px] font-mono text-sm"
+                    className="min-h-[120px] font-mono text-xs"
                   />
                 </CardContent>
               </CollapsibleContent>

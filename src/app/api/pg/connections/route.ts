@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { db } from '@/db';
 import { pgConnections, auditLogs } from '@/db/schema';
 import { eq, desc, and } from 'drizzle-orm';
 import { encrypt } from '@/lib/crypto';
+import {
+  requireSession,
+  apiSuccess,
+  apiError,
+  validateRequired,
+} from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/pg/connections
- * PostgreSQL 연결 목록 조회
+ * PostgreSQL 연결 목록 조회 (현재 사용자 소유만)
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connections = await db
       .select({
@@ -45,10 +47,11 @@ export async function GET() {
       ))
       .orderBy(desc(pgConnections.isDefault), pgConnections.name);
 
+    // 프론트엔드 호환: 배열 직접 반환 (database-selector, connections page에서 .map() 사용)
     return NextResponse.json(connections);
   } catch (error) {
     console.error('Failed to fetch connections:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return apiError('연결 목록 조회에 실패했습니다.', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -58,22 +61,17 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { name, description, host, port, database, username, password, sslMode, searchPath, isDefault } = body;
 
-    if (!name || !host || !database || !username || !password) {
-      return NextResponse.json(
-        { error: '필수 필드를 모두 입력해주세요 (이름, 호스트, 데이터베이스, 사용자명, 비밀번호)' },
-        { status: 400 }
-      );
+    const missingError = validateRequired(body, ['name', 'host', 'database', 'username', 'password']);
+    if (missingError) {
+      return apiError(missingError, 'BAD_REQUEST', 400);
     }
 
-    // 비밀번호 암호화
     const passwordEncrypted = encrypt(password);
 
     const [newConnection] = await db
@@ -94,7 +92,7 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    // 감사 로그 (실패해도 연결 생성에 영향 없도록)
+    // 감사 로그 (실패해도 연결 생성에 영향 없음)
     try {
       await db.insert(auditLogs).values({
         userId: session.user.id,
@@ -104,15 +102,16 @@ export async function POST(request: NextRequest) {
         details: { name, host, port: port || 5432, database },
       });
     } catch (auditError) {
-      console.error('Audit log failed:', auditError);
+      console.error('[Audit] CREATE_CONNECTION log failed:', auditError);
     }
 
-    return NextResponse.json({ success: true, data: newConnection }, { status: 201 });
-  } catch (error: any) {
-    if (error.code === '23505') {
-      return NextResponse.json({ error: '이미 같은 이름의 연결이 존재합니다.' }, { status: 400 });
+    return apiSuccess(newConnection, 201);
+  } catch (error: unknown) {
+    const err = error as { code?: string; message?: string };
+    if (err.code === '23505') {
+      return apiError('이미 같은 이름의 연결이 존재합니다.', 'CONFLICT', 409);
     }
-    console.error('Failed to create connection:', error?.message || error, error?.code, error?.detail);
-    return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
+    console.error('Failed to create connection:', err.message);
+    return apiError('연결 생성에 실패했습니다.', 'INTERNAL_ERROR', 500);
   }
 }

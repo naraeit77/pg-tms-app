@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { getLLMClient } from '@/lib/ai/client';
 import { PG_SYSTEM_PROMPT } from '@/lib/ai/prompts/system';
 import { db } from '@/db';
@@ -43,10 +42,8 @@ const CONTEXT_PROMPTS: Record<string, string> = {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return new Response('Unauthorized', { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const {
@@ -140,8 +137,8 @@ export async function POST(request: NextRequest) {
               })
               .catch((err: Error) => console.error('Failed to save analysis history:', err));
           }
-        } catch (error: any) {
-          const errorData = `data: ${JSON.stringify({ type: 'error', error: error.message })}\n\n`;
+        } catch (error) {
+          const errorData = `data: ${JSON.stringify({ type: 'error', error: error instanceof Error ? error.message : String(error) })}\n\n`;
           controller.enqueue(encoder.encode(errorData));
         } finally {
           controller.close();
@@ -156,9 +153,9 @@ export async function POST(request: NextRequest) {
         Connection: 'keep-alive',
       },
     });
-  } catch (error: any) {
-    console.error('AI tuning guide error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error) {
+    console.error('[TuningGuide]', error);
+    return new Response(JSON.stringify({ error: '요청 처리 중 오류가 발생했습니다.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

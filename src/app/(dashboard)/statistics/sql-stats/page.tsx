@@ -93,11 +93,11 @@ export default function SqlStatsPage() {
                 <PieChart>
                   <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={45}
                     label={({ name, percent }) => `${name.substring(0, 15)}… ${(percent * 100).toFixed(0)}%`}
-                    labelLine={{ stroke: 'hsl(215 20% 50%)', strokeWidth: 1 }}
+                    labelLine={{ stroke: 'hsl(var(--chart-tick))', strokeWidth: 1 }}
                   >
                     {pieData.map((e: any, i: number) => <Cell key={i} fill={e.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(217 33% 13%)', border: '1px solid hsl(215 25% 20%)', borderRadius: '6px', fontSize: '11px', color: 'hsl(210 40% 98%)' }} />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--chart-tooltip-bg))', border: '1px solid hsl(var(--chart-tooltip-border))', borderRadius: '6px', fontSize: '11px', color: 'hsl(var(--chart-tooltip-text))', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} />
                 </PieChart>
               </ResponsiveContainer>
             )}

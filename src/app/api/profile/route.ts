@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { db } from '@/db';
 import { users, userProfiles } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -11,10 +10,8 @@ import { eq } from 'drizzle-orm';
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const result = await db
       .select({
@@ -33,7 +30,7 @@ export async function GET() {
       })
       .from(users)
       .leftJoin(userProfiles, eq(userProfiles.id, users.id))
-      .where(eq(users.email, session.user.email))
+      .where(eq(users.email, session.user.email!))
       .limit(1);
 
     if (result.length === 0) {
@@ -45,8 +42,8 @@ export async function GET() {
       data: result[0],
     });
   } catch (error) {
-    console.error('Profile API error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[ProfileGet]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
 
@@ -56,10 +53,8 @@ export async function GET() {
  */
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { name } = body;
@@ -72,7 +67,7 @@ export async function PATCH(request: NextRequest) {
     const userResult = await db
       .select({ id: users.id })
       .from(users)
-      .where(eq(users.email, session.user.email))
+      .where(eq(users.email, session.user.email!))
       .limit(1);
 
     if (userResult.length === 0) {
@@ -110,7 +105,7 @@ export async function PATCH(request: NextRequest) {
       })
       .from(users)
       .leftJoin(userProfiles, eq(userProfiles.id, users.id))
-      .where(eq(users.email, session.user.email))
+      .where(eq(users.email, session.user.email!))
       .limit(1);
 
     return NextResponse.json({
@@ -118,7 +113,7 @@ export async function PATCH(request: NextRequest) {
       data: result[0],
     });
   } catch (error) {
-    console.error('Profile update error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[ProfileUpdate]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

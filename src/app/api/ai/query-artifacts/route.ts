@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery, executeExplain } from '@/lib/pg/client';
 import { getLLMClient } from '@/lib/ai/client';
@@ -85,10 +84,8 @@ interface AccessPath {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { sql, connectionId, options = {} } = body;
@@ -102,14 +99,14 @@ export async function POST(request: NextRequest) {
 
     // 연결이 있으면 실제 DB에서 정보 수집
     if (connectionId) {
-      const config = await getPgConfig(connectionId);
+      const config = await getPgConfig(connectionId, session.user.id);
 
       // 1) EXPLAIN 실행
       try {
         const explainResult = await executeExplain(config, sql, false, 15000);
         explainPlan = explainResult.plan;
-      } catch (e: any) {
-        console.warn('EXPLAIN failed:', e.message);
+      } catch (e) {
+        console.warn('EXPLAIN failed:', e instanceof Error ? e.message : String(e));
       }
 
       // 2) SQL에서 테이블 추출 후 인덱스/통계 조회
@@ -190,8 +187,8 @@ export async function POST(request: NextRequest) {
             seqScanCount: stat?.seq_scan_count || 0,
             idxScanCount: stat?.idx_scan_count || 0,
           });
-        } catch (e: any) {
-          console.warn(`Table info failed for ${tableName}:`, e.message);
+        } catch (e) {
+          console.warn(`Table info failed for ${tableName}:`, e instanceof Error ? e.message : String(e));
           // 최소 정보로 추가
           tableStats.push({
             name: tableName,
@@ -258,9 +255,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: result });
-  } catch (error: any) {
-    console.error('Query artifacts error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'QueryArtifacts');
   }
 }
 
@@ -453,8 +449,8 @@ ${explainPlan ? `## EXPLAIN Plan\n\`\`\`json\n${JSON.stringify(explainPlan, null
         healthScore: parsed.healthScore || 50,
       };
     }
-  } catch (e: any) {
-    console.error('AI recommendation failed:', e.message);
+  } catch (e) {
+    console.error('AI recommendation failed:', e instanceof Error ? e.message : String(e));
   }
 
   // AI 실패 시 규칙 기반 분석

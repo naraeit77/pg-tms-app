@@ -158,7 +158,7 @@ async function collectRealtime(): Promise<void> {
         ]);
 
         const now = new Date();
-        const tenantId = conn.orgId || conn.id; // orgId 없으면 connectionId를 임시 사용
+        const tenantId = conn.orgId || conn.id; // 단일 테넌트: orgId=null → connectionId 사용
         const inserts = [];
 
         if (globalStats) {
@@ -286,7 +286,7 @@ async function collectSnapshot(): Promise<void> {
               connectionId: conn.id,
               collectedAt: now,
               snapshotNumber,
-              queryid: row.queryid,
+              queryid: Number(row.queryid),
               queryText: row.query,
               username: row.username,
               calls: row.calls,

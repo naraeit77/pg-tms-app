@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery } from '@/lib/pg';
 
@@ -12,10 +11,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connectionId = request.nextUrl.searchParams.get('connection_id');
     if (!connectionId) {
@@ -25,7 +22,7 @@ export async function GET(request: NextRequest) {
     const tab = request.nextUrl.searchParams.get('tab') || 'bloating';
     const objType = request.nextUrl.searchParams.get('type') || 'table';
     const limit = Math.min(Number(request.nextUrl.searchParams.get('limit') || '50'), 200);
-    const config = await getPgConfig(connectionId);
+    const config = await getPgConfig(connectionId, session.user.id);
 
     let data: any[] = [];
 
@@ -112,7 +109,7 @@ export async function GET(request: NextRequest) {
       meta: { tab, type: objType, limit },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'Top objects');
   }
 }

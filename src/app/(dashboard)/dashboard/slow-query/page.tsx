@@ -299,27 +299,27 @@ export default function SlowQueryPage() {
                   setRefAreaRight(undefined);
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(215 25% 20%)" strokeOpacity={0.5} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} />
                 <XAxis
                   dataKey="x"
                   type="number"
                   domain={['dataMin', 'dataMax']}
                   tickFormatter={formatTime}
-                  tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }}
-                  axisLine={{ stroke: 'hsl(215 25% 20%)' }}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }}
+                  axisLine={{ stroke: 'hsl(var(--chart-grid))' }}
                   tickLine={false}
                 />
                 <YAxis
                   dataKey="y"
                   name="Duration (s)"
-                  tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }}
                   axisLine={false}
                   tickLine={false}
                   label={{
                     value: '실행시간 (초)',
                     angle: -90,
                     position: 'insideLeft',
-                    style: { fontSize: 10, fill: 'hsl(215 20% 50%)' },
+                    style: { fontSize: 10, fill: 'hsl(var(--chart-tick))' },
                   }}
                 />
                 <Tooltip

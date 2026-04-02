@@ -106,21 +106,21 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.role = (user as any).role;
-        token.roleId = (user as any).roleId;
-        token.permissions = (user as any).permissions;
+        token.role = user.role;
+        token.roleId = user.roleId;
+        token.permissions = user.permissions;
       }
       return token;
     },
 
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
-        session.user.role = token.role as string;
-        session.user.roleId = token.roleId as string;
-        session.user.permissions = token.permissions as any;
+        session.user.id = token.id ?? '';
+        session.user.email = token.email ?? '';
+        session.user.name = token.name ?? '';
+        session.user.role = token.role ?? 'viewer';
+        session.user.roleId = token.roleId ?? null;
+        session.user.permissions = token.permissions ?? {};
       }
       return session;
     },
@@ -142,7 +142,8 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NEXTAUTH_DEBUG === 'true',
 };
 
-// 타입 확장
+// ─── NextAuth 타입 확장 (단일 테넌트) ───
+
 declare module "next-auth" {
   interface Session {
     user: {
@@ -152,14 +153,14 @@ declare module "next-auth" {
       image?: string | null;
       role: string;
       roleId: string | null;
-      permissions: any;
+      permissions: Record<string, boolean>;
     };
   }
 
   interface User {
     role?: string;
     roleId?: string | null;
-    permissions?: any;
+    permissions?: Record<string, boolean>;
   }
 }
 
@@ -168,6 +169,6 @@ declare module "next-auth/jwt" {
     id?: string;
     role?: string;
     roleId?: string | null;
-    permissions?: any;
+    permissions?: Record<string, boolean>;
   }
 }

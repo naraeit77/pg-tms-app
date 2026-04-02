@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { startScheduler, stopScheduler, getSchedulerStatus } from '@/lib/scheduler';
 
 export const dynamic = 'force-dynamic';
@@ -10,15 +9,13 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     return NextResponse.json({ success: true, data: getSchedulerStatus() });
   } catch (error) {
-    console.error('Scheduler status error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[SchedulerStatus]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
 
@@ -28,10 +25,8 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { action, snapshotInterval, retentionDays } = await request.json();
 
@@ -45,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: getSchedulerStatus() });
   } catch (error) {
-    console.error('Scheduler action error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[SchedulerAction]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

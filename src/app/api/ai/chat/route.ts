@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { db } from '@/db';
 import { aiChatSessions, aiChatMessages } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
@@ -17,10 +16,8 @@ import type { ChatMessage } from '@/lib/ai/types';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { session_id, connection_id, message } = await request.json();
 
@@ -61,7 +58,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const client = getLLMClient();
-    const config = await getPgConfig(connection_id);
+    const config = await getPgConfig(connection_id, session.user.id);
 
     // Tool Calling 루프 (최대 5회)
     let finalContent = '';
@@ -80,7 +77,9 @@ export async function POST(request: NextRequest) {
         });
 
         for (const toolCall of response.tool_calls) {
-          const args = JSON.parse(toolCall.function.arguments);
+          const args = typeof toolCall.function.arguments === 'string'
+            ? JSON.parse(toolCall.function.arguments)
+            : toolCall.function.arguments;
           const result = await executeTool(toolCall.function.name, args, config);
 
           allToolCalls.push(toolCall);
@@ -124,8 +123,7 @@ export async function POST(request: NextRequest) {
         tool_results: allToolResults,
       },
     });
-  } catch (error: any) {
-    console.error('AI chat error:', error);
-    return NextResponse.json({ error: error.message || 'AI chat failed' }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'AI Chat');
   }
 }

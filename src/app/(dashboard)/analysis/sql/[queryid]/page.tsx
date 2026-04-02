@@ -7,11 +7,15 @@ import { Code2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useSelectedDatabase } from '@/hooks/use-selected-database';
+import { ExplainPlanTree } from '@/components/charts/explain-plan-tree';
 
 export default function SqlDetailPage({ params }: { params: Promise<{ queryid: string }> }) {
   const { queryid } = use(params);
   const searchParams = useSearchParams();
-  const connectionId = searchParams.get('connection_id');
+  const { selectedConnectionId } = useSelectedDatabase();
+  // URL의 connection_id 우선, 없으면 전역 선택된 연결 사용
+  const connectionId = searchParams.get('connection_id') || selectedConnectionId;
 
   const { data, isLoading } = useQuery({
     queryKey: ['sql-detail', connectionId, queryid],
@@ -25,6 +29,24 @@ export default function SqlDetailPage({ params }: { params: Promise<{ queryid: s
 
   const current = data?.data?.current;
   const history = data?.data?.history || [];
+
+  // Auto EXPLAIN — $1, $2 등 파라미터를 NULL로 치환
+  const { data: explainData } = useQuery({
+    queryKey: ['sql-explain', connectionId, current?.query],
+    queryFn: async () => {
+      const explainSql = current.query.replace(/\$\d+/g, 'NULL');
+      const res = await fetch('/api/pg/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ connection_id: connectionId, sql: explainSql, analyze: false }),
+      });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    enabled: !!connectionId && !!current?.query,
+    retry: false,
+  });
 
   return (
     <div className="space-y-4">
@@ -99,6 +121,15 @@ export default function SqlDetailPage({ params }: { params: Promise<{ queryid: s
               </CardContent>
             </Card>
           </div>
+
+          {explainData?.plan && (
+            <Card>
+              <CardHeader className="pb-2"><CardTitle className="text-base">실행계획 (Execution Plan)</CardTitle></CardHeader>
+              <CardContent className="p-0">
+                <ExplainPlanTree plan={explainData.plan} />
+              </CardContent>
+            </Card>
+          )}
 
           {history.length > 0 && (
             <Card>

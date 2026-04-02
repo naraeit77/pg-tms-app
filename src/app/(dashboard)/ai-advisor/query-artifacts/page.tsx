@@ -30,6 +30,7 @@ import {
   ArrowRight,
   ChevronRight,
 } from 'lucide-react'
+import { IndexDiagram } from '@/components/charts/index-diagram'
 
 type InputMode = 'queryid' | 'sql'
 
@@ -409,80 +410,16 @@ export default function QueryArtifactsPage() {
                   </TabsList>
 
                   {/* Index Diagram */}
-                  <TabsContent value="diagram" className="flex-1 mt-4 overflow-auto space-y-4">
-                    {/* Visual diagram */}
+                  <TabsContent value="diagram" className="flex-1 mt-4 overflow-auto">
                     <Card>
-                      <CardContent className="py-6">
-                        <div className="flex items-center justify-center gap-4 flex-wrap">
-                          {data.tables.map((table, idx) => (
-                            <div key={table.name} className="flex items-center gap-2">
-                              {idx > 0 && (
-                                <div className="flex flex-col items-center">
-                                  <ArrowRight className="w-5 h-5 text-gray-400" />
-                                  {data.joins[idx - 1] && (
-                                    <span className="text-[10px] text-gray-500">
-                                      {data.joins[idx - 1].joinType}
-                                    </span>
-                                  )}
-                                </div>
-                              )}
-                              <div
-                                className={`relative cursor-pointer transition-all hover:scale-105 ${
-                                  selectedTable?.name === table.name ? 'ring-2 ring-indigo-500' : ''
-                                }`}
-                                onClick={() => setSelectedTable(table)}
-                              >
-                                {/* Table circle */}
-                                <div className={`w-24 h-24 rounded-full border-2 flex flex-col items-center justify-center ${
-                                  table.existingIndexes.length > 0 ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : 'border-red-500 bg-red-50 dark:bg-red-950/20'
-                                }`}>
-                                  <span className="text-xs font-bold truncate max-w-[80px]">{table.alias || table.name}</span>
-                                  <span className="text-[10px] text-muted-foreground">{table.estimatedRows?.toLocaleString() || '?'} rows</span>
-                                </div>
-                                {/* Index points */}
-                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 flex gap-1">
-                                  {table.columns.filter(c => c.usedIn.length > 0).slice(0, 5).map((col, ci) => (
-                                    <div
-                                      key={ci}
-                                      className={`w-5 h-5 rounded-full text-[9px] font-bold flex items-center justify-center ${
-                                        col.hasIndex
-                                          ? 'bg-blue-500 text-white'
-                                          : 'bg-white border-2 border-red-500 text-red-500'
-                                      }`}
-                                      title={`${col.name} (${col.usedIn.join(', ')})`}
-                                    >
-                                      {ci + 1}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        {data.tables.length === 0 && (
-                          <p className="text-center text-muted-foreground">테이블이 감지되지 않았습니다</p>
-                        )}
-                      </CardContent>
-                    </Card>
-
-                    {/* Guide */}
-                    <Card className="bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800">
                       <CardContent className="py-4">
-                        <div className="flex items-start gap-3">
-                          <Info className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-3 text-sm">
-                            <div>
-                              <h4 className="font-semibold mb-1">인덱스 생성도 읽는 법</h4>
-                              <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-xs">
-                                <li><strong>원(테이블)</strong>: SQL에서 사용된 테이블. 녹색 테두리=인덱스 있음, 빨간 테두리=인덱스 없음</li>
-                                <li><strong>화살표</strong>: JOIN 관계 및 접근 순서</li>
-                                <li><span className="inline-flex items-center gap-1"><span className="w-4 h-4 rounded-full bg-blue-500 text-white text-[9px] font-bold inline-flex items-center justify-center">n</span>파란색</span>: 인덱스가 이미 존재</li>
-                                <li><span className="inline-flex items-center gap-1"><span className="w-4 h-4 rounded-full border-2 border-red-500 text-red-500 text-[9px] font-bold inline-flex items-center justify-center">n</span>빨간 테두리</span>: 인덱스 생성 권장</li>
-                                <li>테이블 원을 클릭하면 왼쪽 패널에서 상세 정보를 확인할 수 있습니다</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+                        <IndexDiagram
+                          tables={data.tables}
+                          joins={data.joins}
+                          recommendations={data.recommendations}
+                          onSelectTable={setSelectedTable}
+                          selectedTable={selectedTable}
+                        />
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -522,29 +459,155 @@ export default function QueryArtifactsPage() {
                   <TabsContent value="access-path" className="flex-1 mt-4 overflow-auto">
                     <Card>
                       <CardContent className="py-4">
-                        <div className="space-y-3">
-                          {data.accessPaths.map((path, idx) => (
-                            <div key={idx} className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-sm font-bold text-indigo-600">
-                                {path.step}
+                        {data.accessPaths.length === 0 ? (
+                          <p className="text-center text-muted-foreground py-4">접근 경로 정보가 없습니다</p>
+                        ) : (
+                          <div className="space-y-4">
+                            {/* Access direction */}
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                              <span>실행 순서</span>
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </div>
+
+                            {/* SVG Pipeline */}
+                            <div className="overflow-x-auto border border-border rounded-lg bg-white">
+                              <svg
+                                width={Math.max(600, data.accessPaths.length * 200 + 100)}
+                                height={180}
+                                viewBox={`0 0 ${Math.max(600, data.accessPaths.length * 200 + 100)} 180`}
+                                className="select-none"
+                              >
+                                {data.accessPaths.map((path, idx) => {
+                                  const cx = 80 + idx * 200;
+                                  const cy = 80;
+                                  const isSeqScan = path.accessType?.toLowerCase().includes('seq');
+                                  const isIndexScan = path.accessType?.toLowerCase().includes('index');
+                                  const isJoin = path.accessType?.toLowerCase().includes('join') || path.accessType?.toLowerCase().includes('loop') || path.accessType?.toLowerCase().includes('hash') || path.accessType?.toLowerCase().includes('merge');
+                                  const nodeColor = isSeqScan ? '#ef4444' : isIndexScan ? '#22c55e' : isJoin ? '#6366f1' : '#3b82f6';
+                                  const bgColor = isSeqScan ? '#fef2f2' : isIndexScan ? '#f0fdf4' : isJoin ? '#eef2ff' : '#eff6ff';
+
+                                  return (
+                                    <g key={idx}>
+                                      {/* Connector line */}
+                                      {idx > 0 && (
+                                        <g>
+                                          <line
+                                            x1={80 + (idx - 1) * 200 + 55}
+                                            y1={cy}
+                                            x2={cx - 55}
+                                            y2={cy}
+                                            stroke="#d1d5db"
+                                            strokeWidth={2}
+                                            markerEnd="url(#arrowhead)"
+                                          />
+                                        </g>
+                                      )}
+
+                                      {/* Step number */}
+                                      <circle cx={cx} cy={24} r={12} fill={nodeColor} />
+                                      <text x={cx} y={28} textAnchor="middle" fontSize={11} fill="white" fontWeight="bold">
+                                        {path.step}
+                                      </text>
+
+                                      {/* Node rounded rect */}
+                                      <rect
+                                        x={cx - 52}
+                                        y={cy - 30}
+                                        width={104}
+                                        height={60}
+                                        rx={8}
+                                        fill={bgColor}
+                                        stroke={nodeColor}
+                                        strokeWidth={2}
+                                      />
+
+                                      {/* Table name */}
+                                      <text x={cx} y={cy - 8} textAnchor="middle" fontSize={12} fill="#1f2937" fontWeight="bold">
+                                        {(path.table || '').toUpperCase().substring(0, 12)}
+                                      </text>
+
+                                      {/* Access type */}
+                                      <text x={cx} y={cy + 10} textAnchor="middle" fontSize={9} fill={nodeColor} fontWeight="600">
+                                        {path.accessType}
+                                      </text>
+
+                                      {/* Cost */}
+                                      {path.estimatedCost != null && path.estimatedCost > 0 && (
+                                        <text x={cx} y={cy + 48} textAnchor="middle" fontSize={9} fill="#9ca3af">
+                                          cost: {path.estimatedCost > 1000 ? `${(path.estimatedCost / 1000).toFixed(1)}K` : path.estimatedCost.toFixed(1)}
+                                        </text>
+                                      )}
+
+                                      {/* Condition */}
+                                      {path.condition && (
+                                        <text x={cx} y={cy + 60} textAnchor="middle" fontSize={8} fill="#9ca3af" className="font-mono">
+                                          {path.condition.length > 25 ? path.condition.substring(0, 23) + '…' : path.condition}
+                                        </text>
+                                      )}
+                                    </g>
+                                  );
+                                })}
+                                {/* Arrow marker */}
+                                <defs>
+                                  <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                    <polygon points="0 0, 8 3, 0 6" fill="#d1d5db" />
+                                  </marker>
+                                </defs>
+                              </svg>
+                            </div>
+
+                            {/* Legend */}
+                            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 px-2 text-[11px] text-muted-foreground">
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded-sm bg-red-100 border-2 border-red-500" />Seq Scan (전체 스캔)
                               </div>
-                              <ChevronRight className="w-4 h-4 text-gray-400" />
-                              <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-sm">{path.table}</span>
-                                  <Badge variant="outline" className="text-xs">{path.accessType}</Badge>
-                                  {path.estimatedCost !== undefined && path.estimatedCost > 0 && (
-                                    <span className="text-xs text-muted-foreground">cost: {path.estimatedCost.toFixed(1)}</span>
-                                  )}
-                                </div>
-                                {path.condition && <p className="text-xs text-muted-foreground mt-1">{path.condition}</p>}
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded-sm bg-green-100 border-2 border-green-500" />Index Scan
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded-sm bg-indigo-100 border-2 border-indigo-500" />Join / Aggregate
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded-sm bg-blue-100 border-2 border-blue-500" />기타
                               </div>
                             </div>
-                          ))}
-                          {data.accessPaths.length === 0 && (
-                            <p className="text-center text-muted-foreground py-4">접근 경로 정보가 없습니다</p>
-                          )}
-                        </div>
+
+                            {/* Detail table */}
+                            <div className="border border-border rounded-lg overflow-hidden">
+                              <table className="w-full text-xs">
+                                <thead>
+                                  <tr className="bg-muted/50">
+                                    <th className="px-3 py-2 text-left font-medium text-muted-foreground w-12">#</th>
+                                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">테이블</th>
+                                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">접근 방식</th>
+                                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">조건</th>
+                                    <th className="px-3 py-2 text-right font-medium text-muted-foreground">Cost</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {data.accessPaths.map((path, idx) => {
+                                    const isSeqScan = path.accessType?.toLowerCase().includes('seq');
+                                    return (
+                                      <tr key={idx} className="border-t border-border/50 hover:bg-muted/20">
+                                        <td className="px-3 py-2 font-bold text-muted-foreground">{path.step}</td>
+                                        <td className="px-3 py-2 font-semibold">{path.table}</td>
+                                        <td className="px-3 py-2">
+                                          <Badge variant={isSeqScan ? 'destructive' : 'outline'} className="text-[10px]">
+                                            {path.accessType}
+                                          </Badge>
+                                        </td>
+                                        <td className="px-3 py-2 font-mono text-muted-foreground truncate max-w-[200px]">{path.condition || '-'}</td>
+                                        <td className="px-3 py-2 text-right font-mono">
+                                          {path.estimatedCost != null && path.estimatedCost > 0 ? path.estimatedCost.toFixed(1) : '-'}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   </TabsContent>

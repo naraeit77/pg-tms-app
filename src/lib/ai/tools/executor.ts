@@ -37,7 +37,7 @@ async function executeQueryStats(args: any, config: PgConnectionConfig): Promise
   const safeOrder = validColumns.includes(orderBy) ? orderBy : 'total_exec_time';
 
   let sql = `
-    SELECT queryid, query, calls, total_exec_time, mean_exec_time, rows,
+    SELECT queryid::text AS queryid, query, calls, total_exec_time, mean_exec_time, rows,
            shared_blks_hit, shared_blks_read, temp_blks_written,
            pg_catalog.pg_get_userbyid(userid) AS username
     FROM pg_stat_statements
@@ -67,7 +67,8 @@ async function executeQueryStats(args: any, config: PgConnectionConfig): Promise
 }
 
 async function executeExplainQuery(args: any, config: PgConnectionConfig): Promise<string> {
-  const result = await executeExplain(config, args.sql, args.analyze || false, 15000);
+  const safeSql = (args.sql || '').replace(/\$\d+/g, 'NULL');
+  const result = await executeExplain(config, safeSql, args.analyze || false, 15000);
   return JSON.stringify({
     plan: result.plan,
     planning_time_ms: result.planningTimeMs,

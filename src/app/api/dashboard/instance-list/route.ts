@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { db } from '@/db';
 import { pgConnections } from '@/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
@@ -43,10 +42,8 @@ interface InstanceMetrics {
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connections = await db
       .select({
@@ -87,7 +84,7 @@ export async function GET() {
         };
 
         try {
-          const config = await getPgConfig(conn.id);
+          const config = await getPgConfig(conn.id, session.user.id);
 
           const [globalStats, sessions] = await Promise.all([
             collectGlobalStats(config),
@@ -107,7 +104,7 @@ export async function GET() {
           if (
             lockWaitSessions.length > 5 ||
             slowQueries.length > 10 ||
-            (globalStats.cache_hit_ratio != null && globalStats.cache_hit_ratio < 0.9)
+            (globalStats.cache_hit_ratio != null && globalStats.cache_hit_ratio < 90)
           ) {
             status = 'critical';
           } else if (
@@ -131,8 +128,8 @@ export async function GET() {
               lockWaitSessions: lockWaitSessions.length,
               slowQueries: slowQueries.length,
               replicationDelay: 0,
-              dbSizeMb: globalStats.db_size_bytes
-                ? Number((globalStats.db_size_bytes / 1024 / 1024).toFixed(1))
+              dbSizeMb: globalStats.db_size
+                ? Number((globalStats.db_size / 1024 / 1024).toFixed(1))
                 : 0,
               uptime: globalStats.uptime || '',
             },
@@ -159,11 +156,7 @@ export async function GET() {
       },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
-    console.error('Instance list error:', error?.message || error);
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handlePgError(error, 'InstanceList');
   }
 }

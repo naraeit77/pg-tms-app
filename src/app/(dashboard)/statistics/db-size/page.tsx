@@ -126,11 +126,11 @@ export default function DbSizePage() {
                 <PieChart>
                   <Pie data={dbPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={40}
                     label={({ name, value }) => `${name}: ${fmtBytes(value)}`}
-                    labelLine={{ stroke: 'hsl(215 20% 50%)', strokeWidth: 1 }}
+                    labelLine={{ stroke: 'hsl(var(--chart-tick))', strokeWidth: 1 }}
                   >
                     {dbPieData.map((e: any, i: number) => <Cell key={i} fill={e.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(217 33% 13%)', border: '1px solid hsl(215 25% 20%)', borderRadius: '6px', fontSize: '12px', color: 'hsl(210 40% 98%)' }} formatter={(v: number) => fmtBytes(v)} />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--chart-tooltip-bg))', border: '1px solid hsl(var(--chart-tooltip-border))', borderRadius: '6px', fontSize: '12px', color: 'hsl(var(--chart-tooltip-text))', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(v: number) => fmtBytes(v)} />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -145,10 +145,10 @@ export default function DbSizePage() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={tableBarData} layout="vertical" margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(215 25% 20%)" strokeOpacity={0.5} horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 9, fill: 'hsl(215 20% 50%)' }} tickLine={false} axisLine={false} tickFormatter={(v) => fmtBytes(v)} />
-                  <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 9, fill: 'hsl(215 20% 50%)' }} tickLine={false} axisLine={false} />
-                  <Tooltip contentStyle={{ backgroundColor: 'hsl(217 33% 13%)', border: '1px solid hsl(215 25% 20%)', borderRadius: '6px', fontSize: '11px', color: 'hsl(210 40% 98%)' }} formatter={(v: number) => fmtBytes(v)} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 9, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} tickFormatter={(v) => fmtBytes(v)} />
+                  <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 9, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--chart-tooltip-bg))', border: '1px solid hsl(var(--chart-tooltip-border))', borderRadius: '6px', fontSize: '11px', color: 'hsl(var(--chart-tooltip-text))', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(v: number) => fmtBytes(v)} />
                   <Bar dataKey="table" stackId="size" fill="#10b981" name="Table" />
                   <Bar dataKey="index" stackId="size" fill="#8b5cf6" name="Index" radius={[0, 4, 4, 0]} />
                 </BarChart>

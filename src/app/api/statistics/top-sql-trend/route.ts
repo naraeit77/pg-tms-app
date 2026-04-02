@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery } from '@/lib/pg';
 
@@ -13,10 +12,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connectionId = request.nextUrl.searchParams.get('connection_id');
     if (!connectionId) {
@@ -26,7 +23,7 @@ export async function GET(request: NextRequest) {
     const orderBy = request.nextUrl.searchParams.get('order_by') || 'total_exec_time';
     const limit = Math.min(Number(request.nextUrl.searchParams.get('limit') || '20'), 100);
     const groupBy = request.nextUrl.searchParams.get('group_by') || 'all';
-    const config = await getPgConfig(connectionId);
+    const config = await getPgConfig(connectionId, session.user.id);
 
     // pg_stat_statements 확장 확인
     try {
@@ -51,29 +48,24 @@ export async function GET(request: NextRequest) {
     const orderClause = allowedOrders[orderBy] || 'total_exec_time DESC';
 
     if (groupBy === 'all') {
-      const result = await executeQuery<{
-        queryid: string;
-        query: string;
-        dbid: number;
-        userid: number;
-        calls: number;
-        total_exec_time: number;
-        mean_exec_time: number;
-        max_exec_time: number;
-        min_exec_time: number;
-        stddev_exec_time: number;
-        rows: number;
-        shared_blks_hit: number;
-        shared_blks_read: number;
-        local_blks_hit: number;
-        local_blks_read: number;
-        temp_blks_read: number;
-        temp_blks_written: number;
-        blk_read_time: number;
-        blk_write_time: number;
-        total_plan_time: number;
-        mean_plan_time: number;
-      }>(config, `
+      // 동적 컬럼 감지: pg_stat_statements 버전에 따라 컬럼이 다름
+      let extraColumns = '';
+      try {
+        const colCheck = await executeQuery(config, `
+          SELECT column_name FROM information_schema.columns
+          WHERE table_name = 'pg_stat_statements'
+            AND column_name IN ('blk_read_time', 'blk_write_time', 'total_plan_time', 'mean_plan_time')
+        `);
+        const available = new Set(colCheck.rows.map((r: any) => r.column_name));
+        extraColumns += available.has('blk_read_time') ? ',\n          COALESCE(blk_read_time, 0)::float AS blk_read_time' : ',\n          0::float AS blk_read_time';
+        extraColumns += available.has('blk_write_time') ? ',\n          COALESCE(blk_write_time, 0)::float AS blk_write_time' : ',\n          0::float AS blk_write_time';
+        extraColumns += available.has('total_plan_time') ? ',\n          COALESCE(total_plan_time, 0)::float AS total_plan_time' : ',\n          0::float AS total_plan_time';
+        extraColumns += available.has('mean_plan_time') ? ',\n          COALESCE(mean_plan_time, 0)::float AS mean_plan_time' : ',\n          0::float AS mean_plan_time';
+      } catch {
+        extraColumns = ',\n          0::float AS blk_read_time, 0::float AS blk_write_time, 0::float AS total_plan_time, 0::float AS mean_plan_time';
+      }
+
+      const result = await executeQuery<any>(config, `
         SELECT
           queryid::text,
           query,
@@ -91,11 +83,8 @@ export async function GET(request: NextRequest) {
           local_blks_hit::bigint,
           local_blks_read::bigint,
           temp_blks_read::bigint,
-          temp_blks_written::bigint,
-          blk_read_time::float,
-          blk_write_time::float,
-          COALESCE(total_plan_time, 0)::float AS total_plan_time,
-          COALESCE(mean_plan_time, 0)::float AS mean_plan_time
+          temp_blks_written::bigint
+          ${extraColumns}
         FROM pg_stat_statements
         WHERE query NOT LIKE '%pg_stat_statements%'
         ORDER BY ${orderClause}
@@ -153,7 +142,7 @@ export async function GET(request: NextRequest) {
       meta: { orderBy, limit, groupBy, total: groupResult.rows.length },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'TopSqlTrend');
   }
 }

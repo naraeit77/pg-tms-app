@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery } from '@/lib/pg/client';
 import { collectSqlStats } from '@/lib/pg/collectors/sql-stats';
@@ -18,17 +17,15 @@ import type { ChatMessage } from '@/lib/ai/types';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { connection_id } = await request.json();
     if (!connection_id) {
       return NextResponse.json({ error: 'connection_id required' }, { status: 400 });
     }
 
-    const config = await getPgConfig(connection_id);
+    const config = await getPgConfig(connection_id, session.user.id);
 
     // 데이터 수집
     const [tableStats, indexStats, topSql] = await Promise.all([
@@ -89,8 +86,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: { content: response.content, parsed },
     });
-  } catch (error: any) {
-    console.error('Index advisor error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'IndexAdvisor');
   }
 }

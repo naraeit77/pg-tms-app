@@ -126,10 +126,10 @@ export default function VacuumPage() {
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={deadTuplesChart} layout="vertical" margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(215 25% 20%)" strokeOpacity={0.5} horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }} tickLine={false} axisLine={false} />
-                <YAxis type="category" dataKey="name" width={180} tick={{ fontSize: 10, fill: 'hsl(215 20% 50%)' }} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: 'hsl(217 33% 13%)', border: '1px solid hsl(215 25% 20%)', borderRadius: '6px', fontSize: '12px', color: 'hsl(210 40% 98%)' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="name" width={180} tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--chart-tooltip-bg))', border: '1px solid hsl(var(--chart-tooltip-border))', borderRadius: '6px', fontSize: '12px', color: 'hsl(var(--chart-tooltip-text))', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} />
                 <Bar dataKey="value" fill="#f97316" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>

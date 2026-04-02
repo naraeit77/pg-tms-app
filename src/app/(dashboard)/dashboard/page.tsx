@@ -92,13 +92,13 @@ export default function InstanceListPage() {
     const now = new Date().toISOString();
     for (const inst of data.data) {
       if (!inst.metrics) continue;
-      const history = historyRef.current.get(inst.id) || [];
-      history.push({
+      const prev = historyRef.current.get(inst.id) || [];
+      const history = [...prev, {
         time: now,
         active: inst.metrics.activeSessions,
         tps: inst.metrics.tps,
-      });
-      if (history.length > 60) history.shift();
+      }];
+      if (history.length > 60) history.splice(0, history.length - 60);
       historyRef.current.set(inst.id, history);
     }
   }, [data]);
@@ -226,16 +226,15 @@ export default function InstanceListPage() {
       align: 'right',
       sortable: true,
       render: (_val, row) => {
-        const ratio = Number(row.metrics?.cacheHitRatio) || 0;
-        const pct = (ratio * 100).toFixed(1);
+        const pct = Number(row.metrics?.cacheHitRatio) || 0;
         return (
           <span
             className={cn(
               'font-mono text-sm',
-              ratio < 0.9 ? 'text-red-400' : ratio < 0.95 ? 'text-orange-400' : 'text-emerald-400'
+              pct < 90 ? 'text-red-400' : pct < 95 ? 'text-orange-400' : 'text-emerald-400'
             )}
           >
-            {pct}%
+            {pct.toFixed(1)}%
           </span>
         );
       },

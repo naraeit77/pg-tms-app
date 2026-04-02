@@ -21,21 +21,37 @@ interface SeriesConfig {
   name: string;
 }
 
+const DEFAULT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+
 interface MiniTimeChartProps {
   data: Record<string, any>[];
-  series: SeriesConfig[];
+  series?: SeriesConfig[];
+  /** Shorthand: array of data keys (auto-generates series from dataKeys + colors) */
+  dataKeys?: string[];
+  colors?: string[];
   height?: number;
+  width?: number;
   yFormatter?: (v: number) => string;
   stacked?: boolean;
+  showAxis?: boolean;
 }
 
 export function MiniTimeChart({
   data,
-  series,
+  series: seriesProp,
+  dataKeys,
+  colors,
   height = 130,
+  width,
   yFormatter,
   stacked = false,
+  showAxis = true,
 }: MiniTimeChartProps) {
+  const series: SeriesConfig[] = seriesProp ?? (dataKeys || []).map((key, i) => ({
+    key,
+    color: colors?.[i] ?? DEFAULT_COLORS[i % DEFAULT_COLORS.length],
+    name: key,
+  }));
   if (data.length < 2) {
     return (
       <div
@@ -54,42 +70,47 @@ export function MiniTimeChart({
   };
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer width={width ?? '100%'} height={height}>
       <AreaChart
         data={data}
-        margin={{ top: 5, right: 5, left: -10, bottom: 0 }}
+        margin={showAxis ? { top: 5, right: 5, left: -10, bottom: 0 } : { top: 0, right: 0, left: 0, bottom: 0 }}
       >
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="hsl(215 25% 20%)"
-          vertical={false}
-        />
+        {showAxis && (
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--chart-grid))"
+            vertical={false}
+          />
+        )}
         <XAxis
           dataKey="time"
-          tick={{ fontSize: 9, fill: 'hsl(215 20% 50%)' }}
+          tick={showAxis ? { fontSize: 9, fill: 'hsl(var(--chart-tick))' } : false}
           tickLine={false}
-          axisLine={{ stroke: 'hsl(215 25% 20%)' }}
+          axisLine={showAxis ? { stroke: 'hsl(var(--chart-grid))' } : false}
           interval="preserveStartEnd"
+          hide={!showAxis}
         />
         <YAxis
-          tick={{ fontSize: 9, fill: 'hsl(215 20% 50%)' }}
+          tick={showAxis ? { fontSize: 9, fill: 'hsl(var(--chart-tick))' } : false}
           tickLine={false}
           axisLine={false}
-          width={40}
+          width={showAxis ? 40 : 0}
           tickFormatter={yFormatter || defaultYFormatter}
           allowDecimals={false}
+          hide={!showAxis}
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'hsl(217 33% 15%)',
-            border: '1px solid hsl(215 25% 25%)',
+            backgroundColor: 'hsl(var(--chart-tooltip-bg))',
+            border: '1px solid hsl(var(--chart-tooltip-border))',
             borderRadius: '6px',
             fontSize: '11px',
-            color: 'hsl(210 40% 98%)',
+            color: 'hsl(var(--chart-tooltip-text))',
             padding: '6px 10px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
           }}
           labelStyle={{
-            color: 'hsl(215 20% 55%)',
+            color: 'hsl(var(--chart-tooltip-muted))',
             fontSize: '10px',
             marginBottom: '2px',
           }}

@@ -17,7 +17,8 @@ import { organizations } from './organizations';
 
 /**
  * PostgreSQL 대상 DB 연결 정보
- * orgId: SaaS 멀티테넌트 소속 조직 (nullable for backward compat)
+ * 단일 테넌트: userId로 소유권 격리 (모든 API에서 userId 기반 필터링)
+ * orgId: 향후 멀티테넌트 확장용 (현재 미사용, nullable)
  */
 export const pgConnections = pgTable('pg_connections', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),

@@ -157,9 +157,9 @@ export default function InstanceMapPage() {
                         <span className="text-muted-foreground">Cache</span>
                         <span className={cn(
                           'font-mono',
-                          Number(inst.metrics.cacheHitRatio) < 0.9 ? 'text-red-400' : 'text-emerald-400'
+                          Number(inst.metrics.cacheHitRatio) < 90 ? 'text-red-400' : 'text-emerald-400'
                         )}>
-                          {(Number(inst.metrics.cacheHitRatio) * 100).toFixed(1)}%
+                          {Number(inst.metrics.cacheHitRatio).toFixed(1)}%
                         </span>
                       </div>
                     </div>
@@ -226,7 +226,7 @@ export default function InstanceMapPage() {
                     <MetricRow label="Active Sessions" value={Number(selectedInstance.metrics.activeSessions) || 0} warn={10} crit={50} />
                     <MetricRow label="Total Connections" value={Number(selectedInstance.metrics.totalSessions) || 0} />
                     <MetricRow label="TPS" value={Number((Number(selectedInstance.metrics.tps) || 0).toFixed(1))} />
-                    <MetricRow label="Cache Hit Ratio" value={`${(Number(selectedInstance.metrics.cacheHitRatio) * 100).toFixed(1)}%`} />
+                    <MetricRow label="Cache Hit Ratio" value={`${Number(selectedInstance.metrics.cacheHitRatio).toFixed(1)}%`} />
                     <MetricRow label="Lock Wait" value={Number(selectedInstance.metrics.lockWaitSessions) || 0} warn={1} crit={5} />
                     <MetricRow label="Slow Queries" value={Number(selectedInstance.metrics.slowQueries) || 0} warn={3} crit={10} />
                   </>

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession } from '@/lib/api-utils';
 import { getLLMClient } from '@/lib/ai/client';
 import { PG_SYSTEM_PROMPT } from '@/lib/ai/prompts/system';
 import { buildSqlAnalysisPrompt, buildExplainAnalysisPrompt } from '@/lib/ai/prompts/analysis';
@@ -15,10 +14,8 @@ import type { ChatMessage } from '@/lib/ai/types';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const body = await request.json();
     const { type, metrics, planJson, sqlText, connection_id } = body;
@@ -67,8 +64,8 @@ export async function POST(request: NextRequest) {
         parsed,
       },
     });
-  } catch (error: any) {
-    console.error('AI analyze error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    console.error('[AIAnalyze]', error);
+    return NextResponse.json({ error: '요청 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

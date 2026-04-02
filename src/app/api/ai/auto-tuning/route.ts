@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { collectSqlStats } from '@/lib/pg/collectors/sql-stats';
 import { getLLMClient } from '@/lib/ai/client';
@@ -16,10 +15,8 @@ import type { ChatMessage } from '@/lib/ai/types';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { connection_id, top_n = 5, order_by = 'total_exec_time' } = await request.json();
 
@@ -27,7 +24,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'connection_id required' }, { status: 400 });
     }
 
-    const config = await getPgConfig(connection_id);
+    const config = await getPgConfig(connection_id, session.user.id);
     const topSql = await collectSqlStats(config, top_n, order_by);
 
     if (topSql.length === 0) {
@@ -67,8 +64,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: { content: response.content, parsed, analyzedCount: topSql.length },
     });
-  } catch (error: any) {
-    console.error('Auto tuning error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'AutoTuning');
   }
 }

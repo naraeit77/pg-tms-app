@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeExplain } from '@/lib/pg/client';
 import { db } from '@/db';
@@ -12,10 +11,8 @@ import { pgExecutionPlans } from '@/db/schema';
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { connection_id, sql, analyze = false, timeout = 30000, queryid, save = false } = await request.json();
 
@@ -23,8 +20,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'connection_id and sql required' }, { status: 400 });
     }
 
-    const config = await getPgConfig(connection_id);
-    const result = await executeExplain(config, sql, analyze, timeout);
+    // pg_stat_statements의 $1, $2 등 파라미터를 NULL로 치환 (EXPLAIN은 실행하지 않으므로 안전)
+    const safeSql = sql.replace(/\$\d+/g, 'NULL');
+
+    const config = await getPgConfig(connection_id, session.user.id);
+    const result = await executeExplain(config, safeSql, analyze, timeout);
 
     // 저장 옵션
     if (save && result.plan) {
@@ -45,9 +45,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: result });
-  } catch (error: any) {
-    console.error('EXPLAIN error:', error);
-    return NextResponse.json({ error: error.message || 'EXPLAIN failed' }, { status: 500 });
+  } catch (error) {
+    return handlePgError(error, 'Explain');
   }
 }
 

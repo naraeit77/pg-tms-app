@@ -1,28 +1,30 @@
 'use client';
 
 /**
- * Dashboard Page - WhaTap Multi-Instance Monitoring Style
- * https://docs.whatap.io/postgresql/multi-instance-monitoring
+ * Instance Monitoring Dashboard - WhaTap Style
+ * https://docs.whatap.io/postgresql/instance-monitoring
  *
- * Layout:
- *   Row 1 (System):  Cache Hit | TPS | Connections | DB Info+Uptime | Temp/Checkpoints
- *   Row 2 (Perf):    Active Sessions | DML Tuples | Slow Query | Logical I/O | SQL Elapse Map
- *   Row 3 (Resource): Lock Wait | Commits | Replication Delay | Physical I/O | Wait Class
- *   Row 4 (Extended): Long Active | Long Waiting | Deadlocks | Vacuum Sessions | Idle in Tx
- *   Bottom:          [액티브 세션] [락 트리] [Top SQL]
+ * Layout (4 rows of 4-5 metric cards + SQL Elapse Map + tabbed bottom):
+ *   Row 1: Active Sessions | Connection 사용 | Transaction 수 | DML별 실행 row수
+ *   Row 2: Lock 대기 수 | Index Hit Ratio | Temp 사용 | Logical I/O
+ *   Row 3: Physical I/O | Buffer Hit Rate(%) | Vacuum 수행 수 | Checkpoint
+ *   Row 4: Long Active Sessions | Idle in Transaction | Deadlocks | Wait Event | SQL Elapse Map
+ *   Bottom: [액티브 세션] [락 트리] [Top SQL]
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Database, AlertTriangle, HardDrive, Server, Shield, Cpu,
+  Database, HardDrive, Server, Shield, Cpu,
   RefreshCw, ArrowUpRight, Pause, Play, Maximize2, Clock,
+  Info,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSelectedDatabase } from '@/hooks/use-selected-database';
 import { MiniTimeChart } from '@/components/charts/mini-time-chart';
+import { SqlElapseMap, SqlElapseLegend, type SqlElapsePoint } from '@/components/charts/sql-elapse-map';
 import { WAIT_COLORS } from '@/components/charts/wait-event-chart';
 import Link from 'next/link';
 import {
@@ -77,7 +79,7 @@ interface DashboardMetrics {
   };
   waitEvents: Array<{ wait_event_type: string; wait_event: string; count: number }>;
   topSql: Array<{
-    queryid: number; query: string; calls: number;
+    queryid: string; query: string; calls: number;
     total_exec_time: number; mean_exec_time: number;
     shared_blks_hit: number; shared_blks_read: number; rows: number;
   }>;
@@ -89,12 +91,13 @@ interface DashboardMetrics {
   slow_query_count?: number;
   replication_delay_sec?: number;
   vacuum_sessions?: number;
-  uptime_sec?: number;
   long_active_sessions?: { under3s: number; s3to10: number; s10to15: number; over15s: number };
   long_waiting_sessions?: { under5s: number; s5to10: number; s10to60: number; over60s: number };
+  uptime_sec?: number;
   pgssStatus?: 'enabled' | 'no_data' | 'not_installed';
 }
 
+/** History point for time-series charts */
 interface HP {
   time: string;
   activeSessions: number; idleSessions: number; idleInTx: number;
@@ -102,15 +105,23 @@ interface HP {
   slowQueries: number; lockWaits: number; deadlocks: number;
   tps: number; commits: number; rollbacks: number;
   dml: number; blksHit: number; blksRead: number;
-  checkpoints: number; tempMB: number;
+  checkpoints: number; tempBytesPerSec: number;
   replicationDelay: number; vacuumSessions: number;
   longActive_under3s: number; longActive_3to10: number;
   longActive_10to15: number; longActive_over15s: number;
   longWaiting_under5s: number; longWaiting_5to10: number;
   longWaiting_10to60: number; longWaiting_over60s: number;
+  /** Buffer hit rate = blksHit / (blksHit + blksRead) * 100 */
+  bufferHitRate: number;
 }
 
-interface RC { timestamp: number; txC: number; txR: number; dml: number; bH: number; bR: number }
+/** Raw cumulative counters for delta calculation */
+interface RC {
+  timestamp: number;
+  txC: number; txR: number; dml: number;
+  bH: number; bR: number; tB: number;
+  ckpt: number;
+}
 
 /* ════════════════════════════════════════════════════════════ */
 /*  Utilities                                                   */
@@ -150,12 +161,13 @@ const durationColor = (ms: number | null) => {
 };
 
 // Recharts dark theme constants
-const GRID = 'hsl(215 25% 20%)';
-const TICK = { fontSize: 9, fill: 'hsl(215 20% 50%)' };
-const TT_STYLE = {
-  backgroundColor: 'hsl(217 33% 15%)',
-  border: '1px solid hsl(215 25% 25%)',
-  borderRadius: '6px', fontSize: '11px', color: 'hsl(210 40% 98%)',
+const GRID = 'hsl(var(--chart-grid))';
+const TICK = { fontSize: 9, fill: 'hsl(var(--chart-tick))' };
+const TT_STYLE: React.CSSProperties = {
+  backgroundColor: 'hsl(var(--chart-tooltip-bg))',
+  border: '1px solid hsl(var(--chart-tooltip-border))',
+  borderRadius: '6px', fontSize: '11px', color: 'hsl(var(--chart-tooltip-text))',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
 };
 
 /* ════════════════════════════════════════════════════════════ */
@@ -168,8 +180,10 @@ export default function DashboardPage() {
   const prevRef = useRef<RC | null>(null);
   const [activeTab, setActiveTab] = useState<'sessions' | 'locktree' | 'topsql'>('sessions');
   const [isPaused, setIsPaused] = useState(false);
+  // SQL Elapse Map data accumulator (max 300 points ≈ 5 minutes)
+  const [elapseData, setElapseData] = useState<SqlElapsePoint[]>([]);
 
-  useEffect(() => { setHistory([]); prevRef.current = null; }, [selectedConnectionId]);
+  useEffect(() => { setHistory([]); prevRef.current = null; setElapseData([]); }, [selectedConnectionId]);
 
   const { data: metrics, isLoading, isError, error, refetch, isFetching } =
     useQuery<DashboardMetrics>({
@@ -178,7 +192,6 @@ export default function DashboardPage() {
         const r = await fetch(`/api/dashboard/metrics?connection_id=${selectedConnectionId}`);
         if (!r.ok) { const b = await r.json().catch(() => ({})); const e = new Error(b.error||'fail'); (e as any).code = b.code; throw e; }
         const json = await r.json();
-        console.log('[Instance] topSql:', json.data?.topSql?.length, 'pgssStatus:', json.data?.pgssStatus);
         return json.data;
       },
       enabled: !!selectedConnectionId && !isPaused,
@@ -200,6 +213,8 @@ export default function DashboardPage() {
     const dt = p ? Math.max(1, (now - p.timestamp) / 1000) : 0;
     const dml = (g.tup_inserted||0)+(g.tup_updated||0)+(g.tup_deleted||0);
     const rate = (cur: number, prev: number) => p ? Math.max(0, Math.round((cur - prev) / dt)) : 0;
+    const bH = rate(g.blks_hit||0, p?.bH||0);
+    const bR = rate(g.blks_read||0, p?.bR||0);
 
     const pt: HP = {
       time,
@@ -211,8 +226,8 @@ export default function DashboardPage() {
       slowQueries: metrics.slow_query_count || 0,
       lockWaits: metrics.blockedSessions.length,
       deadlocks: g.deadlocks,
-      checkpoints: g.checkpoints_timed + g.checkpoints_req,
-      tempMB: Math.round(g.temp_bytes / (1024*1024)),
+      checkpoints: rate((g.checkpoints_timed + g.checkpoints_req), p?.ckpt || 0),
+      tempBytesPerSec: rate(g.temp_bytes, p?.tB||0),
       replicationDelay: metrics.replication_delay_sec || 0,
       vacuumSessions: metrics.vacuum_sessions || 0,
       longActive_under3s: metrics.long_active_sessions?.under3s || 0,
@@ -227,58 +242,107 @@ export default function DashboardPage() {
       commits: rate(g.tx_committed, p?.txC||0),
       rollbacks: rate(g.tx_rolled_back, p?.txR||0),
       dml: rate(dml, p?.dml||0),
-      blksHit: rate(g.blks_hit||0, p?.bH||0),
-      blksRead: rate(g.blks_read||0, p?.bR||0),
+      blksHit: bH,
+      blksRead: bR,
+      bufferHitRate: (bH + bR) > 0 ? (bH / (bH + bR)) * 100 : 100,
     };
-    prevRef.current = { timestamp: now, txC: g.tx_committed, txR: g.tx_rolled_back, dml, bH: g.blks_hit||0, bR: g.blks_read||0 };
+    prevRef.current = {
+      timestamp: now, txC: g.tx_committed, txR: g.tx_rolled_back,
+      dml, bH: g.blks_hit||0, bR: g.blks_read||0, tB: g.temp_bytes,
+      ckpt: g.checkpoints_timed + g.checkpoints_req,
+    };
     if (p) setHistory(h => [...h.slice(-59), pt]);
+
+    // ── Accumulate SQL Elapse Map points ──
+    const newPoints: SqlElapsePoint[] = [];
+
+    // 1) 현재 활성 세션의 실행 시간 (실시간 데이터)
+    if (metrics.sessions.activeSessions.length > 0) {
+      metrics.sessions.activeSessions.forEach((s, i) => {
+        if (s.query_duration_ms != null) {
+          newPoints.push({
+            time,
+            timeNum: now + i, // 각 포인트 X좌표 미세 분리
+            elapsed: Math.max(s.query_duration_ms, 1) / 1000,
+            pid: s.pid,
+            query: s.query,
+            user: s.usename,
+          });
+        }
+      });
+    }
+
+    // 2) Top SQL의 평균 실행시간 (활성 세션이 없어도 scatter 포인트 생성)
+    if (newPoints.length === 0 && metrics.topSql && metrics.topSql.length > 0) {
+      metrics.topSql.slice(0, 5).forEach((sql, i) => {
+        if (sql.mean_exec_time > 0) {
+          newPoints.push({
+            time,
+            timeNum: now + i,
+            elapsed: sql.mean_exec_time / 1000,
+            query: sql.query?.substring(0, 100),
+          });
+        }
+      });
+    }
+
+    if (newPoints.length > 0) {
+      setElapseData(prev => [...prev.slice(-300 + newPoints.length), ...newPoints]);
+    }
   }, [metrics?.timestamp]);
+
+  // Derived data
+  const s = metrics?.sessions;
+  const g = metrics?.global;
+  const lv = history.length > 0 ? history[history.length - 1] : null;
 
   const waitClassData = useMemo(() => {
     if (!metrics?.waitEvents) return [];
-    const m: Record<string, number> = {};
-    metrics.waitEvents.forEach(e => { m[e.wait_event_type||'Other'] = (m[e.wait_event_type||'Other']||0)+Number(e.count); });
-    return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n,c])=>({name:n,count:c,fill:WAIT_COLORS[n]||'#475569'}));
+    const grouped = new Map<string, number>();
+    metrics.waitEvents.forEach(e => {
+      grouped.set(e.wait_event_type, (grouped.get(e.wait_event_type) || 0) + e.count);
+    });
+    return Array.from(grouped.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([name, count]) => ({
+        name: name.length > 8 ? name.substring(0, 7) + '…' : name,
+        count,
+        fill: (WAIT_COLORS as Record<string, string>)[name] || '#6b7280',
+      }));
   }, [metrics?.waitEvents]);
 
-  const topSqlChart = useMemo(() => {
-    if (!metrics?.topSql) return [];
-    return metrics.topSql.slice(0,5).map((s,i) => ({ name:`SQL-${i+1}`, elapsed: Math.round(s.mean_exec_time*100)/100 }));
-  }, [metrics?.topSql]);
+  if (!selectedConnection) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
+        <Database className="h-12 w-12 text-muted-foreground/30"/>
+        <p className="text-sm text-muted-foreground">모니터링할 데이터베이스를 선택하세요</p>
+      </div>
+    );
+  }
 
-  const g = metrics?.global;
-  const s = metrics?.sessions;
-  const lv = history.length > 0 ? history[history.length - 1] : null;
-
-  if (!selectedConnection) return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <Database className="h-16 w-16 text-muted-foreground/30 mb-4" />
-      <h3 className="text-lg font-semibold text-foreground mb-2">데이터베이스를 연결해주세요</h3>
-      <p className="text-muted-foreground text-sm text-center max-w-md">상단 헤더의 DB선택에서 PostgreSQL 데이터베이스를 선택하거나, DB 연결 관리에서 새 연결을 추가하세요.</p>
-    </div>
-  );
-
-  if (isError) return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <AlertTriangle className="h-16 w-16 text-red-400 mb-4" />
-      <h3 className="text-lg font-semibold mb-2">메트릭 조회 실패</h3>
-      <p className="text-muted-foreground text-sm mb-4">{(error as any)?.code==='CONNECTION_ERROR'?'대상 데이터베이스에 연결할 수 없습니다.':error?.message}</p>
-      <Button variant="outline" size="sm" onClick={()=>refetch()}><RefreshCw className="h-4 w-4 mr-1.5"/>다시 시도</Button>
-    </div>
-  );
+  if (isError) {
+    const code = (error as any)?.code;
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
+        <div className="text-red-400 text-sm font-medium">{code === 'CONNECTION_ERROR' ? '데이터베이스 연결 실패' : '데이터 조회 중 오류 발생'}</div>
+        <p className="text-xs text-muted-foreground max-w-md text-center">{(error as Error).message}</p>
+        <Button variant="outline" size="sm" onClick={() => refetch()}>재시도</Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-2">
-      {/* ── Live Header ── */}
+    <div className="space-y-2 p-2">
+      {/* ── Header bar ── */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <button onClick={()=>setIsPaused(!isPaused)} className="flex items-center justify-center w-7 h-7 rounded bg-muted hover:bg-muted/80 transition-colors" title={isPaused?'재개':'일시정지'}>
-              {isPaused?<Play className="h-3.5 w-3.5 text-foreground/70"/>:<Pause className="h-3.5 w-3.5 text-foreground/70"/>}
-            </button>
-            {!isPaused ? <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white text-[10px] px-2 py-0.5 font-bold animate-pulse">LIVE</Badge>
-              : <Badge variant="outline" className="text-[10px] px-2 py-0.5 text-muted-foreground">PAUSED</Badge>}
-          </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={()=>setIsPaused(p=>!p)} className="h-7 px-2 gap-1">
+            {isPaused ? <Play className="h-3 w-3"/> : <Pause className="h-3 w-3"/>}
+          </Button>
+          {isPaused
+            ? <Badge variant="outline" className="text-[10px] px-2 py-0.5 text-muted-foreground">PAUSED</Badge>
+            : <Badge variant="outline" className="text-[10px] px-2 py-0.5 text-emerald-400 border-emerald-500/30">LIVE</Badge>}
           {metrics?.timestamp && <span className="text-xs text-muted-foreground font-mono">{new Date(metrics.timestamp).toLocaleTimeString('ko-KR')}</span>}
           <div className="h-4 w-px bg-border hidden sm:block"/>
           <span className="text-xs text-muted-foreground font-medium hidden sm:inline">{selectedConnection.name}</span>
@@ -306,104 +370,93 @@ export default function DashboardPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 1: System Overview                                   */}
+      {/* Row 1: 액티브 세션 수 | Connection 사용 | Transaction 수 | DML별 실행 row수 */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-        <WCard title="Cache Hit Ratio" val={isLoading?'-':`${g?.cache_hit_ratio??0}%`} vc={g&&g.cache_hit_ratio>=99?'text-emerald-400':g&&g.cache_hit_ratio>=95?'text-amber-400':'text-red-400'}>
-          <MiniTimeChart data={history} series={[{key:'cacheHitRatio',color:'#6366f1',name:'Hit%'}]} height={100} yFormatter={v=>`${v}%`}/>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <WCard title="액티브 세션 수" val={isLoading?'-':String(s?.active??0)} vc="text-blue-400" link="/monitoring/sessions">
+          <MiniTimeChart data={history} series={[
+            {key:'activeSessions',color:'#3b82f6',name:'Active'},
+            {key:'idleSessions',color:'#64748b',name:'Idle'},
+            {key:'idleInTx',color:'#f59e0b',name:'Idle in Tx'},
+          ]} height={100}/>
         </WCard>
-        <WCard title="TPS" val={lv?fmtNum(lv.tps):'-'} vc="text-emerald-400">
-          <MiniTimeChart data={history} series={[{key:'tps',color:'#10b981',name:'TPS'}]} height={100}/>
+        <WCard title="Connection 사용" val={isLoading?'-':String(g?.total_connections??0)} link="/monitoring/sessions">
+          <MiniTimeChart data={history} series={[
+            {key:'totalConnections',color:'#3b82f6',name:'Total'},
+            {key:'activeSessions',color:'#10b981',name:'Active'},
+            {key:'idleInTx',color:'#f59e0b',name:'Idle in Tx'},
+          ]} height={100}/>
         </WCard>
-        <WCard title="Connections" val={isLoading?'-':String(g?.total_connections??0)} link="/monitoring/sessions">
-          <MiniTimeChart data={history} series={[{key:'totalConnections',color:'#64748b',name:'Total'},{key:'idleInTx',color:'#f59e0b',name:'Idle in Tx'}]} height={100}/>
+        <WCard title="Transaction 수" val={lv?`${fmtNum(lv.tps)}/s`:'-'} vc="text-emerald-400">
+          <MiniTimeChart data={history} series={[
+            {key:'commits',color:'#10b981',name:'Commits/s'},
+            {key:'rollbacks',color:'#ef4444',name:'Rollbacks/s'},
+          ]} height={100}/>
         </WCard>
-        {/* DB Info + Uptime - text card */}
-        <div className="bg-card rounded border border-border p-3 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-medium text-muted-foreground">Database Info</span>
-            {metrics?.uptime_sec != null && <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3"/>{fmtUptime(metrics.uptime_sec)}</span>}
-          </div>
-          <div className="space-y-1.5 flex-1">
-            <IR icon={<HardDrive className="h-3 w-3"/>} label="Size" value={isLoading?'-':fmtBytes(g?.db_size??0)} bold/>
-            <IR icon={<Server className="h-3 w-3"/>} label="Host" value={`${selectedConnection.host}:${selectedConnection.port}`} mono/>
-            <IR icon={<Shield className="h-3 w-3"/>} label="Version" value={selectedConnection.pgVersion||'-'}/>
-            <IR icon={<Cpu className="h-3 w-3"/>} label="Deadlocks" value={isLoading?'-':String(g?.deadlocks??0)} bold/>
-          </div>
-          <div className="flex gap-1 pt-1.5 mt-1 border-t border-border/50">
-            {selectedConnection.pgStatStatementsEnabled
-              ? <Badge variant="outline" className="text-[8px] h-3.5 px-1 border-emerald-500/30 text-emerald-400">pg_stat_statements ✓</Badge>
-              : <Badge variant="outline" className="text-[8px] h-3.5 px-1 border-amber-500/30 text-amber-400">pg_stat_statements ✗</Badge>}
-          </div>
-        </div>
-        {/* Temp + Checkpoints combined */}
-        <div className="bg-card rounded border border-border p-3">
-          <span className="text-[11px] font-medium text-muted-foreground">Temp / Checkpoints</span>
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div><div className="text-[10px] text-muted-foreground/70">Temp Usage</div><div className="text-sm font-bold text-foreground">{isLoading?'-':fmtBytes(g?.temp_bytes??0)}</div></div>
-            <div><div className="text-[10px] text-muted-foreground/70">Checkpoints</div><div className="text-sm font-bold text-foreground">{isLoading?'-':String((g?.checkpoints_timed??0)+(g?.checkpoints_req??0))}</div></div>
-            <div><div className="text-[10px] text-muted-foreground/70">Timed</div><div className="text-xs font-semibold text-foreground/70">{g?.checkpoints_timed??0}</div></div>
-            <div><div className="text-[10px] text-muted-foreground/70">Requested</div><div className="text-xs font-semibold text-foreground/70">{g?.checkpoints_req??0}</div></div>
-          </div>
-        </div>
+        <WCard title="DML별 실행 row수" val={lv?`${fmtNum(lv.dml)}/s`:'-'} vc="text-purple-400">
+          <MiniTimeChart data={history} series={[{key:'dml',color:'#8b5cf6',name:'DML/s'}]} height={100}/>
+        </WCard>
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 2: DB Performance (WhaTap default)                   */}
+      {/* Row 2: Lock 대기 수 | Index hit ratio | temp 사용 | Logical I/O */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-        <WCard title="Active Sessions" val={isLoading?'-':String(s?.active??0)} vc="text-blue-400" link="/monitoring/sessions">
-          <MiniTimeChart data={history} series={[{key:'activeSessions',color:'#3b82f6',name:'Active'}]} height={100}/>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <WCard title="Lock 대기 수" val={isLoading?'-':String(metrics?.blockedSessions.length??0)} vc={(metrics?.blockedSessions.length??0)>0?'text-red-400':'text-foreground/50'} link="/monitoring/locks">
+          <MiniTimeChart data={history} series={[{key:'lockWaits',color:'#ef4444',name:'Lock Waits'}]} height={100}/>
         </WCard>
-        <WCard title="DML Tuples" val={lv?`${fmtNum(lv.dml)}/s`:'-'} vc="text-purple-400">
-          <MiniTimeChart data={history} series={[{key:'dml',color:'#8b5cf6',name:'DML/s'}]} height={100}/>
+        <WCard title="Index hit ratio" val={isLoading?'-':`${g?.cache_hit_ratio??0}%`} vc={g&&g.cache_hit_ratio>=99?'text-emerald-400':g&&g.cache_hit_ratio>=95?'text-amber-400':'text-red-400'}>
+          <MiniTimeChart data={history} series={[{key:'cacheHitRatio',color:'#6366f1',name:'Hit%'}]} height={100} yFormatter={v=>`${v}%`}/>
         </WCard>
-        <WCard title="Slow Query" val={isLoading?'-':String(metrics?.slow_query_count??0)} vc={(metrics?.slow_query_count??0)>0?'text-amber-400':'text-foreground/50'}>
-          <MiniTimeChart data={history} series={[{key:'slowQueries',color:'#f59e0b',name:'Slow'}]} height={100}/>
+        <WCard title="temp 사용" val={isLoading?'-':history.length>0?fmtBytes(history[history.length-1]?.tempBytesPerSec??0)+'/s':'0 B/s'}>
+          <MiniTimeChart data={history} series={[{key:'tempBytesPerSec',color:'#f97316',name:'Temp/s'}]} height={100} yFormatter={v=>fmtBytes(v)}/>
         </WCard>
         <WCard title="Logical I/O" val={lv?`${fmtNum(lv.blksHit)}/s`:'-'} vc="text-blue-400" sub={lv&&lv.blksRead>0?`Read: ${fmtNum(lv.blksRead)}/s`:undefined} sc="text-red-400">
           <MiniTimeChart data={history} series={[{key:'blksHit',color:'#3b82f6',name:'Hit/s'},{key:'blksRead',color:'#ef4444',name:'Read/s'}]} height={100}/>
         </WCard>
-        {/* SQL Elapse Map */}
-        <div className="bg-card rounded border border-border p-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-medium text-muted-foreground">SQL Elapse Map</span>
-            <Link href="/monitoring/top-sql" className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-0.5">상세<ArrowUpRight className="h-2.5 w-2.5"/></Link>
-          </div>
-          {topSqlChart.length===0
-            ? <div className="flex items-center justify-center h-[100px] text-[11px] text-muted-foreground">SQL 데이터 없음</div>
-            : <ResponsiveContainer width="100%" height={100}><BarChart data={topSqlChart} margin={{top:0,right:5,left:-10,bottom:0}}>
-                <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false}/>
-                <XAxis dataKey="name" tick={TICK} tickLine={false} axisLine={false}/>
-                <YAxis tick={TICK} tickLine={false} axisLine={false} width={40}/>
-                <Tooltip contentStyle={TT_STYLE} formatter={(v:any)=>[fmtMs(Number(v)),'Avg']}/>
-                <Bar dataKey="elapsed" radius={[3,3,0,0]} barSize={16}>
-                  {topSqlChart.map((_,i)=><Cell key={i} fill={['#3b82f6','#6366f1','#8b5cf6','#a855f7','#c084fc'][i]}/>)}
-                </Bar>
-              </BarChart></ResponsiveContainer>}
-        </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 3: DB Resources (WhaTap default)                     */}
+      {/* Row 3: Physical I/O | Buffer Hit Rate(%) | vacuum 수행 수 | Checkpoint */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-        <WCard title="Lock Wait Sessions" val={isLoading?'-':String(metrics?.blockedSessions.length??0)} vc={(metrics?.blockedSessions.length??0)>0?'text-red-400':'text-foreground/50'} link="/monitoring/locks">
-          <MiniTimeChart data={history} series={[{key:'lockWaits',color:'#ef4444',name:'Lock Waits'}]} height={100}/>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <WCard title="Physical I/O" val={lv?`${fmtNum(lv.blksRead)}/s`:'-'} vc="text-orange-400">
+          <MiniTimeChart data={history} series={[{key:'blksRead',color:'#f97316',name:'Blks Read/s'}]} height={100}/>
         </WCard>
-        <WCard title="Commits" val={lv?`${fmtNum(lv.commits)}/s`:'-'} vc="text-emerald-400" sub={lv&&lv.rollbacks>0?`Rollback: ${lv.rollbacks}/s`:undefined} sc="text-red-400">
-          <MiniTimeChart data={history} series={[{key:'commits',color:'#10b981',name:'Commits/s'},{key:'rollbacks',color:'#ef4444',name:'Rollbacks/s'}]} height={100}/>
+        <WCard title="Buffer Hit Rate(%)" val={lv?`${lv.bufferHitRate.toFixed(1)}%`:'-'} vc={lv&&lv.bufferHitRate>=99?'text-emerald-400':lv&&lv.bufferHitRate>=95?'text-amber-400':'text-red-400'}>
+          <MiniTimeChart data={history} series={[{key:'bufferHitRate',color:'#10b981',name:'Hit%'}]} height={100} yFormatter={v=>`${v.toFixed(0)}%`}/>
+        </WCard>
+        <WCard title="vacuum 수행 수" val={isLoading?'-':String(metrics?.vacuum_sessions??0)} vc={(metrics?.vacuum_sessions??0)>3?'text-amber-400':'text-foreground/50'} link="/monitoring/vacuum">
+          <MiniTimeChart data={history} series={[{key:'vacuumSessions',color:'#14b8a6',name:'Vacuum'}]} height={100}/>
+        </WCard>
+        <WCard title="Checkpoint" val={lv?String(lv.checkpoints):'-'}>
+          <MiniTimeChart data={history} series={[{key:'checkpoints',color:'#8b5cf6',name:'Checkpoints'}]} height={100}/>
+        </WCard>
+      </div>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* Row 4: Long Active | Replication Delay | Deadlocks | Wait Event | SQL Elapse Map */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+        <WCard title="Long Active Session Count" val={isLoading?'-':String((metrics?.long_active_sessions?.s3to10??0)+(metrics?.long_active_sessions?.s10to15??0)+(metrics?.long_active_sessions?.over15s??0))}
+          vc={(metrics?.long_active_sessions?.over15s??0)>0?'text-red-400':(metrics?.long_active_sessions?.s10to15??0)>0?'text-orange-400':'text-foreground/50'}>
+          <MiniTimeChart data={history} series={[
+            {key:'longActive_under3s',color:'#3b82f6',name:'<3s'},
+            {key:'longActive_3to10',color:'#10b981',name:'3-10s'},
+            {key:'longActive_10to15',color:'#f97316',name:'10-15s'},
+            {key:'longActive_over15s',color:'#ef4444',name:'>15s'},
+          ]} height={100} stacked/>
         </WCard>
         <WCard title="Replication Delay(Sec)" val={isLoading?'-':`${(metrics?.replication_delay_sec??0).toFixed(1)}s`} vc={(metrics?.replication_delay_sec??0)>10?'text-red-400':(metrics?.replication_delay_sec??0)>1?'text-amber-400':'text-emerald-400'}>
           <MiniTimeChart data={history} series={[{key:'replicationDelay',color:'#06b6d4',name:'Delay(s)'}]} height={100} yFormatter={v=>`${v.toFixed(1)}s`}/>
         </WCard>
-        <WCard title="Physical I/O" val={lv?`${fmtNum(lv.blksRead)}/s`:'-'} vc="text-orange-400">
-          <MiniTimeChart data={history} series={[{key:'blksRead',color:'#f97316',name:'Blks Read/s'}]} height={100}/>
+        <WCard title="Deadlocks" val={isLoading?'-':String(g?.deadlocks??0)} vc={(g?.deadlocks??0)>0?'text-red-400':'text-emerald-400'}>
+          <MiniTimeChart data={history} series={[{key:'deadlocks',color:'#e11d48',name:'Deadlocks'}]} height={100}/>
         </WCard>
-        {/* Wait Class - horizontal bar */}
+        {/* Wait Event - horizontal bar */}
         <div className="bg-card rounded border border-border p-3">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-medium text-muted-foreground">Wait Class</span>
+            <span className="text-[11px] font-medium text-muted-foreground">Wait Event</span>
             <Link href="/monitoring/wait-events" className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-0.5">상세<ArrowUpRight className="h-2.5 w-2.5"/></Link>
           </div>
           {waitClassData.length===0
@@ -417,39 +470,35 @@ export default function DashboardPage() {
                 </Bar>
               </BarChart></ResponsiveContainer>}
         </div>
+        {/* SQL Elapse Map - scatter chart */}
+        <div className="bg-card rounded border border-border p-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-medium text-muted-foreground">SQL Elapse Map</span>
+            <div className="flex items-center gap-2">
+              <SqlElapseLegend compact/>
+              <Link href="/monitoring/top-sql" className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-0.5">상세<ArrowUpRight className="h-2.5 w-2.5"/></Link>
+            </div>
+          </div>
+          <SqlElapseMap data={elapseData} height={100} compact/>
+        </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 4: Extended Monitoring                                */}
+      {/* DB Info Bar                                              */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-        <WCard title="Long Active Session Count" val={isLoading?'-':String((metrics?.long_active_sessions?.s3to10??0)+(metrics?.long_active_sessions?.s10to15??0)+(metrics?.long_active_sessions?.over15s??0))}
-          vc={(metrics?.long_active_sessions?.over15s??0)>0?'text-red-400':(metrics?.long_active_sessions?.s10to15??0)>0?'text-orange-400':'text-foreground/50'}>
-          <MiniTimeChart data={history} series={[
-            {key:'longActive_under3s',color:'#3b82f6',name:'<3s'},
-            {key:'longActive_3to10',color:'#10b981',name:'3-10s'},
-            {key:'longActive_10to15',color:'#f97316',name:'10-15s'},
-            {key:'longActive_over15s',color:'#ef4444',name:'>15s'},
-          ]} height={100} stacked/>
-        </WCard>
-        <WCard title="Long Waiting Session Count" val={isLoading?'-':String((metrics?.long_waiting_sessions?.s5to10??0)+(metrics?.long_waiting_sessions?.s10to60??0)+(metrics?.long_waiting_sessions?.over60s??0))}
-          vc={(metrics?.long_waiting_sessions?.over60s??0)>0?'text-red-400':'text-foreground/50'}>
-          <MiniTimeChart data={history} series={[
-            {key:'longWaiting_under5s',color:'#3b82f6',name:'<5s'},
-            {key:'longWaiting_5to10',color:'#10b981',name:'5-10s'},
-            {key:'longWaiting_10to60',color:'#f97316',name:'10-60s'},
-            {key:'longWaiting_over60s',color:'#ef4444',name:'>60s'},
-          ]} height={100} stacked/>
-        </WCard>
-        <WCard title="Deadlocks" val={isLoading?'-':String(g?.deadlocks??0)} vc={(g?.deadlocks??0)>0?'text-red-400':'text-emerald-400'}>
-          <MiniTimeChart data={history} series={[{key:'deadlocks',color:'#e11d48',name:'Deadlocks'}]} height={100}/>
-        </WCard>
-        <WCard title="Vacuum Sessions" val={isLoading?'-':String(metrics?.vacuum_sessions??0)} vc={(metrics?.vacuum_sessions??0)>3?'text-amber-400':'text-foreground/50'} link="/monitoring/vacuum">
-          <MiniTimeChart data={history} series={[{key:'vacuumSessions',color:'#14b8a6',name:'Vacuum'}]} height={100}/>
-        </WCard>
-        <WCard title="Idle in Transaction" val={isLoading?'-':String(s?.idleInTx??0)} vc={(s?.idleInTx??0)>0?'text-amber-400':'text-foreground/50'}>
-          <MiniTimeChart data={history} series={[{key:'idleInTx',color:'#eab308',name:'Idle in Tx'}]} height={100}/>
-        </WCard>
+      <div className="bg-card rounded border border-border px-4 py-2 flex items-center justify-between flex-wrap gap-x-6 gap-y-1">
+        <div className="flex items-center gap-4 text-xs">
+          <IR icon={<HardDrive className="h-3 w-3"/>} label="Size" value={isLoading?'-':fmtBytes(g?.db_size??0)} bold/>
+          <IR icon={<Server className="h-3 w-3"/>} label="Host" value={`${selectedConnection.host}:${selectedConnection.port}`} mono/>
+          <IR icon={<Shield className="h-3 w-3"/>} label="Version" value={selectedConnection.pgVersion||'-'}/>
+          <IR icon={<Cpu className="h-3 w-3"/>} label="Deadlocks" value={isLoading?'-':String(g?.deadlocks??0)} bold/>
+        </div>
+        <div className="flex items-center gap-3">
+          {metrics?.uptime_sec != null && <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3"/>Uptime: {fmtUptime(metrics.uptime_sec)}</span>}
+          {selectedConnection.pgStatStatementsEnabled
+            ? <Badge variant="outline" className="text-[8px] h-3.5 px-1 border-emerald-500/30 text-emerald-400">pg_stat_statements ✓</Badge>
+            : <Badge variant="outline" className="text-[8px] h-3.5 px-1 border-amber-500/30 text-amber-400">pg_stat_statements ✗</Badge>}
+        </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
@@ -499,8 +548,8 @@ function WCard({title,val,vc='text-foreground',sub,sc='text-muted-foreground',li
 
 function IR({icon,label,value,bold,mono}:{icon:React.ReactNode;label:string;value:string;bold?:boolean;mono?:boolean}) {
   return (
-    <div className="flex items-center justify-between">
-      <span className="text-[11px] text-muted-foreground flex items-center gap-1.5">{icon}{label}</span>
+    <div className="flex items-center gap-1.5">
+      <span className="text-[11px] text-muted-foreground flex items-center gap-1">{icon}{label}</span>
       <span className={cn('text-xs text-foreground truncate max-w-[110px]',bold&&'font-bold',mono&&'font-mono text-[10px]')}>{value}</span>
     </div>
   );

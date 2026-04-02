@@ -87,10 +87,10 @@ export async function createSnapshot(connectionId: string): Promise<string> {
     // SQL 통계 저장 (배치 insert)
     if (sqlStats.length > 0) {
       const sqlValues = sqlStats.map((s) => {
-        const prev = prevSqlMap.get(s.queryid);
+        const prev = prevSqlMap.get(Number(s.queryid));
         return {
           snapshotId,
-          queryid: s.queryid,
+          queryid: Number(s.queryid),
           query: s.query,
           username: s.username,
           calls: s.calls,

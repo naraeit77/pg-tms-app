@@ -16,31 +16,72 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 210 20% 98%;
+    --foreground: 220 20% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 220 20% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --popover-foreground: 220 20% 14%;
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 20% 95%;
+    --secondary-foreground: 220 20% 18%;
+    --muted: 215 15% 94%;
+    --muted-foreground: 215 15% 46%;
+    --accent: 215 20% 95%;
+    --accent-foreground: 220 20% 18%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 217 91% 50%;
     --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: 217 91% 50%;
+    --chart-2: 160 60% 42%;
+    --chart-3: 30 80% 50%;
+    --chart-4: 280 65% 55%;
+    --chart-5: 340 75% 50%;
+
+    /* Chart area styling (referenced by chart components) */
+    --chart-grid: 215 20% 88%;
+    --chart-tick: 215 15% 50%;
+    --chart-tooltip-bg: 0 0% 100%;
+    --chart-tooltip-border: 215 20% 90%;
+    --chart-tooltip-text: 220 20% 14%;
+    --chart-tooltip-muted: 215 15% 46%;
+
+    /* WhaTap-style status colors */
+    --status-normal: 217 91% 50%;
+    --status-warning: 25 95% 50%;
+    --status-critical: 0 84% 55%;
+    --status-inactive: 215 14% 55%;
+
+    /* Performance text colors */
+    --perf-normal: 220 20% 14%;
+    --perf-slow: 25 95% 50%;
+    --perf-critical: 0 84% 55%;
+
+    /* Wait event type colors */
+    --wait-cpu: 160 60% 38%;
+    --wait-io: 270 60% 50%;
+    --wait-lock: 0 84% 55%;
+    --wait-lwlock: 340 75% 50%;
+    --wait-client: 217 91% 50%;
+    --wait-ipc: 45 93% 42%;
+    --wait-bufferpin: 200 80% 45%;
+    --wait-activity: 215 14% 55%;
+    --wait-extension: 30 80% 50%;
+    --wait-timeout: 280 65% 55%;
+
+    /* Sidebar & Header */
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-border: 215 20% 90%;
+    --sidebar-text: 220 20% 30%;
+    --sidebar-text-muted: 215 15% 55%;
+    --sidebar-hover: 215 20% 96%;
+    --sidebar-active-bg: 217 91% 96%;
+    --sidebar-active-text: 217 91% 45%;
+    --sidebar-section-border: 215 20% 92%;
   }
 
   .dark {
@@ -69,18 +110,20 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    /* WhaTap-style status colors */
+    --chart-grid: 215 25% 20%;
+    --chart-tick: 215 20% 55%;
+    --chart-tooltip-bg: 217 33% 15%;
+    --chart-tooltip-border: 215 25% 25%;
+    --chart-tooltip-text: 210 40% 98%;
+    --chart-tooltip-muted: 215 20% 55%;
+
     --status-normal: 217 91% 60%;
     --status-warning: 25 95% 53%;
     --status-critical: 0 84% 60%;
     --status-inactive: 215 14% 45%;
-
-    /* Performance text colors */
     --perf-normal: 210 40% 98%;
     --perf-slow: 25 95% 53%;
     --perf-critical: 0 84% 60%;
-
-    /* Wait event type colors */
     --wait-cpu: 160 60% 45%;
     --wait-io: 270 60% 60%;
     --wait-lock: 0 84% 60%;
@@ -91,10 +134,14 @@
     --wait-activity: 215 14% 45%;
     --wait-extension: 30 80% 55%;
     --wait-timeout: 280 65% 60%;
-
-    /* Sidebar */
     --sidebar-bg: 222 55% 7%;
-    --sidebar-hover: 217 91% 60%;
+    --sidebar-border: 215 25% 20%;
+    --sidebar-text: 210 40% 98%;
+    --sidebar-text-muted: 215 20% 55%;
+    --sidebar-hover: 215 25% 15%;
+    --sidebar-active-bg: 217 91% 15%;
+    --sidebar-active-text: 217 91% 60%;
+    --sidebar-section-border: 215 25% 18%;
   }
 }
 

@@ -47,7 +47,7 @@ export default function ReportsPage() {
     enabled: !!selectedConnectionId,
   });
 
-  const snapshots: Snapshot[] = snapshotData || [];
+  const snapshots: Snapshot[] = snapshotData?.data || [];
 
   return (
     <div className="space-y-4">
@@ -148,7 +148,7 @@ export default function ReportsPage() {
                     <div className="flex gap-3 mt-0.5 text-[11px]">
                       <span>TPS: <strong>{snap.tps?.toFixed(1) || '-'}</strong></span>
                       <span>Active: <strong>{snap.activeConnections || '-'}</strong></span>
-                      <span>Cache: <strong>{snap.cacheHitRatio ? `${(snap.cacheHitRatio * 100).toFixed(1)}%` : '-'}</strong></span>
+                      <span>Cache: <strong>{snap.cacheHitRatio ? `${Number(snap.cacheHitRatio).toFixed(1)}%` : '-'}</strong></span>
                     </div>
                   </div>
                 </div>

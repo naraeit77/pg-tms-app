@@ -16,6 +16,12 @@ import { users } from './users';
 /**
  * 조직 (멀티테넌트 최상위 단위)
  * SaaS 요금제, 리소스 쿼터, 빌링 등의 단위
+ *
+ * [SINGLE-TENANT NOTE] 현재 v1.0은 단일 테넌트 모드로 운영됩니다.
+ * 이 스키마는 향후 멀티테넌트 확장을 위해 유지하며,
+ * API 라우트에서는 userId 기반으로만 데이터를 격리합니다.
+ * organizations, orgMembers, teams, teamMembers, teamConnections 테이블은
+ * 현재 사용되지 않습니다.
  */
 export const organizations = pgTable('organizations', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),

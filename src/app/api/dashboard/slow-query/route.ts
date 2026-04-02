@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
 import { executeQuery } from '@/lib/pg';
 
@@ -13,10 +12,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const connectionId = request.nextUrl.searchParams.get('connection_id');
     if (!connectionId) {
@@ -24,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     const thresholdMs = Number(request.nextUrl.searchParams.get('threshold_ms') || '100');
-    const config = await getPgConfig(connectionId);
+    const config = await getPgConfig(connectionId, session.user.id);
 
     // 현재 활성 세션에서 느린 쿼리 추출 + pg_stat_statements에서 과거 슬로우 쿼리 보완
     const [activeSlow, statsSlow] = await Promise.all([
@@ -118,11 +115,7 @@ export async function GET(request: NextRequest) {
       },
       timestamp: new Date().toISOString(),
     });
-  } catch (error: any) {
-    console.error('Slow query error:', error?.message || error);
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handlePgError(error, 'SlowQuery');
   }
 }

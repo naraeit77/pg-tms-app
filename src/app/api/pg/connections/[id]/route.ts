@@ -1,11 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest } from 'next/server';
 import { db } from '@/db';
 import { pgConnections, auditLogs } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { encrypt } from '@/lib/crypto';
 import { invalidateConnectionCache } from '@/lib/pg/utils';
+import {
+  requireSession,
+  apiSuccess,
+  apiError,
+} from '@/lib/api-utils';
 
 /**
  * GET /api/pg/connections/[id]
@@ -15,10 +18,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
 
@@ -29,16 +30,16 @@ export async function GET(
       .limit(1);
 
     if (!connection) {
-      return NextResponse.json({ error: 'Connection not found' }, { status: 404 });
+      return apiError('연결을 찾을 수 없습니다.', 'NOT_FOUND', 404);
     }
 
     // 비밀번호는 반환하지 않음
     const { passwordEncrypted, ...safeConnection } = connection;
 
-    return NextResponse.json({ success: true, data: safeConnection });
+    return apiSuccess(safeConnection);
   } catch (error) {
     console.error('Failed to fetch connection:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return apiError('연결 조회에 실패했습니다.', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -50,16 +51,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
     const body = await request.json();
     const { name, description, host, port, database, username, password, sslMode, searchPath, isDefault } = body;
 
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       updatedAt: new Date(),
     };
 
@@ -81,25 +80,27 @@ export async function PUT(
       .returning();
 
     if (!updated) {
-      return NextResponse.json({ error: 'Connection not found' }, { status: 404 });
+      return apiError('연결을 찾을 수 없습니다.', 'NOT_FOUND', 404);
     }
 
-    // 캐시 무효화
     invalidateConnectionCache(id);
 
-    // 감사 로그
-    await db.insert(auditLogs).values({
-      userId: session.user.id,
-      action: 'UPDATE_CONNECTION',
-      resourceType: 'pg_connection',
-      resourceId: id,
-      details: { fields_updated: Object.keys(updateData).filter((k) => k !== 'updatedAt') },
-    });
+    try {
+      await db.insert(auditLogs).values({
+        userId: session.user.id,
+        action: 'UPDATE_CONNECTION',
+        resourceType: 'pg_connection',
+        resourceId: id,
+        details: { fields_updated: Object.keys(updateData).filter((k) => k !== 'updatedAt') },
+      });
+    } catch (auditError) {
+      console.error('[Audit] UPDATE_CONNECTION log failed:', auditError);
+    }
 
-    return NextResponse.json({ success: true, data: updated });
+    return apiSuccess(updated);
   } catch (error) {
     console.error('Failed to update connection:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return apiError('연결 수정에 실패했습니다.', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -111,10 +112,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { session, errorResponse } = await requireSession();
+    if (errorResponse) return errorResponse;
 
     const { id } = await params;
 
@@ -124,24 +123,26 @@ export async function DELETE(
       .returning({ id: pgConnections.id, name: pgConnections.name });
 
     if (!deleted) {
-      return NextResponse.json({ error: 'Connection not found' }, { status: 404 });
+      return apiError('연결을 찾을 수 없습니다.', 'NOT_FOUND', 404);
     }
 
-    // 캐시 무효화
     invalidateConnectionCache(id);
 
-    // 감사 로그
-    await db.insert(auditLogs).values({
-      userId: session.user.id,
-      action: 'DELETE_CONNECTION',
-      resourceType: 'pg_connection',
-      resourceId: id,
-      details: { name: deleted.name },
-    });
+    try {
+      await db.insert(auditLogs).values({
+        userId: session.user.id,
+        action: 'DELETE_CONNECTION',
+        resourceType: 'pg_connection',
+        resourceId: id,
+        details: { name: deleted.name },
+      });
+    } catch (auditError) {
+      console.error('[Audit] DELETE_CONNECTION log failed:', auditError);
+    }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ id: deleted.id });
   } catch (error) {
     console.error('Failed to delete connection:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return apiError('연결 삭제에 실패했습니다.', 'INTERNAL_ERROR', 500);
   }
 }

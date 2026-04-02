@@ -174,7 +174,7 @@ export default function DashboardSidebar() {
       <div className="hidden lg:flex items-center justify-end px-2 pt-2">
         <button
           onClick={toggleCollapse}
-          className="p-1 rounded-md text-slate-500 hover:text-slate-300 hover:bg-white/[0.04] transition-colors"
+          className="p-1 rounded-md text-[hsl(var(--sidebar-text-muted))] hover:text-[hsl(var(--sidebar-text))] hover:bg-[hsl(var(--sidebar-hover))] transition-colors"
           title={isCollapsed ? '사이드바 펼치기' : '사이드바 접기'}
         >
           {isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
@@ -182,8 +182,8 @@ export default function DashboardSidebar() {
       </div>
       {/* Mobile close */}
       <div className="flex lg:hidden items-center justify-between px-3 pt-3">
-        <span className="text-sm font-bold text-white">메뉴</span>
-        <button onClick={() => setOpen(false)} className="p-1 rounded-md text-slate-400 hover:text-white">
+        <span className="text-sm font-bold">메뉴</span>
+        <button onClick={() => setOpen(false)} className="p-1 rounded-md text-[hsl(var(--sidebar-text-muted))] hover:text-[hsl(var(--sidebar-text))]">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -198,7 +198,7 @@ export default function DashboardSidebar() {
       )}
 
       <aside className={cn(
-        'bg-[#0B1120] flex flex-col flex-shrink-0 overflow-y-auto scrollbar-thin transition-all duration-200',
+        'bg-[hsl(var(--sidebar-bg))] text-[hsl(var(--sidebar-text))] border-r border-[hsl(var(--sidebar-border))] flex flex-col flex-shrink-0 overflow-y-auto scrollbar-thin transition-all duration-200',
         // 모바일: 오버레이 사이드바
         isOpen ? 'fixed inset-y-0 left-0 z-50 w-[260px] lg:relative lg:z-auto' : 'hidden lg:flex',
         // 데스크톱: 접기 모드
@@ -221,8 +221,8 @@ export default function DashboardSidebar() {
                 className={cn(
                   'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors',
                   sectionActive
-                    ? 'text-white'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                    ? 'text-[hsl(var(--sidebar-text))] font-semibold'
+                    : 'text-[hsl(var(--sidebar-text-muted))] hover:text-[hsl(var(--sidebar-text))] hover:bg-[hsl(var(--sidebar-hover))]'
                 )}
               >
                 <section.icon
@@ -233,9 +233,9 @@ export default function DashboardSidebar() {
                   <>
                     <span className="flex-1 text-left truncate">{section.title}</span>
                     {sectionOpen ? (
-                      <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+                      <ChevronDown className="h-3.5 w-3.5 text-[hsl(var(--sidebar-text-muted))]" />
                     ) : (
-                      <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
+                      <ChevronRight className="h-3.5 w-3.5 text-[hsl(var(--sidebar-text-muted))]" />
                     )}
                   </>
                 )}
@@ -243,7 +243,7 @@ export default function DashboardSidebar() {
 
               {/* Section Items */}
               {sectionOpen && !isCollapsed && (
-                <div className="ml-[18px] mt-0.5 space-y-px border-l border-slate-800 pl-2.5">
+                <div className="ml-[18px] mt-0.5 space-y-px border-l border-[hsl(var(--sidebar-section-border))] pl-2.5">
                   {section.items.map((item) => {
                     const active = isActive(item.href);
                     return (
@@ -254,15 +254,15 @@ export default function DashboardSidebar() {
                         className={cn(
                           'flex items-center gap-1.5 px-2.5 py-[6px] rounded-md text-[12px] transition-colors no-underline',
                           active
-                            ? 'bg-blue-500/15 text-blue-400 font-medium border-l-2 border-blue-400 -ml-[11px] pl-[19px]'
-                            : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.04]'
+                            ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-text))] font-medium border-l-2 border-[hsl(var(--sidebar-active-text))] -ml-[11px] pl-[19px]'
+                            : 'text-[hsl(var(--sidebar-text-muted))] hover:text-[hsl(var(--sidebar-text))] hover:bg-[hsl(var(--sidebar-hover))]'
                         )}
                       >
                         <span className="truncate">{item.name}</span>
                         {item.badge && (
                           <span
                             className={cn(
-                              'text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white leading-none',
+                              'text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white leading-none select-none',
                               item.badgeColor || 'bg-slate-600'
                             )}
                           >
@@ -280,7 +280,7 @@ export default function DashboardSidebar() {
       </nav>
 
       {/* Bottom Navigation */}
-      <div className="px-2 py-3 border-t border-slate-800/50 space-y-0.5">
+      <div className="px-2 py-3 border-t border-[hsl(var(--sidebar-section-border))] space-y-0.5">
         {bottomNav.map((item) => (
           <Link
             key={item.href}
@@ -288,11 +288,11 @@ export default function DashboardSidebar() {
             className={cn(
               'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] transition-colors no-underline',
               isActive(item.href)
-                ? 'bg-blue-500/15 text-blue-400 font-medium'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-text))] font-medium'
+                : 'text-[hsl(var(--sidebar-text-muted))] hover:text-[hsl(var(--sidebar-text))] hover:bg-[hsl(var(--sidebar-hover))]'
             )}
           >
-            <item.icon className="h-4 w-4 flex-shrink-0 text-slate-500" />
+            <item.icon className="h-4 w-4 flex-shrink-0 text-[hsl(var(--sidebar-text-muted))]" />
             {!isCollapsed && <span className="truncate">{item.name}</span>}
           </Link>
         ))}
