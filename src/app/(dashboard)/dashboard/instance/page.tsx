@@ -17,14 +17,21 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Database, HardDrive, Server, Shield, Cpu,
   RefreshCw, ArrowUpRight, Pause, Play, Maximize2, Clock,
-  Info,
+  Info, Copy, Check,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useSelectedDatabase } from '@/hooks/use-selected-database';
 import { MiniTimeChart } from '@/components/charts/mini-time-chart';
-import { SqlElapseMap, SqlElapseLegend, type SqlElapsePoint } from '@/components/charts/sql-elapse-map';
+import { SqlElapseMap, SqlElapseLegend, getElapsedGrade, formatElapsed, type SqlElapsePoint } from '@/components/charts/sql-elapse-map';
+import { SqlDetailDialog } from '@/components/shared/sql-detail-dialog';
 import { WAIT_COLORS } from '@/components/charts/wait-event-chart';
 import Link from 'next/link';
 import {
@@ -75,6 +82,7 @@ interface DashboardMetrics {
       state?: string;
       client_addr?: string;
       application_name?: string;
+      query_id?: string | null;
     }>;
   };
   waitEvents: Array<{ wait_event_type: string; wait_event: string; count: number }>;
@@ -182,6 +190,7 @@ export default function DashboardPage() {
   const [isPaused, setIsPaused] = useState(false);
   // SQL Elapse Map data accumulator (max 300 points ≈ 5 minutes)
   const [elapseData, setElapseData] = useState<SqlElapsePoint[]>([]);
+  const [selectedElapsePoints, setSelectedElapsePoints] = useState<SqlElapsePoint[]>([]);
 
   useEffect(() => { setHistory([]); prevRef.current = null; setElapseData([]); }, [selectedConnectionId]);
 
@@ -267,6 +276,7 @@ export default function DashboardPage() {
             pid: s.pid,
             query: s.query,
             user: s.usename,
+            queryid: s.query_id ?? undefined,
           });
         }
       });
@@ -281,6 +291,7 @@ export default function DashboardPage() {
             timeNum: now + i,
             elapsed: sql.mean_exec_time / 1000,
             query: sql.query?.substring(0, 100),
+            queryid: sql.queryid,
           });
         }
       });
@@ -435,9 +446,9 @@ export default function DashboardPage() {
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 4: Long Active | Replication Delay | Deadlocks | Wait Event | SQL Elapse Map */}
+      {/* Row 4: Long Active | Replication Delay | Deadlocks | Wait Event */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         <WCard title="Long Active Session Count" val={isLoading?'-':String((metrics?.long_active_sessions?.s3to10??0)+(metrics?.long_active_sessions?.s10to15??0)+(metrics?.long_active_sessions?.over15s??0))}
           vc={(metrics?.long_active_sessions?.over15s??0)>0?'text-red-400':(metrics?.long_active_sessions?.s10to15??0)>0?'text-orange-400':'text-foreground/50'}>
           <MiniTimeChart data={history} series={[
@@ -470,18 +481,31 @@ export default function DashboardPage() {
                 </Bar>
               </BarChart></ResponsiveContainer>}
         </div>
-        {/* SQL Elapse Map - scatter chart */}
-        <div className="bg-card rounded border border-border p-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-medium text-muted-foreground">SQL Elapse Map</span>
-            <div className="flex items-center gap-2">
-              <SqlElapseLegend compact/>
-              <Link href="/monitoring/top-sql" className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-0.5">상세<ArrowUpRight className="h-2.5 w-2.5"/></Link>
-            </div>
-          </div>
-          <SqlElapseMap data={elapseData} height={100} compact/>
-        </div>
       </div>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* SQL Elapse Map - 전용 섹션 (확대)                         */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="bg-card rounded border border-border p-4">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold">SQL Elapse Map</span>
+            <SqlElapseLegend />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground">{elapseData.length} SQLs</span>
+            <Link href="/monitoring/top-sql" className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-0.5">상세<ArrowUpRight className="h-2.5 w-2.5"/></Link>
+          </div>
+        </div>
+        <SqlElapseMap data={elapseData} height={280} onSelect={setSelectedElapsePoints}/>
+      </div>
+
+      {/* SQL Detail Popup Dialog */}
+      <SqlDetailDialog
+        points={selectedElapsePoints}
+        open={selectedElapsePoints.length > 0}
+        onClose={() => setSelectedElapsePoints([])}
+      />
 
       {/* ════════════════════════════════════════════════════════ */}
       {/* DB Info Bar                                              */}
@@ -568,38 +592,129 @@ function CBadge({n,c='bg-blue-500'}:{n:number;c?:string}) {
 /* ════════════════════════════════════════════════════════════ */
 
 function SessionTable({sessions,loading}:{sessions:DashboardMetrics['sessions']['activeSessions'];loading:boolean}) {
+  const [sqlDetail, setSqlDetail] = useState<DashboardMetrics['sessions']['activeSessions'][number]|null>(null);
+  const [copied, setCopied] = useState(false);
+
   if (loading) return <TSkel/>;
   if (!sessions.length) return <div className="text-center py-8 text-xs text-muted-foreground">실행 중인 쿼리 없음</div>;
   return (
-    <table className="w-full text-xs">
-      <thead><tr className="bg-muted/30 border-b border-border sticky top-0">
-        {['PID','User','Application','Client','Runtime','State','Wait Event','Query'].map(h=>
-          <th key={h} className="text-left px-3 py-2 font-medium text-muted-foreground whitespace-nowrap">{h}</th>)}
-      </tr></thead>
-      <tbody>
-        {sessions.map(sess => {
-          const dc = durationColor(sess.query_duration_ms);
-          return (
-            <tr key={sess.pid} className="border-b border-border/30 hover:bg-muted/20">
-              <td className="px-3 py-1.5 font-mono text-blue-400">{sess.pid}</td>
-              <td className="px-3 py-1.5">{sess.usename}</td>
-              <td className="px-3 py-1.5 text-muted-foreground truncate max-w-[100px]">{sess.application_name||'-'}</td>
-              <td className="px-3 py-1.5 font-mono text-muted-foreground">{sess.client_addr||'-'}</td>
-              <td className="px-3 py-1.5">
-                {sess.query_duration_ms!=null && <span className={`font-semibold ${dc}`}>{(sess.query_duration_ms/1000).toFixed(1)}s</span>}
-              </td>
-              <td className="px-3 py-1.5">
-                <span className={cn('inline-block px-1.5 py-0.5 rounded text-[10px] font-medium',
-                  sess.state==='active'?'bg-emerald-500/20 text-emerald-400':'bg-muted text-muted-foreground'
-                )}>{sess.state||'active'}</span>
-              </td>
-              <td className="px-3 py-1.5">{sess.wait_event?<span className="text-muted-foreground">{sess.wait_event_type}:{sess.wait_event}</span>:<span className="text-emerald-400">CPU</span>}</td>
-              <td className={`px-3 py-1.5 font-mono truncate max-w-[400px] ${dc}`} title={sess.query}>{sess.query?.replace(/\s+/g,' ').substring(0,120)}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      <table className="w-full text-xs">
+        <thead><tr className="bg-muted/30 border-b border-border sticky top-0">
+          {['PID','User','Application','Client','Runtime','State','Wait Event','Query'].map(h=>
+            <th key={h} className="text-left px-3 py-2 font-medium text-muted-foreground whitespace-nowrap">{h}</th>)}
+        </tr></thead>
+        <tbody>
+          {sessions.map(sess => {
+            const dc = durationColor(sess.query_duration_ms);
+            return (
+              <tr key={sess.pid} className="border-b border-border/30 hover:bg-muted/20">
+                <td className="px-3 py-1.5 font-mono text-blue-400">{sess.pid}</td>
+                <td className="px-3 py-1.5">{sess.usename}</td>
+                <td className="px-3 py-1.5 text-muted-foreground truncate max-w-[100px]">{sess.application_name||'-'}</td>
+                <td className="px-3 py-1.5 font-mono text-muted-foreground">{sess.client_addr||'-'}</td>
+                <td className="px-3 py-1.5">
+                  {sess.query_duration_ms!=null && <span className={`font-semibold ${dc}`}>{(sess.query_duration_ms/1000).toFixed(1)}s</span>}
+                </td>
+                <td className="px-3 py-1.5">
+                  <span className={cn('inline-block px-1.5 py-0.5 rounded text-[10px] font-medium',
+                    sess.state==='active'?'bg-emerald-500/20 text-emerald-400':'bg-muted text-muted-foreground'
+                  )}>{sess.state||'active'}</span>
+                </td>
+                <td className="px-3 py-1.5">{sess.wait_event?<span className="text-muted-foreground">{sess.wait_event_type}:{sess.wait_event}</span>:<span className="text-emerald-400">CPU</span>}</td>
+                <td
+                  className={`px-3 py-1.5 font-mono truncate max-w-[400px] cursor-pointer hover:text-blue-400 transition-colors ${dc}`}
+                  title="클릭하여 SQL 상세 보기"
+                  onClick={() => { setSqlDetail(sess); setCopied(false); }}
+                >{sess.query?.replace(/\s+/g,' ').substring(0,120)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* SQL Detail Dialog */}
+      <Dialog open={!!sqlDetail} onOpenChange={(open) => !open && setSqlDetail(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              SQL 상세 정보
+              <Badge variant="outline" className="text-[10px] font-mono">PID: {sqlDetail?.pid}</Badge>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Query ID */}
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">Query ID</label>
+              <div className="rounded-md bg-muted/50 px-3 py-2 font-mono text-sm">
+                {sqlDetail?.query_id || <span className="text-muted-foreground italic">N/A (pg_stat_statements 미설정 또는 유틸리티 쿼리)</span>}
+              </div>
+            </div>
+
+            {/* SQL Full Text */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-muted-foreground">SQL Full Text</label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 gap-1 text-xs"
+                  onClick={() => {
+                    navigator.clipboard.writeText(sqlDetail?.query || '');
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                >
+                  {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                  {copied ? '복사됨' : '복사'}
+                </Button>
+              </div>
+              <pre className="rounded-md bg-muted/50 p-3 font-mono text-xs whitespace-pre-wrap break-all max-h-[300px] overflow-y-auto border border-border/50">
+                {sqlDetail?.query || '-'}
+              </pre>
+            </div>
+
+            {/* Session Info Grid */}
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">세션 정보</label>
+              <div className="rounded-md bg-muted/50 p-3 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">User</span>
+                  <span className="font-mono">{sqlDetail?.usename || '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Application</span>
+                  <span className="font-mono">{sqlDetail?.application_name || '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Client</span>
+                  <span className="font-mono">{sqlDetail?.client_addr || '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">State</span>
+                  <span className={cn('font-medium',
+                    sqlDetail?.state === 'active' ? 'text-emerald-400' : 'text-muted-foreground'
+                  )}>{sqlDetail?.state || 'active'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">실행시간</span>
+                  <span className={cn('font-mono font-bold',
+                    (sqlDetail?.query_duration_ms || 0) >= 10000 ? 'text-red-400' :
+                    (sqlDetail?.query_duration_ms || 0) >= 3000 ? 'text-orange-400' : ''
+                  )}>
+                    {sqlDetail?.query_duration_ms != null ? `${(sqlDetail.query_duration_ms / 1000).toFixed(2)}s` : '-'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Wait Event</span>
+                  <span className="font-mono">{sqlDetail?.wait_event ? `${sqlDetail.wait_event_type} / ${sqlDetail.wait_event}` : 'CPU'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -643,6 +758,9 @@ function LockTreeTable({sessions,loading}:{sessions:DashboardMetrics['blockedSes
 /* ════════════════════════════════════════════════════════════ */
 
 function TopSqlTable({data,loading,pgssStatus}:{data:DashboardMetrics['topSql'];loading:boolean;pgssStatus?:DashboardMetrics['pgssStatus']}) {
+  const [sqlDetail, setSqlDetail] = useState<DashboardMetrics['topSql'][number]|null>(null);
+  const [copied, setCopied] = useState(false);
+
   if (loading) return <TSkel/>;
   if (!data.length) {
     const messages: Record<string, { title: string; steps: string[] }> = {
@@ -676,29 +794,125 @@ function TopSqlTable({data,loading,pgssStatus}:{data:DashboardMetrics['topSql'];
     );
   }
   return (
-    <table className="w-full text-xs">
-      <thead><tr className="bg-muted/30 border-b border-border sticky top-0">
-        {['#','Query','Calls','Total Time','Avg Time','Rows','Hit Ratio'].map(h=>
-          <th key={h} className={cn('px-3 py-2 font-medium text-muted-foreground whitespace-nowrap',h==='#'?'text-center w-8':'text-left',['Calls','Total Time','Avg Time','Rows','Hit Ratio'].includes(h)&&'text-right')}>{h}</th>)}
-      </tr></thead>
-      <tbody>
-        {data.map((sql,i) => {
-          const tot = sql.shared_blks_hit+sql.shared_blks_read;
-          const hr = tot>0?((sql.shared_blks_hit/tot)*100).toFixed(1):'-';
-          return (
-            <tr key={sql.queryid} className="border-b border-border/30 hover:bg-muted/20">
-              <td className="text-center px-3 py-1.5 font-semibold text-muted-foreground">{i+1}</td>
-              <td className="px-3 py-1.5"><Link href={`/analysis/sql/${sql.queryid}`} className="font-mono text-blue-400 hover:text-blue-300 truncate block max-w-[400px] no-underline">{sql.query?.replace(/\s+/g,' ').substring(0,100)}</Link></td>
-              <td className="text-right px-3 py-1.5 font-mono">{fmtNum(sql.calls)}</td>
-              <td className="text-right px-3 py-1.5 font-mono">{fmtMs(sql.total_exec_time)}</td>
-              <td className="text-right px-3 py-1.5"><span className={sql.mean_exec_time>1000?'text-red-400 font-semibold':sql.mean_exec_time>100?'text-amber-400 font-semibold':'text-foreground/70'}>{fmtMs(sql.mean_exec_time)}</span></td>
-              <td className="text-right px-3 py-1.5 font-mono">{fmtNum(sql.rows)}</td>
-              <td className="text-right px-3 py-1.5"><span className={Number(hr)>=99?'text-emerald-400':Number(hr)>=90?'text-amber-400':'text-red-400'}>{hr==='-'?'-':`${hr}%`}</span></td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      <table className="w-full text-xs">
+        <thead><tr className="bg-muted/30 border-b border-border sticky top-0">
+          {['#','Query','Calls','Total Time','Avg Time','Rows','Hit Ratio'].map(h=>
+            <th key={h} className={cn('px-3 py-2 font-medium text-muted-foreground whitespace-nowrap',h==='#'?'text-center w-8':'text-left',['Calls','Total Time','Avg Time','Rows','Hit Ratio'].includes(h)&&'text-right')}>{h}</th>)}
+        </tr></thead>
+        <tbody>
+          {data.map((sql,i) => {
+            const tot = sql.shared_blks_hit+sql.shared_blks_read;
+            const hr = tot>0?((sql.shared_blks_hit/tot)*100).toFixed(1):'-';
+            return (
+              <tr key={sql.queryid} className="border-b border-border/30 hover:bg-muted/20">
+                <td className="text-center px-3 py-1.5 font-semibold text-muted-foreground">{i+1}</td>
+                <td className="px-3 py-1.5">
+                  <span
+                    className="font-mono text-blue-400 hover:text-blue-300 truncate block max-w-[400px] cursor-pointer transition-colors"
+                    title="클릭하여 SQL 상세 보기"
+                    onClick={() => { setSqlDetail(sql); setCopied(false); }}
+                  >{sql.query?.replace(/\s+/g,' ').substring(0,100)}</span>
+                </td>
+                <td className="text-right px-3 py-1.5 font-mono">{fmtNum(sql.calls)}</td>
+                <td className="text-right px-3 py-1.5 font-mono">{fmtMs(sql.total_exec_time)}</td>
+                <td className="text-right px-3 py-1.5"><span className={sql.mean_exec_time>1000?'text-red-400 font-semibold':sql.mean_exec_time>100?'text-amber-400 font-semibold':'text-foreground/70'}>{fmtMs(sql.mean_exec_time)}</span></td>
+                <td className="text-right px-3 py-1.5 font-mono">{fmtNum(sql.rows)}</td>
+                <td className="text-right px-3 py-1.5"><span className={Number(hr)>=99?'text-emerald-400':Number(hr)>=90?'text-amber-400':'text-red-400'}>{hr==='-'?'-':`${hr}%`}</span></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* Top SQL Detail Dialog */}
+      <Dialog open={!!sqlDetail} onOpenChange={(open) => !open && setSqlDetail(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>SQL 상세 정보</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Query ID */}
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">Query ID</label>
+              <div className="rounded-md bg-muted/50 px-3 py-2 font-mono text-sm flex items-center justify-between">
+                <span>{sqlDetail?.queryid}</span>
+                <Link href={`/analysis/sql/${sqlDetail?.queryid}`} className="text-xs text-blue-400 hover:text-blue-300 no-underline">
+                  상세 분석 페이지 →
+                </Link>
+              </div>
+            </div>
+
+            {/* SQL Full Text */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-muted-foreground">SQL Full Text</label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 gap-1 text-xs"
+                  onClick={() => {
+                    navigator.clipboard.writeText(sqlDetail?.query || '');
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                >
+                  {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                  {copied ? '복사됨' : '복사'}
+                </Button>
+              </div>
+              <pre className="rounded-md bg-muted/50 p-3 font-mono text-xs whitespace-pre-wrap break-all max-h-[300px] overflow-y-auto border border-border/50">
+                {sqlDetail?.query || '-'}
+              </pre>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground">실행 통계</label>
+              <div className="rounded-md bg-muted/50 p-3 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Calls</span>
+                  <span className="font-mono font-bold">{sqlDetail ? fmtNum(sqlDetail.calls) : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Total Time</span>
+                  <span className="font-mono">{sqlDetail ? fmtMs(sqlDetail.total_exec_time) : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Avg Time</span>
+                  <span className={cn('font-mono font-bold',
+                    (sqlDetail?.mean_exec_time||0) > 1000 ? 'text-red-400' :
+                    (sqlDetail?.mean_exec_time||0) > 100 ? 'text-amber-400' : ''
+                  )}>{sqlDetail ? fmtMs(sqlDetail.mean_exec_time) : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Rows</span>
+                  <span className="font-mono">{sqlDetail ? fmtNum(sqlDetail.rows) : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Shared Blks Hit</span>
+                  <span className="font-mono">{sqlDetail ? fmtNum(sqlDetail.shared_blks_hit) : '-'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Shared Blks Read</span>
+                  <span className="font-mono">{sqlDetail ? fmtNum(sqlDetail.shared_blks_read) : '-'}</span>
+                </div>
+                <div className="flex justify-between col-span-2">
+                  <span className="text-muted-foreground">Hit Ratio</span>
+                  {(() => {
+                    const tot = (sqlDetail?.shared_blks_hit||0)+(sqlDetail?.shared_blks_read||0);
+                    const hr = tot>0?((sqlDetail!.shared_blks_hit/tot)*100).toFixed(1):'-';
+                    return <span className={cn('font-mono font-bold',
+                      Number(hr)>=99?'text-emerald-400':Number(hr)>=90?'text-amber-400':'text-red-400'
+                    )}>{hr==='−'?'-':`${hr}%`}</span>;
+                  })()}
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

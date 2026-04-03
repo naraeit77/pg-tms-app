@@ -124,7 +124,7 @@ export default function VacuumPage() {
           {deadTuplesChart.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">Dead Tuple이 없습니다</div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={deadTuplesChart} layout="vertical" margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} />

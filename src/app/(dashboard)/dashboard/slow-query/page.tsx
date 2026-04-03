@@ -16,7 +16,13 @@ import { WidgetCard } from '@/components/shared/widget-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, AlertTriangle, Clock } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { RefreshCw, AlertTriangle, Clock, Copy, Check } from 'lucide-react';
 import {
   ResponsiveContainer,
   ScatterChart,
@@ -63,6 +69,8 @@ export default function SlowQueryPage() {
   const [selectedArea, setSelectedArea] = useState<{ startX?: number; endX?: number } | null>(null);
   const [refAreaLeft, setRefAreaLeft] = useState<number | undefined>();
   const [refAreaRight, setRefAreaRight] = useState<number | undefined>();
+  const [selectedHistorical, setSelectedHistorical] = useState<HistoricalSlowQuery | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['slow-query', selectedConnectionId, thresholdMs],
@@ -405,9 +413,101 @@ export default function SlowQueryPage() {
             pageSize={20}
             compact
             emptyMessage="기록된 슬로우 쿼리가 없습니다"
+            onRowClick={(row: any) => setSelectedHistorical(row as HistoricalSlowQuery)}
           />
         </WidgetCard>
       )}
+
+      {/* Historical SQL Detail Dialog */}
+      <Dialog open={!!selectedHistorical} onOpenChange={(open) => { if (!open) setSelectedHistorical(null); }}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              SQL 상세 정보
+              <Badge variant="outline" className="text-[10px] font-mono">
+                Query ID: {selectedHistorical?.queryId}
+              </Badge>
+            </DialogTitle>
+          </DialogHeader>
+          {selectedHistorical && (
+            <div className="space-y-4">
+              {/* SQL Full Text */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground">SQL Full Text</label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 gap-1 text-xs"
+                    onClick={() => {
+                      navigator.clipboard.writeText(selectedHistorical.query || '');
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                  >
+                    {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                    {copied ? '복사됨' : '복사'}
+                  </Button>
+                </div>
+                <pre className="rounded-md bg-muted/50 p-3 font-mono text-xs whitespace-pre-wrap break-all max-h-[300px] overflow-y-auto border border-border/50">
+                  {selectedHistorical.query || '-'}
+                </pre>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground">실행 통계</label>
+                <div className="rounded-md bg-muted/50 p-3 grid grid-cols-2 gap-x-6 gap-y-3 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Query ID</span>
+                    <span className="font-mono">{selectedHistorical.queryId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">호출 횟수</span>
+                    <span className="font-mono font-bold">{selectedHistorical.calls.toLocaleString()}회</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">평균 실행시간</span>
+                    <span className={cn(
+                      'font-mono font-bold',
+                      selectedHistorical.meanExecTimeMs >= 5000 ? 'text-red-400' :
+                      selectedHistorical.meanExecTimeMs >= 1000 ? 'text-orange-400' : ''
+                    )}>
+                      {(selectedHistorical.meanExecTimeMs / 1000).toFixed(3)}s
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">최대 실행시간</span>
+                    <span className={cn(
+                      'font-mono font-bold',
+                      selectedHistorical.maxExecTimeMs >= 10000 ? 'text-red-400' :
+                      selectedHistorical.maxExecTimeMs >= 5000 ? 'text-orange-400' : ''
+                    )}>
+                      {(selectedHistorical.maxExecTimeMs / 1000).toFixed(3)}s
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">누적 실행시간</span>
+                    <span className="font-mono font-bold">
+                      {selectedHistorical.totalExecTimeMs >= 60000
+                        ? `${(selectedHistorical.totalExecTimeMs / 60000).toFixed(1)}m`
+                        : `${(selectedHistorical.totalExecTimeMs / 1000).toFixed(1)}s`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">호출당 평균 시간 비중</span>
+                    <span className="font-mono">
+                      {selectedHistorical.calls > 0
+                        ? `${((selectedHistorical.totalExecTimeMs / selectedHistorical.calls / selectedHistorical.meanExecTimeMs) * 100).toFixed(0)}%`
+                        : '-'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

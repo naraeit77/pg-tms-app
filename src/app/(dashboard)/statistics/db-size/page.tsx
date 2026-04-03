@@ -122,7 +122,7 @@ export default function DbSizePage() {
             {dbPieData.length === 0 ? (
               <div className="flex items-center justify-center h-full text-muted-foreground text-sm">데이터 없음</div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={dbPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={40}
                     label={({ name, value }) => `${name}: ${fmtBytes(value)}`}
@@ -143,7 +143,7 @@ export default function DbSizePage() {
             {tableBarData.length === 0 ? (
               <div className="flex items-center justify-center h-full text-muted-foreground text-sm">데이터 없음</div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={tableBarData} layout="vertical" margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} horizontal={false} />
                   <XAxis type="number" tick={{ fontSize: 9, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} tickFormatter={(v) => fmtBytes(v)} />

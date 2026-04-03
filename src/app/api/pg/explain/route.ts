@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSession, handlePgError } from '@/lib/api-utils';
 import { getPgConfig } from '@/lib/pg/utils';
-import { executeExplain } from '@/lib/pg/client';
+import { executeExplain, getPool } from '@/lib/pg/client';
 import { db } from '@/db';
 import { pgExecutionPlans } from '@/db/schema';
 
@@ -20,11 +20,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'connection_id and sql required' }, { status: 400 });
     }
 
-    // pg_stat_statements의 $1, $2 등 파라미터를 NULL로 치환 (EXPLAIN은 실행하지 않으므로 안전)
-    const safeSql = sql.replace(/\$\d+/g, 'NULL');
-
     const config = await getPgConfig(connection_id, session.user.id);
-    const result = await executeExplain(config, safeSql, analyze, timeout);
+    const hasParams = /\$\d+/.test(sql);
+
+    let result: any;
+
+    if (hasParams) {
+      // 파라미터가 있는 SQL: PREPARE → EXPLAIN EXECUTE → DEALLOCATE
+      const paramNums = [...new Set((sql.match(/\$\d+/g) || []).map((p: string) => parseInt(p.slice(1))))].sort((a, b) => a - b);
+      const maxParam = Math.max(...paramNums);
+      const types = Array(maxParam).fill('unknown').join(', ');
+      const nulls = Array(maxParam).fill('NULL').join(', ');
+      const stmtName = `_explain_${Date.now()}`;
+
+      const pool = getPool(config);
+      const client = await pool.connect();
+      try {
+        await client.query(`SET LOCAL statement_timeout = '${timeout}'`);
+        await client.query(`PREPARE ${stmtName}(${types}) AS ${sql}`);
+        const explainCmd = analyze
+          ? `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) EXECUTE ${stmtName}(${nulls})`
+          : `EXPLAIN (FORMAT JSON) EXECUTE ${stmtName}(${nulls})`;
+        const res = await client.query(explainCmd);
+        await client.query(`DEALLOCATE ${stmtName}`);
+
+        const planData = res.rows?.[0]?.['QUERY PLAN'];
+        const plan = Array.isArray(planData) ? planData[0] : planData;
+        result = {
+          plan,
+          planningTimeMs: plan?.['Planning Time'],
+          executionTimeMs: plan?.['Execution Time'],
+          rawJson: planData,
+        };
+      } finally {
+        client.release();
+      }
+    } else {
+      result = await executeExplain(config, sql, analyze, timeout);
+    }
 
     // 저장 옵션
     if (save && result.plan) {

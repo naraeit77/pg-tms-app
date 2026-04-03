@@ -20,7 +20,8 @@ import { DataTable, type DataTableColumn } from '@/components/shared/data-table'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MiniTimeChart } from '@/components/charts/mini-time-chart';
-import { SqlElapseMap, SqlElapseLegend, type SqlElapsePoint } from '@/components/charts/sql-elapse-map';
+import { SqlElapseMap, SqlElapseLegend, getElapsedGrade, formatElapsed, type SqlElapsePoint } from '@/components/charts/sql-elapse-map';
+import { SqlDetailDialog } from '@/components/shared/sql-detail-dialog';
 import { RefreshCw, Pause, Play, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -42,9 +43,26 @@ import {
 
 interface ActiveSessionDetail {
   pid: number;
-  query: string | null;
   usename: string;
+  query: string | null;
   query_duration_ms: number | null;
+  wait_event_type: string | null;
+  wait_event: string | null;
+  state: string;
+  client_addr: string | null;
+  application_name: string | null;
+  query_id: string | null;
+}
+
+interface TopSqlDetail {
+  queryid: string;
+  query: string;
+  calls: number;
+  total_exec_time: number;
+  mean_exec_time: number;
+  shared_blks_hit: number;
+  shared_blks_read: number;
+  rows: number;
 }
 
 interface InstanceMetrics {
@@ -59,6 +77,7 @@ interface InstanceMetrics {
   replicationDelay: number;
   dbSizeMb: number;
   uptime: string;
+  topSql?: TopSqlDetail[];
   activeSessionDetails?: ActiveSessionDetail[];
 }
 
@@ -111,6 +130,7 @@ export default function MultiInstancePage() {
   const [isLive, setIsLive] = useState(true);
   const [history, setHistory] = useState<AHP[]>([]);
   const [elapseData, setElapseData] = useState<SqlElapsePoint[]>([]);
+  const [selectedElapsePoints, setSelectedElapsePoints] = useState<SqlElapsePoint[]>([]);
   const [currentTime, setCurrentTime] = useState('');
 
   const { data, isLoading, refetch, isFetching } = useQuery({
@@ -163,25 +183,47 @@ export default function MultiInstancePage() {
 
     // SQL Elapse Map 포인트 생성 (실제 활성 세션의 query_duration_ms 사용)
     const newPoints: SqlElapsePoint[] = [];
+    let pointIdx = 0;
     for (const inst of connectedInstances) {
-      if (!inst.metrics?.activeSessionDetails) continue;
-      inst.metrics.activeSessionDetails.forEach((s, i) => {
+      if (!inst.metrics?.activeSessionDetails?.length) continue;
+      inst.metrics.activeSessionDetails.forEach((s) => {
         if (s.query_duration_ms != null) {
           newPoints.push({
             time,
-            timeNum: now + i,
+            timeNum: now + pointIdx++, // 인스턴스 간 겹침 방지
             elapsed: Math.max(s.query_duration_ms, 1) / 1000,
             pid: s.pid,
             query: s.query ?? undefined,
             user: s.usename || inst.name,
+            queryid: s.query_id ?? undefined,
           });
         }
       });
     }
+
+    // Fallback: 활성 세션이 없으면 Top SQL(pg_stat_statements)의 평균 실행시간으로 포인트 생성
+    if (newPoints.length === 0) {
+      for (const inst of connectedInstances) {
+        if (!inst.metrics?.topSql?.length) continue;
+        inst.metrics.topSql.slice(0, 5).forEach((sql) => {
+          if (sql.mean_exec_time > 0) {
+            newPoints.push({
+              time,
+              timeNum: now + pointIdx++,
+              elapsed: sql.mean_exec_time / 1000, // ms → sec
+              query: sql.query?.substring(0, 100),
+              user: inst.name,
+              queryid: sql.queryid,
+            });
+          }
+        });
+      }
+    }
+
     if (newPoints.length > 0) {
       setElapseData(prev => [...prev.slice(-300 + newPoints.length), ...newPoints]);
     }
-  }, [data]);
+  }, [data?.timestamp]);
 
   // ── Aggregated metrics ──
   const aggregated = useMemo(() => {
@@ -350,9 +392,9 @@ export default function MultiInstancePage() {
       </div>
 
       {/* ════════════════════════════════════════════════════════ */}
-      {/* Row 1: Active Sessions | DML Tuples | Slow Query | Logical I/O | SQL Elapse Map */}
+      {/* Row 1: Active Sessions | DML Tuples | Slow Query | Logical I/O */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         <WCard title="Active Sessions" val={lv ? String(lv.activeSessions) : '-'} vc="text-blue-400">
           <MiniTimeChart data={history} series={[{key:'activeSessions',color:'#3b82f6',name:'Active'}]} height={120}/>
         </WCard>
@@ -365,15 +407,28 @@ export default function MultiInstancePage() {
         <WCard title="Logical I/O" val={lv ? `${fmtNum(lv.totalSessions)}` : '-'}>
           <MiniTimeChart data={history} series={[{key:'totalSessions',color:'#3b82f6',name:'Sessions'}]} height={120}/>
         </WCard>
-        {/* SQL Elapse Map */}
-        <div className="bg-card rounded border border-border p-3 overflow-hidden min-w-0">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-medium text-muted-foreground">SQL Elapse Map</span>
-            <SqlElapseLegend compact/>
-          </div>
-          <SqlElapseMap data={elapseData} height={120}/>
-        </div>
       </div>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* SQL Elapse Map - 전용 섹션 (확대)                         */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="bg-card rounded border border-border p-4">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold">SQL Elapse Map</span>
+            <SqlElapseLegend />
+          </div>
+          <span className="text-[10px] text-muted-foreground">{elapseData.length} SQLs</span>
+        </div>
+        <SqlElapseMap data={elapseData} height={280} onSelect={setSelectedElapsePoints}/>
+      </div>
+
+      {/* SQL Detail Popup Dialog */}
+      <SqlDetailDialog
+        points={selectedElapsePoints}
+        open={selectedElapsePoints.length > 0}
+        onClose={() => setSelectedElapsePoints([])}
+      />
 
       {/* ════════════════════════════════════════════════════════ */}
       {/* Row 2: Lock Wait | Commit Count | Replication Delay | Physical I/O | Wait Event */}

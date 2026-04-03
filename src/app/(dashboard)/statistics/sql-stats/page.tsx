@@ -89,7 +89,7 @@ export default function SqlStatsPage() {
             {pieData.length === 0 ? (
               <div className="flex items-center justify-center h-full text-muted-foreground text-sm">데이터 없음</div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={45}
                     label={({ name, percent }) => `${name.substring(0, 15)}… ${(percent * 100).toFixed(0)}%`}

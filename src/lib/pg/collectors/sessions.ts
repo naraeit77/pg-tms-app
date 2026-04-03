@@ -21,6 +21,7 @@ export interface SessionRow {
   state_change: string | null;
   backend_start: string | null;
   query_duration_ms: number | null;
+  query_id: string | null;
 }
 
 export async function collectSessions(config: PgConnectionConfig): Promise<SessionRow[]> {
@@ -45,7 +46,8 @@ export async function collectSessions(config: PgConnectionConfig): Promise<Sessi
         WHEN state = 'active' AND query_start IS NOT NULL
         THEN EXTRACT(EPOCH FROM (now() - query_start)) * 1000
         ELSE NULL
-      END AS query_duration_ms
+      END AS query_duration_ms,
+      query_id::text
     FROM pg_stat_activity
     WHERE pid <> pg_backend_pid()
       AND datname IS NOT NULL

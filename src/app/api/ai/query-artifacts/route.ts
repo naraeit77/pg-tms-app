@@ -101,10 +101,34 @@ export async function POST(request: NextRequest) {
     if (connectionId) {
       const config = await getPgConfig(connectionId, session.user.id);
 
-      // 1) EXPLAIN 실행
+      // 1) EXPLAIN 실행 (파라미터 플레이스홀더를 PREPARE/EXECUTE로 처리)
       try {
-        const explainResult = await executeExplain(config, sql, false, 15000);
-        explainPlan = explainResult.plan;
+        const paramCount = (sql.match(/\$\d+/g) || []).length;
+        let explainResult;
+
+        if (paramCount > 0) {
+          // 파라미터가 있는 SQL은 PREPARE 후 generic plan으로 EXPLAIN
+          // unknown 타입으로 선언하면 PostgreSQL이 컨텍스트에서 타입을 자동 추론
+          const paramNums = [...new Set((sql.match(/\$\d+/g) || []).map(p => parseInt(p.slice(1))))].sort((a, b) => a - b);
+          const maxParam = Math.max(...paramNums);
+          const types = Array(maxParam).fill('unknown').join(', ');
+          const nulls = Array(maxParam).fill('NULL').join(', ');
+          const stmtName = `_qa_explain_${Date.now()}`;
+
+          const pool = (await import('@/lib/pg/client')).getPool(config);
+          const client = await pool.connect();
+          try {
+            await client.query(`PREPARE ${stmtName}(${types}) AS ${sql}`);
+            const res = await client.query(`EXPLAIN (FORMAT JSON) EXECUTE ${stmtName}(${nulls})`);
+            await client.query(`DEALLOCATE ${stmtName}`);
+            explainPlan = res.rows?.[0]?.['QUERY PLAN']?.[0]?.['Plan'] || res.rows?.[0]?.['QUERY PLAN'];
+          } finally {
+            client.release();
+          }
+        } else {
+          explainResult = await executeExplain(config, sql, false, 15000);
+          explainPlan = explainResult.plan;
+        }
       } catch (e) {
         console.warn('EXPLAIN failed:', e instanceof Error ? e.message : String(e));
       }
@@ -158,15 +182,26 @@ export async function POST(request: NextRequest) {
           const stat = statResult.rows[0];
           const usedColumns = extractColumnsForTable(sql, tableName, t.alias);
 
+          // array_agg 결과가 문자열로 올 수 있으므로 배열로 변환
+          const normalizeColumns = (cols: any): string[] => {
+            if (Array.isArray(cols)) return cols;
+            if (typeof cols === 'string') {
+              // PostgreSQL array 문자열: {col1,col2}
+              return cols.replace(/^\{|\}$/g, '').split(',').map((s: string) => s.trim().replace(/"/g, ''));
+            }
+            return [];
+          };
+
           tableStats.push({
             name: tableName,
             alias: t.alias,
             schema,
             columns: colResult.rows.map((c: any) => {
               const usage = usedColumns.find(u => u.name.toLowerCase() === c.column_name.toLowerCase());
-              const matchingIdx = idxResult.rows.find((idx: any) =>
-                idx.columns.some((col: string) => col.toLowerCase() === c.column_name.toLowerCase())
-              );
+              const matchingIdx = idxResult.rows.find((idx: any) => {
+                const idxCols = normalizeColumns(idx.columns);
+                return idxCols.some((col: string) => col.toLowerCase() === c.column_name.toLowerCase());
+              });
               return {
                 name: c.column_name,
                 type: c.data_type,
@@ -177,7 +212,7 @@ export async function POST(request: NextRequest) {
             }),
             existingIndexes: idxResult.rows.map((idx: any) => ({
               name: idx.index_name,
-              columns: idx.columns,
+              columns: normalizeColumns(idx.columns),
               type: idx.index_type,
               isUnique: idx.is_unique,
               size: formatBytes(idx.index_size),

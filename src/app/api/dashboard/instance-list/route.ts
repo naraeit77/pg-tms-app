@@ -6,6 +6,7 @@ import { eq, and, desc } from 'drizzle-orm';
 import { getPgConfig } from '@/lib/pg/utils';
 import { collectGlobalStats } from '@/lib/pg/collectors/global-stats';
 import { collectSessions } from '@/lib/pg/collectors/sessions';
+import { collectSqlStats } from '@/lib/pg/collectors/sql-stats';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,9 +34,25 @@ interface InstanceMetrics {
     uptime: string;
     activeSessionDetails: {
       pid: number;
-      query: string | null;
       usename: string;
+      query: string | null;
       query_duration_ms: number | null;
+      wait_event_type: string | null;
+      wait_event: string | null;
+      state: string;
+      client_addr: string | null;
+      application_name: string | null;
+      query_id: string | null;
+    }[];
+    topSql: {
+      queryid: string;
+      query: string;
+      calls: number;
+      total_exec_time: number;
+      mean_exec_time: number;
+      shared_blks_hit: number;
+      shared_blks_read: number;
+      rows: number;
     }[];
   } | null;
   error?: string;
@@ -92,9 +109,10 @@ export async function GET() {
         try {
           const config = await getPgConfig(conn.id, session.user.id);
 
-          const [globalStats, sessions] = await Promise.all([
+          const [globalStats, sessions, topSql] = await Promise.all([
             collectGlobalStats(config),
             collectSessions(config),
+            collectSqlStats(config, 15, 'total_exec_time').catch(() => []),
           ]);
 
           const activeSessions = sessions.filter((s) => s.state === 'active');
@@ -140,9 +158,25 @@ export async function GET() {
               uptime: globalStats.uptime || '',
               activeSessionDetails: activeSessions.slice(0, 20).map((s) => ({
                 pid: s.pid,
-                query: s.query?.substring(0, 200),
                 usename: s.usename,
+                query: s.query?.substring(0, 200) ?? null,
                 query_duration_ms: s.query_duration_ms,
+                wait_event_type: s.wait_event_type,
+                wait_event: s.wait_event,
+                state: s.state,
+                client_addr: s.client_addr ?? null,
+                application_name: s.application_name ?? null,
+                query_id: s.query_id,
+              })),
+              topSql: topSql.slice(0, 15).map((s) => ({
+                queryid: s.queryid,
+                query: s.query,
+                calls: s.calls,
+                total_exec_time: s.total_exec_time,
+                mean_exec_time: s.mean_exec_time,
+                shared_blks_hit: s.shared_blks_hit,
+                shared_blks_read: s.shared_blks_read,
+                rows: s.rows,
               })),
             },
           };

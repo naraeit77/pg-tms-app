@@ -173,7 +173,7 @@ export default function TopSqlPage() {
           {chartData.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">데이터가 없습니다</div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={chartData} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" strokeOpacity={0.5} />
                 <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'hsl(var(--chart-tick))' }} tickLine={false} axisLine={false} />

@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useSelectedDatabase } from '@/hooks/use-selected-database'
+import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -276,59 +277,139 @@ export default function QueryArtifactsPage() {
               </CardContent>
             </Card>
 
-            {/* Table Detail Panel */}
-            {selectedTable && (
-              <Card className="max-h-[300px] overflow-y-auto">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Table2 className="w-4 h-4 text-blue-500" />
-                    {selectedTable.schema}.{selectedTable.name}
-                    {selectedTable.alias && <Badge variant="outline" className="text-xs">alias: {selectedTable.alias}</Badge>}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-xs">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
-                      <div className="font-bold">{selectedTable.estimatedRows?.toLocaleString() || '-'}</div>
-                      <div className="text-muted-foreground">행 수</div>
-                    </div>
-                    <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
-                      <div className="font-bold">{selectedTable.seqScanCount?.toLocaleString() || '0'}</div>
-                      <div className="text-muted-foreground">Seq Scan</div>
-                    </div>
-                    <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
-                      <div className="font-bold">{selectedTable.idxScanCount?.toLocaleString() || '0'}</div>
-                      <div className="text-muted-foreground">Idx Scan</div>
-                    </div>
-                  </div>
-                  {selectedTable.existingIndexes.length > 0 && (
+            {/* Table Detail Panel - sqltms.info 스타일 */}
+            {selectedTable && (() => {
+              const tableJoin = data?.joins.find(j =>
+                j.leftTable === selectedTable.name || j.rightTable === selectedTable.name
+                || j.leftTable === selectedTable.alias || j.rightTable === selectedTable.alias
+              );
+              const joinType = tableJoin?.joinType?.toUpperCase().replace('JOIN', '').trim() || '';
+              const usedCols = selectedTable.columns.filter(c => c.usedIn.length > 0);
+              const noIndexCols = usedCols.filter(c => !c.hasIndex && c.usedIn.some(u => u !== 'select'));
+              const tableRecs = data?.recommendations.filter(r => r.table === selectedTable.name) || [];
+
+              const getColRating = (col: ColumnInfo) => {
+                if (col.hasIndex) return { label: 'GOOD', color: 'text-emerald-600' };
+                if (col.usedIn.some(u => u === 'WHERE' || u === 'JOIN')) return { label: 'POOR', color: 'text-red-500' };
+                return { label: 'FAIR', color: 'text-amber-500' };
+              };
+
+              return (
+                <Card className="max-h-[400px] overflow-y-auto shadow-lg">
+                  <CardContent className="py-4 space-y-4">
+                    {/* Table Header */}
                     <div>
-                      <h4 className="font-semibold mb-1">기존 인덱스</h4>
-                      {selectedTable.existingIndexes.map((idx, i) => (
-                        <div key={i} className="p-1.5 bg-blue-50 dark:bg-blue-950/30 rounded mb-1">
-                          <div className="font-mono">{idx.name}</div>
-                          <div className="text-muted-foreground">({idx.columns.join(', ')}) [{idx.type}] {idx.size}</div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Database className="w-5 h-5 text-blue-500" />
+                        <span className="text-lg font-bold">{selectedTable.name.toUpperCase()}</span>
+                      </div>
+                      {joinType && (
+                        <Badge className="text-xs bg-gray-900 text-white hover:bg-gray-800">{joinType}</Badge>
+                      )}
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
+                        <div className="font-bold text-sm">{selectedTable.estimatedRows?.toLocaleString() || '-'}</div>
+                        <div className="text-[10px] text-muted-foreground">행 수</div>
+                      </div>
+                      <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
+                        <div className="font-bold text-sm">{selectedTable.seqScanCount?.toLocaleString() || '0'}</div>
+                        <div className="text-[10px] text-muted-foreground">Seq Scan</div>
+                      </div>
+                      <div className="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded">
+                        <div className="font-bold text-sm">{selectedTable.idxScanCount?.toLocaleString() || '0'}</div>
+                        <div className="text-[10px] text-muted-foreground">Idx Scan</div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Column Analysis */}
+                    {usedCols.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+                          <ChevronRight className="w-4 h-4" />
+                          컬럼 분석 ({usedCols.length}개)
+                        </h4>
+                        <div className="space-y-2">
+                          {usedCols.map((col, i) => {
+                            const rating = getColRating(col);
+                            return (
+                              <div key={i} className="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-900 rounded-lg border border-border/50">
+                                <div className="flex items-start gap-2">
+                                  <div className={cn(
+                                    'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 flex-shrink-0',
+                                    col.hasIndex ? 'bg-blue-500 text-white' : 'bg-white border-2 border-amber-400 text-amber-500'
+                                  )}>
+                                    {col.hasIndex ? '✓' : '!'}
+                                  </div>
+                                  <div>
+                                    <div className="font-mono text-sm font-semibold">{col.name.toUpperCase()}  <span className="text-muted-foreground font-normal">#{i + 1}</span></div>
+                                    <div className="text-xs text-muted-foreground mt-0.5">
+                                      {col.usedIn.join(', ')}
+                                    </div>
+                                  </div>
+                                </div>
+                                <span className={cn('text-xs font-bold', rating.color)}>{rating.label}</span>
+                              </div>
+                            );
+                          })}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                  {selectedTable.columns.filter(c => c.usedIn.length > 0).length > 0 && (
-                    <div>
-                      <h4 className="font-semibold mb-1">사용 컬럼</h4>
-                      {selectedTable.columns.filter(c => c.usedIn.length > 0).map((col, i) => (
-                        <div key={i} className="flex items-center justify-between p-1">
-                          <span className="font-mono">{col.name}</span>
-                          <div className="flex gap-1">
-                            {col.usedIn.map(u => <Badge key={u} variant="outline" className="text-[10px]">{u}</Badge>)}
-                            {col.hasIndex ? <Badge className="text-[10px] bg-blue-500">indexed</Badge> : <Badge variant="destructive" className="text-[10px]">no-idx</Badge>}
+                      </div>
+                    )}
+
+                    {/* Existing Indexes */}
+                    {selectedTable.existingIndexes.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
+                          <ChevronRight className="w-4 h-4" />
+                          기존 인덱스 ({selectedTable.existingIndexes.length}개)
+                        </h4>
+                        <div className="space-y-1.5">
+                          {selectedTable.existingIndexes.map((idx, i) => (
+                            <div key={i} className="p-2 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200/50 dark:border-blue-800/30">
+                              <div className="font-mono text-xs font-semibold text-blue-700 dark:text-blue-300">{idx.name}</div>
+                              <div className="text-[10px] text-muted-foreground mt-0.5">
+                                ({idx.columns.join(', ')}) [{idx.type}]{idx.isUnique ? ' UNIQUE' : ''} {idx.size && `· ${idx.size}`}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Index Recommendation */}
+                    {noIndexCols.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold mb-2 flex items-center gap-1.5 text-amber-600">
+                          <Lightbulb className="w-4 h-4" />
+                          인덱스 추천
+                        </h4>
+                        <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200/50 dark:border-amber-800/30">
+                          <p className="text-xs text-muted-foreground mb-2">다음 컬럼에 인덱스를 생성하면 성능이 향상될 수 있습니다:</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {noIndexCols.map((col, i) => (
+                              <Badge key={i} variant="outline" className="font-mono text-xs bg-white dark:bg-gray-900 border-amber-300 dark:border-amber-700">
+                                {col.name.toUpperCase()}
+                              </Badge>
+                            ))}
                           </div>
+                          {tableRecs.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {tableRecs.map((rec, i) => (
+                                <pre key={i} className="text-[10px] font-mono bg-white dark:bg-gray-900 p-1.5 rounded border overflow-x-auto">{rec.ddl}</pre>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })()}
           </div>
 
           {/* Right Panel - Results */}
