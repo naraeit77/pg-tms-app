@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Narae PG-TMS v1.0** - PostgreSQL SQL Tuning Management System by 주식회사 나래정보기술
+**Narae PG-TMS v2.0** - PostgreSQL SQL Tuning Management System by 주식회사 나래정보기술
 
 Next.js 16 application using React 19, TypeScript, Tailwind CSS, Shadcn UI, and Mantine v8. Built with local PostgreSQL 17 + Drizzle ORM + NextAuth v4.
 

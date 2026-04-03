@@ -2,7 +2,7 @@
 
 /**
  * Landing Page
- * PG-TMS v1.0 랜딩 페이지
+ * PG-TMS v2.0 랜딩 페이지
  */
 
 export const dynamic = 'force-dynamic';
@@ -51,7 +51,7 @@ export default function Home() {
               <span className="text-3xl">🐘</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold gradient-text">Narae PG-TMS v1.0</h1>
+              <h1 className="text-xl font-bold gradient-text">Narae PG-TMS v2.0</h1>
               <p className="text-xs text-muted-foreground">PostgreSQL SQL Tuning Management System</p>
             </div>
           </div>

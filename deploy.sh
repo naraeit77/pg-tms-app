@@ -1,12 +1,12 @@
 #!/bin/bash
 # ====================================
-# PG-TMS v1.0 배포 스크립트
+# PG-TMS v2.0 배포 스크립트
 # ====================================
 
 set -e
 
 echo "=========================================="
-echo "  Narae PG-TMS v1.0 Installation"
+echo "  Narae PG-TMS v2.0 Installation"
 echo "=========================================="
 
 # 1. Node.js 확인
@@ -45,7 +45,7 @@ npm run build
 
 echo ""
 echo "=========================================="
-echo "  PG-TMS v1.0 설치 완료!"
+echo "  PG-TMS v2.0 설치 완료!"
 echo "=========================================="
 echo "  npm start               # 서버 시작"
 echo "  docker compose up -d    # Docker 시작"

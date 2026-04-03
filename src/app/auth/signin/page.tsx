@@ -93,7 +93,7 @@ function SignInContent() {
               <Database className="h-8 w-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">Narae PG-TMS v1.0</CardTitle>
+          <CardTitle className="text-2xl text-center">Narae PG-TMS v2.0</CardTitle>
           <CardDescription className="text-center">
             SQL Tuning Management System
           </CardDescription>

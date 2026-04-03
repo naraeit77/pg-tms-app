@@ -1,4 +1,4 @@
-# Narae PG-TMS v1.0
+# Narae PG-TMS v2.0
 
 **PostgreSQL SQL Tuning Management System** by 주식회사 나래정보기술
 

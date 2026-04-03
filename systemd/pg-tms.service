@@ -1,5 +1,5 @@
 [Unit]
-Description=PG-TMS v1.0 - PostgreSQL SQL Tuning Management System
+Description=PG-TMS v2.0 - PostgreSQL SQL Tuning Management System
 After=network.target postgresql.service
 
 [Service]

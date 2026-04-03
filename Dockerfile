@@ -1,5 +1,5 @@
 # ====================================
-# Multi-stage Dockerfile for PG-TMS v1.0
+# Multi-stage Dockerfile for PG-TMS v2.0
 # Oracle Instant Client 레이어 제거
 # ====================================
 

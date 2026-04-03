@@ -33,7 +33,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Narae PG-TMS v1.0 - PostgreSQL SQL Tuning Management System',
+  title: 'Narae PG-TMS v2.0 - PostgreSQL SQL Tuning Management System',
   description: 'Narae PG-TMS - 주식회사 나래정보기술의 엔터프라이즈급 PostgreSQL SQL 튜닝 관리 시스템',
 };
 
