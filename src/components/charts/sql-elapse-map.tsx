@@ -130,7 +130,7 @@ export function SqlElapseMap({
   const tickCount = compact ? 3 : Math.min(timeLabels.length, 6);
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer width="100%" height={height} minWidth={0} minHeight={0}>
       <ScatterChart margin={showAxis ? { top: 5, right: 8, left: -10, bottom: 0 } : { top: 2, right: 2, left: 0, bottom: 0 }}>
         {showAxis && (
           <CartesianGrid

@@ -286,7 +286,7 @@ export default function SlowQueryPage() {
               {isLoading ? '데이터 로딩 중...' : '현재 슬로우 쿼리가 없습니다'}
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <ScatterChart
                 margin={{ top: 10, right: 10, bottom: 0, left: 0 }}
                 onMouseDown={(e: any) => e?.activeLabel && setRefAreaLeft(e.activeLabel)}

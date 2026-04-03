@@ -461,7 +461,7 @@ export default function DashboardPage() {
           </div>
           {waitClassData.length===0
             ? <div className="flex items-center justify-center h-[100px] text-[11px] text-muted-foreground">대기 이벤트 없음</div>
-            : <ResponsiveContainer width="100%" height={100}><BarChart data={waitClassData} layout="vertical" margin={{top:0,right:5,left:0,bottom:0}}>
+            : <ResponsiveContainer width="100%" height={100} minWidth={0} minHeight={0}><BarChart data={waitClassData} layout="vertical" margin={{top:0,right:5,left:0,bottom:0}}>
                 <XAxis type="number" tick={TICK} tickLine={false} axisLine={false}/>
                 <YAxis type="category" dataKey="name" tick={TICK} tickLine={false} axisLine={false} width={50}/>
                 <Tooltip contentStyle={TT_STYLE} formatter={(v:any)=>[`${v}`,'']}/>

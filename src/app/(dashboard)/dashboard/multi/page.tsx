@@ -40,6 +40,13 @@ import {
 /*  Types                                                      */
 /* ════════════════════════════════════════════════════════════ */
 
+interface ActiveSessionDetail {
+  pid: number;
+  query: string | null;
+  usename: string;
+  query_duration_ms: number | null;
+}
+
 interface InstanceMetrics {
   activeSessions: number;
   idleSessions: number;
@@ -52,6 +59,7 @@ interface InstanceMetrics {
   replicationDelay: number;
   dbSizeMb: number;
   uptime: string;
+  activeSessionDetails?: ActiveSessionDetail[];
 }
 
 interface InstanceData {
@@ -103,6 +111,7 @@ export default function MultiInstancePage() {
   const [isLive, setIsLive] = useState(true);
   const [history, setHistory] = useState<AHP[]>([]);
   const [elapseData, setElapseData] = useState<SqlElapsePoint[]>([]);
+  const [currentTime, setCurrentTime] = useState('');
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['instance-list'],
@@ -120,9 +129,10 @@ export default function MultiInstancePage() {
 
   // ── Accumulate aggregated history ──
   useEffect(() => {
-    if (!connectedInstances.length) return;
     const now = Date.now();
     const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setCurrentTime(time);
+    if (!connectedInstances.length) return;
 
     const agg: AHP = {
       time,
@@ -151,41 +161,22 @@ export default function MultiInstancePage() {
 
     setHistory(prev => [...prev.slice(-59), agg]);
 
-    // SQL Elapse Map 포인트 생성 (인스턴스별 활성/슬로우 세션 기반)
+    // SQL Elapse Map 포인트 생성 (실제 활성 세션의 query_duration_ms 사용)
     const newPoints: SqlElapsePoint[] = [];
     for (const inst of connectedInstances) {
-      if (!inst.metrics) continue;
-      const slowCount = Number(inst.metrics.slowQueries) || 0;
-      const activeSessions = Number(inst.metrics.activeSessions) || 0;
-      const tps = Number(inst.metrics.tps) || 0;
-
-      // Slow query 포인트 (1초 이상)
-      for (let i = 0; i < Math.min(slowCount, 5); i++) {
-        newPoints.push({
-          time, timeNum: now + i,
-          elapsed: 1 + Math.random() * 10,
-          query: `Slow query from ${inst.name}`,
-          user: inst.name,
-        });
-      }
-      // Active session 포인트
-      for (let i = 0; i < Math.min(activeSessions, 3); i++) {
-        newPoints.push({
-          time, timeNum: now + 10 + i,
-          elapsed: 0.05 + Math.random() * 2,
-          query: `Active session from ${inst.name}`,
-          user: inst.name,
-        });
-      }
-      // TPS 기반 포인트 (활성 세션 없어도 쿼리 실행 중인 경우)
-      if (slowCount === 0 && activeSessions === 0 && tps > 0) {
-        newPoints.push({
-          time, timeNum: now + 20,
-          elapsed: 0.01 + Math.random() * 0.5,
-          query: `Transaction from ${inst.name}`,
-          user: inst.name,
-        });
-      }
+      if (!inst.metrics?.activeSessionDetails) continue;
+      inst.metrics.activeSessionDetails.forEach((s, i) => {
+        if (s.query_duration_ms != null) {
+          newPoints.push({
+            time,
+            timeNum: now + i,
+            elapsed: Math.max(s.query_duration_ms, 1) / 1000,
+            pid: s.pid,
+            query: s.query ?? undefined,
+            user: s.usename || inst.name,
+          });
+        }
+      });
     }
     if (newPoints.length > 0) {
       setElapseData(prev => [...prev.slice(-300 + newPoints.length), ...newPoints]);
@@ -314,7 +305,7 @@ export default function MultiInstancePage() {
           {isLive
             ? <Badge variant="outline" className="text-[10px] px-2 py-0.5 text-emerald-400 border-emerald-500/30">LIVE</Badge>
             : <Badge variant="outline" className="text-[10px] px-2 py-0.5 text-muted-foreground">PAUSED</Badge>}
-          <span className="text-xs text-muted-foreground font-mono">{new Date().toLocaleTimeString('ko-KR')}</span>
+          <span className="text-xs text-muted-foreground font-mono" suppressHydrationWarning>{currentTime}</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-xs">
@@ -375,7 +366,7 @@ export default function MultiInstancePage() {
           <MiniTimeChart data={history} series={[{key:'totalSessions',color:'#3b82f6',name:'Sessions'}]} height={120}/>
         </WCard>
         {/* SQL Elapse Map */}
-        <div className="bg-card rounded border border-border p-3">
+        <div className="bg-card rounded border border-border p-3 overflow-hidden min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[11px] font-medium text-muted-foreground">SQL Elapse Map</span>
             <SqlElapseLegend compact/>
@@ -398,39 +389,35 @@ export default function MultiInstancePage() {
           <MiniTimeChart data={history} series={[{key:'replicationDelay',color:'#06b6d4',name:'Delay(s)'}]} height={120} yFormatter={v=>`${v.toFixed(1)}s`}/>
         </WCard>
         {/* Instance Active Sessions Bar Chart */}
-        <div className="bg-card rounded border border-border p-3">
+        <div className="bg-card rounded border border-border p-3 overflow-hidden min-w-0">
           <span className="text-[11px] font-medium text-muted-foreground">인스턴스별 Active</span>
-          <div style={{height: 120}}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={activeSessionsChart} margin={{top:5,right:5,bottom:0,left:-10}}>
-                <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false}/>
-                <XAxis dataKey="name" tick={TICK} tickLine={false} axisLine={false}/>
-                <YAxis tick={TICK} tickLine={false} axisLine={false}/>
-                <Tooltip contentStyle={TT_STYLE}/>
-                <Bar dataKey="active" radius={[3,3,0,0]} barSize={14}>
-                  {activeSessionsChart.map((e,i)=><Cell key={i} fill={e.color}/>)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <ResponsiveContainer width="100%" height={120} minWidth={0}>
+            <BarChart data={activeSessionsChart} margin={{top:5,right:5,bottom:0,left:-10}}>
+              <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false}/>
+              <XAxis dataKey="name" tick={TICK} tickLine={false} axisLine={false}/>
+              <YAxis tick={TICK} tickLine={false} axisLine={false}/>
+              <Tooltip contentStyle={TT_STYLE}/>
+              <Bar dataKey="active" radius={[3,3,0,0]} barSize={14}>
+                {activeSessionsChart.map((e,i)=><Cell key={i} fill={e.color}/>)}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
         {/* DB Size Pie */}
-        <div className="bg-card rounded border border-border p-3">
+        <div className="bg-card rounded border border-border p-3 overflow-hidden min-w-0">
           <span className="text-[11px] font-medium text-muted-foreground">DB Size 분포</span>
-          <div style={{height: 120}}>
-            {dbSizeChart.length === 0
-              ? <div className="flex items-center justify-center h-full text-[11px] text-muted-foreground">데이터 없음</div>
-              : <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={dbSizeChart} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={45} innerRadius={25}
-                      label={({name, value}) => `${name}: ${value>=1024?`${(value/1024).toFixed(1)}G`:`${value}M`}`}
-                      labelLine={{stroke:'hsl(var(--chart-tick))',strokeWidth:1}}>
-                      {dbSizeChart.map((e,i)=><Cell key={i} fill={e.color}/>)}
-                    </Pie>
-                    <Tooltip contentStyle={TT_STYLE}/>
-                  </PieChart>
-                </ResponsiveContainer>}
-          </div>
+          {dbSizeChart.length === 0
+            ? <div className="flex items-center justify-center text-[11px] text-muted-foreground" style={{height: 120}}>데이터 없음</div>
+            : <ResponsiveContainer width="100%" height={120} minWidth={0}>
+                <PieChart>
+                  <Pie data={dbSizeChart} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={45} innerRadius={25}
+                    label={({name, value}) => `${name}: ${value>=1024?`${(value/1024).toFixed(1)}G`:`${value}M`}`}
+                    labelLine={{stroke:'hsl(var(--chart-tick))',strokeWidth:1}}>
+                    {dbSizeChart.map((e,i)=><Cell key={i} fill={e.color}/>)}
+                  </Pie>
+                  <Tooltip contentStyle={TT_STYLE}/>
+                </PieChart>
+              </ResponsiveContainer>}
         </div>
       </div>
 
@@ -461,7 +448,7 @@ function WCard({title, val, vc='text-foreground', children}: {
   title: string; val?: string; vc?: string; children: React.ReactNode;
 }) {
   return (
-    <div className="bg-card rounded border border-border p-3">
+    <div className="bg-card rounded border border-border p-3 overflow-hidden min-w-0">
       <div className="flex items-center justify-between mb-0.5">
         <span className="text-[11px] font-medium text-muted-foreground truncate">{title}</span>
         {val && <span className={`text-sm font-bold tabular-nums ${vc}`}>{val}</span>}

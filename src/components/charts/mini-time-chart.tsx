@@ -70,7 +70,7 @@ export function MiniTimeChart({
   };
 
   return (
-    <ResponsiveContainer width={width ?? '100%'} height={height}>
+    <ResponsiveContainer width={width ?? '100%'} height={height} minWidth={0} minHeight={0}>
       <AreaChart
         data={data}
         margin={showAxis ? { top: 5, right: 5, left: -10, bottom: 0 } : { top: 0, right: 0, left: 0, bottom: 0 }}

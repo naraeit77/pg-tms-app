@@ -31,6 +31,12 @@ interface InstanceMetrics {
     replicationDelay: number;
     dbSizeMb: number;
     uptime: string;
+    activeSessionDetails: {
+      pid: number;
+      query: string | null;
+      usename: string;
+      query_duration_ms: number | null;
+    }[];
   } | null;
   error?: string;
   lastCheckedAt: string;
@@ -132,6 +138,12 @@ export async function GET() {
                 ? Number((globalStats.db_size / 1024 / 1024).toFixed(1))
                 : 0,
               uptime: globalStats.uptime || '',
+              activeSessionDetails: activeSessions.slice(0, 20).map((s) => ({
+                pid: s.pid,
+                query: s.query?.substring(0, 200),
+                usename: s.usename,
+                query_duration_ms: s.query_duration_ms,
+              })),
             },
           };
         } catch (error: any) {

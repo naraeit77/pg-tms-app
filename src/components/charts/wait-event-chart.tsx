@@ -73,7 +73,7 @@ export function WaitEventChart({ data, className }: WaitEventChartProps) {
 
   return (
     <div className={className}>
-      <ResponsiveContainer width="100%" height={220}>
+      <ResponsiveContainer width="100%" height={220} minWidth={0} minHeight={0}>
         <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 20, left: 60, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
           <XAxis type="number" tick={{ fontSize: 11, fill: '#64748b' }} />
