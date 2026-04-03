@@ -47,15 +47,18 @@ export default function CountTrendPage() {
   useEffect(() => {
     if (!data?.data?.summary) return;
     const s = data.data.summary;
-    historyRef.current.push({
-      time: new Date().toISOString(),
-      active: s.active || 0,
-      idle: s.idle || 0,
-      idleInTx: s.idleInTransaction || 0,
-      lockWait: s.lockWait || 0,
-      total: s.total || 0,
-    });
-    if (historyRef.current.length > 120) historyRef.current.shift();
+    const next = [
+      ...historyRef.current,
+      {
+        time: new Date().toISOString(),
+        active: s.active || 0,
+        idle: s.idle || 0,
+        idleInTx: s.idleInTransaction || 0,
+        lockWait: s.lockWait || 0,
+        total: s.total || 0,
+      },
+    ];
+    historyRef.current = next.length > 120 ? next.slice(-120) : next;
   }, [data]);
 
   const chartData = historyRef.current;
