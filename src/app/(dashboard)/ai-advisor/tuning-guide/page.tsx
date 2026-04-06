@@ -70,6 +70,15 @@ interface HistoryItem {
   response: string
 }
 
+interface QueryIdResult {
+  sql: string
+  metrics: SQLMetrics | null
+  executionPlan: unknown | null
+  planningTime?: number
+  executionTime?: number
+  nodeTypes?: string[]
+}
+
 interface LLMHealthStatus {
   healthy: boolean
   model: string
@@ -114,6 +123,8 @@ export default function AITuningGuidePage() {
   const [queryId, setQueryId] = useState('')
   const [isLoadingQueryId, setIsLoadingQueryId] = useState(false)
   const [queryIdError, setQueryIdError] = useState<string | null>(null)
+  const [queryIdResult, setQueryIdResult] = useState<QueryIdResult | null>(null)
+  const [explainFetchError, setExplainFetchError] = useState<string | null>(null)
 
   // Form state
   const [sqlText, setSqlText] = useState('')
@@ -202,6 +213,7 @@ export default function AITuningGuidePage() {
     }
     setIsLoadingQueryId(true)
     setQueryIdError(null)
+    setQueryIdResult(null)
 
     try {
       const res = await fetch(
@@ -216,8 +228,9 @@ export default function AITuningGuidePage() {
       if (!sqlData?.query) throw new Error('SQL을 찾을 수 없습니다')
       setSqlText(sqlData.query)
 
+      let resultMetrics: SQLMetrics | null = null
       if (sqlData.calls) {
-        setMetrics({
+        resultMetrics = {
           calls: sqlData.calls || 0,
           total_exec_time: sqlData.total_exec_time || 0,
           mean_exec_time: sqlData.mean_exec_time || 0,
@@ -225,30 +238,52 @@ export default function AITuningGuidePage() {
           shared_blks_hit: sqlData.shared_blks_hit || 0,
           shared_blks_read: sqlData.shared_blks_read || 0,
           temp_blks_written: sqlData.temp_blks_written || 0,
-        })
+        }
+        setMetrics(resultMetrics)
         setUseMetrics(true)
       }
 
-      // EXPLAIN 자동 조회 — $1, $2 등 파라미터를 NULL로 치환하여 실행
+      // EXPLAIN 자동 조회 — 파라미터가 있으면 API의 PREPARE/EXECUTE 방식 활용
+      let resultPlan: unknown | null = null
+      let planningTime: number | undefined
+      let executionTime: number | undefined
+      let nodeTypes: string[] | undefined
+      let explainError: string | null = null
       try {
-        const explainSql = sqlData.query.replace(/\$\d+/g, 'NULL')
         const explainRes = await fetch('/api/pg/explain', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             connection_id: selectedConnectionId,
-            sql: explainSql,
+            sql: sqlData.query,
             analyze: false,
           }),
         })
         const explainData = await explainRes.json()
         if (explainData.success && explainData.data?.plan) {
+          resultPlan = explainData.data.plan
+          planningTime = explainData.data.planningTimeMs
+          executionTime = explainData.data.executionTimeMs
           setExecutionPlan(JSON.stringify(explainData.data.plan, null, 2))
+          setExecutionPlanOpen(true)
+        } else {
+          explainError = explainData.error || 'EXPLAIN 실행 실패'
           setExecutionPlanOpen(true)
         }
       } catch {
-        // EXPLAIN is optional
+        explainError = 'EXPLAIN 요청 실패'
+        setExecutionPlanOpen(true)
       }
+      setExplainFetchError(explainError)
+
+      setQueryIdResult({
+        sql: sqlData.query,
+        metrics: resultMetrics,
+        executionPlan: resultPlan,
+        planningTime,
+        executionTime,
+        nodeTypes,
+      })
 
       setInputMode('sql')
     } catch (error) {
@@ -436,6 +471,8 @@ export default function AITuningGuidePage() {
     setExecutionPlan('')
     setQueryId('')
     setQueryIdError(null)
+    setQueryIdResult(null)
+    setExplainFetchError(null)
     setMetrics({ calls: 0, total_exec_time: 0, mean_exec_time: 0, rows: 0, shared_blks_hit: 0, shared_blks_read: 0, temp_blks_written: 0 })
     setStreamContent('')
     setChatMessages([])
@@ -596,6 +633,17 @@ export default function AITuningGuidePage() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <CardContent className="space-y-3">
+                  {/* EXPLAIN 자동 조회 실패 메시지 */}
+                  {explainFetchError && !executionPlan && (
+                    <div className="flex items-start space-x-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
+                      <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm">
+                        <p className="font-medium text-amber-900 dark:text-amber-300">실행계획 자동 조회 실패</p>
+                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">{explainFetchError}</p>
+                        <p className="text-xs text-gray-500 mt-1">EXPLAIN (FORMAT JSON) 결과를 아래에 직접 붙여넣을 수 있습니다.</p>
+                      </div>
+                    </div>
+                  )}
                   {/* Oracle-style plan tree view */}
                   {executionPlan && (() => {
                     try {
