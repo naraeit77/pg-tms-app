@@ -180,7 +180,8 @@ export async function POST(request: NextRequest) {
           `, [schema, tableName]);
 
           const stat = statResult.rows[0];
-          const usedColumns = extractColumnsForTable(sql, tableName, t.alias);
+          const dbColumnNames = colResult.rows.map((c: any) => c.column_name as string);
+          const usedColumns = extractColumnsForTable(sql, tableName, t.alias, dbColumnNames);
 
           // array_agg 결과가 문자열로 올 수 있으므로 배열로 변환
           const normalizeColumns = (cols: any): string[] => {
@@ -297,25 +298,43 @@ export async function POST(request: NextRequest) {
 
 /**
  * SQL에서 테이블 추출 (기본 정규식 파서)
+ * FROM a, b, c 형태의 콤마 구분 테이블과 JOIN 절 모두 지원
  */
 function extractTablesFromSQL(sql: string): Array<{ name: string; alias?: string; schema?: string }> {
   const tables: Array<{ name: string; alias?: string; schema?: string }> = [];
   const normalizedSql = sql.replace(/\s+/g, ' ').replace(/--[^\n]*/g, '');
 
-  // FROM / JOIN 절에서 테이블 추출
-  const tablePattern = /(?:FROM|JOIN|INNER\s+JOIN|LEFT\s+(?:OUTER\s+)?JOIN|RIGHT\s+(?:OUTER\s+)?JOIN|FULL\s+(?:OUTER\s+)?JOIN|CROSS\s+JOIN)\s+((?:(\w+)\.)?(\w+))(?:\s+(?:AS\s+)?(\w+))?/gi;
+  const reserved = new Set(['select', 'where', 'on', 'and', 'or', 'inner', 'left', 'right', 'full', 'cross', 'join', 'outer', 'group', 'order', 'having', 'limit', 'offset', 'union', 'intersect', 'except', 'set', 'values', 'into', 'update', 'delete', 'insert', 'from', 'as', 'natural', 'using', 'lateral']);
 
-  let match;
-  while ((match = tablePattern.exec(normalizedSql)) !== null) {
-    const schema = match[2] || undefined;
-    const name = match[3];
-    const alias = match[4];
-
-    // 예약어 제외
-    const reserved = ['select', 'where', 'on', 'and', 'or', 'inner', 'left', 'right', 'full', 'cross', 'join', 'outer', 'group', 'order', 'having', 'limit', 'offset', 'union', 'intersect', 'except'];
-    if (!reserved.includes(name.toLowerCase()) && !tables.find(t => t.name === name)) {
-      tables.push({ name, alias, schema });
+  const addTable = (name: string, alias?: string, schema?: string) => {
+    if (!reserved.has(name.toLowerCase()) && !tables.find(t => t.name === name)) {
+      tables.push({ name, alias: alias && !reserved.has(alias.toLowerCase()) ? alias : undefined, schema });
     }
+  };
+
+  // 1) FROM 절에서 콤마 구분 테이블 목록 추출
+  const fromPattern = /\bFROM\s+([\s\S]+?)(?=\bWHERE\b|\bGROUP\b|\bORDER\b|\bHAVING\b|\bLIMIT\b|\bUNION\b|\bINTERSECT\b|\bEXCEPT\b|\bINNER\b|\bLEFT\b|\bRIGHT\b|\bFULL\b|\bCROSS\b|\bNATURAL\b|\bJOIN\b|$)/gi;
+  let fromMatch;
+  while ((fromMatch = fromPattern.exec(normalizedSql)) !== null) {
+    const fromClause = fromMatch[1];
+    // 콤마로 분리하여 각 테이블 파싱
+    const parts = fromClause.split(',');
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (!trimmed) continue;
+      // [schema.]table [AS] [alias] 패턴 매칭
+      const tableMatch = trimmed.match(/^(?:(\w+)\.)?(\w+)(?:\s+(?:AS\s+)?(\w+))?$/i);
+      if (tableMatch) {
+        addTable(tableMatch[2], tableMatch[3], tableMatch[1]);
+      }
+    }
+  }
+
+  // 2) JOIN 절에서 테이블 추출
+  const joinPattern = /\b(?:INNER\s+JOIN|LEFT\s+(?:OUTER\s+)?JOIN|RIGHT\s+(?:OUTER\s+)?JOIN|FULL\s+(?:OUTER\s+)?JOIN|CROSS\s+JOIN|NATURAL\s+JOIN|JOIN)\s+(?:(\w+)\.)?(\w+)(?:\s+(?:AS\s+)?(\w+))?/gi;
+  let joinMatch;
+  while ((joinMatch = joinPattern.exec(normalizedSql)) !== null) {
+    addTable(joinMatch[2], joinMatch[3], joinMatch[1]);
   }
 
   return tables;
@@ -323,25 +342,22 @@ function extractTablesFromSQL(sql: string): Array<{ name: string; alias?: string
 
 /**
  * SQL에서 특정 테이블의 사용 컬럼 추출
+ * table.column (qualified) 및 비한정 컬럼(unqualified) 모두 지원
+ * dbColumns가 전달되면 비한정 컬럼도 매칭
  */
 function extractColumnsForTable(
   sql: string,
   tableName: string,
-  alias?: string
+  alias?: string,
+  dbColumns?: string[]
 ): Array<{ name: string; usedIn: ('where' | 'join' | 'orderby' | 'groupby' | 'select')[] }> {
   const columns: Map<string, Set<string>> = new Map();
   const normalizedSql = sql.replace(/\s+/g, ' ');
   const tableRef = alias || tableName;
 
-  // table.column 또는 alias.column 패턴
-  const colPattern = new RegExp(`\\b${tableRef}\\.(\\w+)\\b`, 'gi');
-  let match;
-  while ((match = colPattern.exec(normalizedSql)) !== null) {
-    const colName = match[1];
+  const addUsage = (colName: string, position: number) => {
     if (!columns.has(colName)) columns.set(colName, new Set());
-
-    // 위치에 따른 사용 유형 판별
-    const beforeMatch = normalizedSql.substring(0, match.index).toUpperCase();
+    const beforeMatch = normalizedSql.substring(0, position).toUpperCase();
     if (beforeMatch.includes('WHERE') && !beforeMatch.includes('ORDER BY') && !beforeMatch.includes('GROUP BY')) {
       columns.get(colName)!.add('where');
     }
@@ -354,6 +370,34 @@ function extractColumnsForTable(
     if (beforeMatch.includes('GROUP BY')) {
       columns.get(colName)!.add('groupby');
     }
+    // WHERE 절의 등호 조건도 join으로 간주 (암시적 조인)
+    if (columns.get(colName)!.size === 0) {
+      columns.get(colName)!.add('where');
+    }
+  };
+
+  // 1) table.column 또는 alias.column 패턴 (qualified)
+  const colPattern = new RegExp(`\\b${tableRef}\\.(\\w+)\\b`, 'gi');
+  let match;
+  while ((match = colPattern.exec(normalizedSql)) !== null) {
+    addUsage(match[1], match.index);
+  }
+
+  // 2) 비한정 컬럼 매칭: DB에서 가져온 실제 컬럼명이 SQL에 존재하는지 확인
+  if (dbColumns && dbColumns.length > 0) {
+    for (const col of dbColumns) {
+      // 이미 qualified로 찾은 컬럼은 건너뜀
+      if (columns.has(col)) continue;
+      // SQL에서 비한정 컬럼명이 사용되는지 확인 (table.col 형태가 아닌 것만)
+      const unqualifiedPattern = new RegExp(`(?<!\\.)\\b${col}\\b(?!\\s*\\.)`, 'gi');
+      let uMatch;
+      while ((uMatch = unqualifiedPattern.exec(normalizedSql)) !== null) {
+        // 앞에 점이 없는지 확인 (다른 테이블의 qualified 참조가 아닌지)
+        const charBefore = normalizedSql[uMatch.index - 1];
+        if (charBefore === '.') continue;
+        addUsage(col, uMatch.index);
+      }
+    }
   }
 
   return Array.from(columns.entries()).map(([name, usedIn]) => ({
@@ -364,11 +408,13 @@ function extractColumnsForTable(
 
 /**
  * SQL에서 JOIN 관계 추출
+ * 명시적 JOIN ... ON 구문과 암시적 WHERE a.x = b.x 구문 모두 지원
  */
 function extractJoinsFromSQL(sql: string): JoinInfo[] {
   const joins: JoinInfo[] = [];
   const normalizedSql = sql.replace(/\s+/g, ' ');
 
+  // 1) 명시적 JOIN ... ON 구문
   const joinPattern = /(\w+)\s+(?:INNER|LEFT|RIGHT|FULL|CROSS)?\s*(?:OUTER\s+)?JOIN\s+(?:(\w+)\.)?(\w+)(?:\s+(?:AS\s+)?(\w+))?\s+ON\s+(\w+)\.(\w+)\s*=\s*(\w+)\.(\w+)/gi;
 
   let match;
@@ -387,6 +433,36 @@ function extractJoinsFromSQL(sql: string): JoinInfo[] {
       rightColumn: match[8],
       joinType,
     });
+  }
+
+  // 2) 암시적 조인: WHERE 절에서 table1.col = table2.col 패턴 추출
+  const whereMatch = normalizedSql.match(/\bWHERE\b([\s\S]+?)(?:\bGROUP\b|\bORDER\b|\bHAVING\b|\bLIMIT\b|\bUNION\b|$)/i);
+  if (whereMatch) {
+    const whereClause = whereMatch[1];
+    const eqPattern = /(\w+)\.(\w+)\s*=\s*(\w+)\.(\w+)/g;
+    let eqMatch;
+    while ((eqMatch = eqPattern.exec(whereClause)) !== null) {
+      const leftTable = eqMatch[1];
+      const leftColumn = eqMatch[2];
+      const rightTable = eqMatch[3];
+      const rightColumn = eqMatch[4];
+      // 같은 테이블의 자기 조인이 아닌 경우만, 중복 제거
+      if (leftTable !== rightTable) {
+        const isDuplicate = joins.some(j =>
+          (j.leftTable === leftTable && j.rightTable === rightTable && j.leftColumn === leftColumn && j.rightColumn === rightColumn)
+          || (j.leftTable === rightTable && j.rightTable === leftTable && j.leftColumn === rightColumn && j.rightColumn === leftColumn)
+        );
+        if (!isDuplicate) {
+          joins.push({
+            leftTable,
+            rightTable,
+            leftColumn,
+            rightColumn,
+            joinType: 'INNER',
+          });
+        }
+      }
+    }
   }
 
   return joins;
